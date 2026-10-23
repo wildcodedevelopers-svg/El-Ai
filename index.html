@@ -1,453 +1,731 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#030713">
+<meta name="theme-color" content="#090615">
 <title>El,ai | ELHAM STUDIOS</title>
 
 <style>
 :root {
-  --bg: #030713;
-  --panel: #0a1223;
-  --blue: #2589ff;
-  --cyan: #65e5ff;
-  --text: #edf5ff;
-  --muted: #8b9ab5;
-  --border: rgba(105, 165, 255, .16);
+  --bg:#090615;
+  --purple:#a56bff;
+  --pink:#fa80ff;
+  --blue:#668dff;
+  --text:#f7f2ff;
+  --muted:#9d93b7;
+  --line:rgba(188,143,255,.19);
 }
 
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
+
+html,body {
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+}
 
 body {
-  margin: 0;
-  min-height: 100dvh;
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
   background:
-    radial-gradient(ellipse at 50% 15%, #102653 0%, transparent 38%),
-    linear-gradient(180deg, #030713, #050a17 60%, #030713);
-  color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
-  overflow: hidden;
+    radial-gradient(ellipse at 50% 19%,#28124d 0%,transparent 37%),
+    radial-gradient(ellipse at 5% 75%,#171039 0%,transparent 40%),
+    radial-gradient(ellipse at 95% 85%,#170d34 0%,transparent 36%),
+    var(--bg);
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .17;
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.14;
   background-image:
-    linear-gradient(rgba(71,133,230,.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(71,133,230,.12) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
+    linear-gradient(#b38aff12 1px,transparent 1px),
+    linear-gradient(90deg,#b38aff12 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
 }
 
+button,textarea { font:inherit; }
+button { cursor:pointer; }
+button:disabled { cursor:wait; }
+
 .app {
-  width: 100%;
-  max-width: 760px;
-  height: 100dvh;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
+  max-width:760px;
+  height:100vh;
+  height:100dvh;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
 }
 
 header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 17px 19px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(3, 7, 19, .65);
-  backdrop-filter: blur(18px);
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px 15px;
+  border-bottom:1px solid var(--line);
+  background:#0b0715e8;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:3;
+  flex-shrink:0;
 }
 
+/* EL ROBOT BRAND LOGO */
 .logo {
-  width: 43px;
-  height: 43px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-size: 23px;
-  font-weight: 800;
-  color: white;
-  background: linear-gradient(140deg, #37baff, #2547e9 65%, #111a53);
-  box-shadow: 0 0 25px #1679ff55;
+  width:49px;
+  height:49px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:#10051f;
+  border:1px solid #a56bff55;
+  box-shadow:0 0 22px #a56bff35;
+  overflow:hidden;
 }
 
-.brand { flex: 1; min-width: 0; }
+.logo svg {
+  width:43px;
+  height:43px;
+  filter:drop-shadow(0 0 5px #8f59ff);
+}
+
+.brand {
+  flex:1;
+  min-width:0;
+}
 
 .brand h1 {
-  font-size: 19px;
-  letter-spacing: 1px;
-  margin: 0;
+  margin:0;
+  font-size:19px;
+  letter-spacing:1.5px;
 }
 
-.brand p {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 2px;
-  margin: 4px 0 0;
+.brand .brand-subtitle {
+  margin:3px 0 0;
+  font-size:9px;
+  letter-spacing:1.5px;
+  color:#d5b5ff;
+}
+
+.brand .brand-studio {
+  margin:3px 0 0;
+  font-size:8px;
+  letter-spacing:2px;
+  color:var(--muted);
 }
 
 .status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: #a9f6d0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:9px;
+  white-space:nowrap;
+  color:#c5a9ff;
 }
 
-.dot {
-  width: 7px;
-  height: 7px;
-  background: #51f6a7;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #51f6a7;
+.status-dot {
+  width:7px;
+  height:7px;
+  background:#b994ff;
+  border-radius:50%;
+  box-shadow:0 0 10px #b994ff;
+  animation:statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  50% { opacity:.45; box-shadow:0 0 3px #b994ff; }
 }
 
 main {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
 }
 
 .hero {
-  flex-shrink: 0;
-  text-align: center;
-  padding: 8px 0 2px;
-  position: relative;
+  flex-shrink:0;
+  text-align:center;
+  padding:5px 12px 0;
 }
 
+.eyebrow {
+  margin:10px 0 0;
+  color:#c29aff;
+  font-size:9px;
+  letter-spacing:3px;
+  font-weight:700;
+}
+
+/* LIVING, BREATHING ORB */
 .orb-stage {
-  width: 210px;
-  height: 166px;
-  margin: 0 auto;
-  position: relative;
-  display: grid;
-  place-items: center;
-  perspective: 600px;
+  height:190px;
+  width:260px;
+  max-width:100%;
+  margin:0 auto;
+  position:relative;
+  display:grid;
+  place-items:center;
+  perspective:700px;
+  isolation:isolate;
 }
 
 .orb-glow {
-  position: absolute;
-  width: 116px;
-  height: 116px;
-  border-radius: 50%;
-  background: #087dff;
-  filter: blur(48px);
-  opacity: .44;
-  animation: breathe 4s ease-in-out infinite;
+  position:absolute;
+  width:125px;
+  height:125px;
+  border-radius:50%;
+  background:radial-gradient(circle,#c35aff 0%,#7a30ff 40%,transparent 72%);
+  filter:blur(34px);
+  opacity:.7;
+  animation:energyBreath 3.8s ease-in-out infinite;
 }
 
-.planet {
-  width: 86px;
-  height: 86px;
-  position: relative;
-  z-index: 2;
-  border-radius: 50%;
+.orb {
+  position:relative;
+  z-index:2;
+  width:88px;
+  height:88px;
+  border-radius:43% 57% 62% 38% / 42% 40% 60% 58%;
   background:
-    radial-gradient(ellipse at 28% 22%, #d9ffff 0%, #75eaff 7%,
-      #258cff 27%, #1250c8 51%, #071640 82%);
+    radial-gradient(ellipse at 32% 25%,#fff 0%,#f8d5ff 5%,transparent 24%),
+    radial-gradient(ellipse at 65% 68%,#fa63ff 0%,transparent 36%),
+    radial-gradient(ellipse at 30% 70%,#388dff 0%,transparent 42%),
+    conic-gradient(from 20deg,#4b2cff,#f26bff,#3420c7,#50dcff,#852dff,#4b2cff);
   box-shadow:
-    inset -12px -8px 22px #01091e,
-    inset 5px 4px 16px #c0f7ff,
-    0 0 24px #198bffbb,
-    0 0 70px #087dff55;
-  animation: planetFloat 5s ease-in-out infinite;
+    inset -10px -12px 20px #080315a8,
+    inset 5px 4px 13px #ffe5ff88,
+    0 0 24px #d66bff,
+    0 0 55px #a33bff80;
+  filter:drop-shadow(0 0 15px #b46aff);
+  animation:livingCore 5s ease-in-out infinite;
 }
 
-.planet::after {
-  content: "";
-  position: absolute;
-  inset: 8px 12px 52px 14px;
-  border-radius: 50%;
-  background: #ffffff9c;
-  filter: blur(7px);
+.orb::before {
+  content:"";
+  position:absolute;
+  inset:-11px;
+  border-radius:inherit;
+  background:conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #cda1ff 65deg,
+    #73eaff 120deg,
+    transparent 175deg,
+    #ff9cff 245deg,
+    transparent 320deg
+  );
+  filter:blur(13px);
+  opacity:.72;
+  animation:energyTurn 8s linear infinite;
 }
 
+.orb::after {
+  content:"";
+  position:absolute;
+  inset:9px;
+  border-radius:57% 43% 38% 62% / 48% 62% 38% 52%;
+  background:
+    radial-gradient(ellipse at 35% 30%,#fff 0%,#f8caff 8%,transparent 30%),
+    radial-gradient(ellipse at 65% 65%,#a24dff 0%,#5634ff 36%,transparent 70%);
+  mix-blend-mode:screen;
+  filter:blur(5px);
+  animation:innerFlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes livingCore {
+  0%,100% {
+    transform:scale(.91) rotate(-8deg);
+    border-radius:43% 57% 62% 38% / 42% 40% 60% 58%;
+    filter:drop-shadow(0 0 15px #b46aff);
+  }
+  25% {
+    transform:scale(1.07,.96) rotate(9deg);
+    border-radius:58% 42% 45% 55% / 53% 35% 65% 47%;
+  }
+  50% {
+    transform:scale(1.13) rotate(19deg);
+    border-radius:37% 63% 55% 45% / 39% 59% 41% 61%;
+    filter:drop-shadow(0 0 30px #d47aff);
+  }
+  75% {
+    transform:scale(.98,1.08) rotate(-12deg);
+    border-radius:61% 39% 36% 64% / 59% 43% 57% 41%;
+  }
+}
+
+@keyframes energyBreath {
+  0%,100% {
+    transform:scale(.78);
+    opacity:.4;
+    filter:blur(35px);
+  }
+  50% {
+    transform:scale(1.5);
+    opacity:.9;
+    filter:blur(48px);
+  }
+}
+
+@keyframes energyTurn {
+  to { transform:rotate(360deg); }
+}
+
+@keyframes innerFlow {
+  from { transform:scale(.86) rotate(-15deg); }
+  to { transform:scale(1.12) rotate(25deg); }
+}
+
+/* HOLOGRAPHIC ORBITS */
 .ring {
-  position: absolute;
-  width: 176px;
-  height: 60px;
-  left: 50%;
-  top: 50%;
-  margin-left: -88px;
-  margin-top: -30px;
-  border: 3px solid transparent;
-  border-radius: 50%;
-  transform-style: preserve-3d;
-  pointer-events: none;
+  position:absolute;
+  left:50%;
+  top:50%;
+  border:2px solid transparent;
+  border-radius:50%;
+  pointer-events:none;
+  transform-style:preserve-3d;
 }
 
-.ring-one {
-  border-top-color: #8cecff;
-  border-left-color: #379dff;
-  border-right-color: #2c69e9;
-  transform: rotate(-24deg) rotateX(67deg);
-  box-shadow: 0 -3px 9px #42b9ff66;
-  animation: ringGlow 3s ease-in-out infinite;
+.ring1 {
+  width:170px;
+  height:61px;
+  margin:-30px 0 0 -85px;
+  border-top-color:#ffd3ff;
+  border-left-color:#e184ff;
+  border-right-color:#866bff;
+  box-shadow:0 -2px 9px #df80ff55;
+  animation:ringOne 7s ease-in-out infinite alternate;
 }
 
-.ring-two {
-  width: 195px;
-  height: 79px;
-  margin-left: -97px;
-  margin-top: -39px;
-  border-top-color: #e4faff;
-  border-bottom-color: #246cff;
-  transform: rotate(47deg) rotateX(67deg);
-  opacity: .9;
+.ring2 {
+  width:192px;
+  height:79px;
+  margin:-39px 0 0 -96px;
+  border-top-color:#a1a0ff;
+  border-bottom-color:#fa91ff;
+  opacity:.9;
+  animation:ringTwo 10s ease-in-out infinite alternate;
 }
 
-.ring-three {
-  width: 159px;
-  height: 92px;
-  margin-left: -79px;
-  margin-top: -46px;
-  border-left-color: #58c5ff;
-  border-bottom-color: #5e80ff;
-  transform: rotate(105deg) rotateX(63deg);
-  opacity: .75;
+.ring3 {
+  width:148px;
+  height:95px;
+  margin:-47px 0 0 -74px;
+  border-left-color:#e9b0ff;
+  border-bottom-color:#8271ff;
+  opacity:.8;
+  animation:ringThree 8s ease-in-out infinite alternate;
 }
 
-.ring-four {
-  width: 184px;
-  height: 66px;
-  margin-left: -92px;
-  margin-top: -33px;
-  border-right-color: #b1f5ff;
-  border-bottom-color: #2779ff;
-  transform: rotate(-65deg) rotateX(72deg);
-  opacity: .65;
+.ring4 {
+  width:202px;
+  height:52px;
+  margin:-26px 0 0 -101px;
+  border-right-color:#d8b4ff;
+  border-bottom-color:#a47aff;
+  opacity:.7;
+  animation:ringFour 12s ease-in-out infinite alternate;
 }
 
-@keyframes breathe {
-  50% { transform: scale(1.22); opacity: .68; }
+.ring5 {
+  width:210px;
+  height:105px;
+  margin:-52px 0 0 -105px;
+  border-top-color:#8c70ff;
+  border-left-color:#bc6fff66;
+  opacity:.5;
+  animation:ringFive 9s ease-in-out infinite alternate;
 }
 
-@keyframes planetFloat {
-  50% { transform: translateY(-4px); }
+@keyframes ringOne {
+  from { transform:rotate(-28deg) rotateX(67deg); }
+  to { transform:rotate(-19deg) rotateX(58deg) scale(1.08); }
 }
-
-@keyframes ringGlow {
-  50% { filter: brightness(1.7); }
+@keyframes ringTwo {
+  from { transform:rotate(48deg) rotateX(67deg); }
+  to { transform:rotate(67deg) rotateX(74deg) scale(.94); }
+}
+@keyframes ringThree {
+  from { transform:rotate(110deg) rotateX(65deg); }
+  to { transform:rotate(94deg) rotateX(56deg) scale(1.1); }
+}
+@keyframes ringFour {
+  from { transform:rotate(-64deg) rotateX(72deg); }
+  to { transform:rotate(-49deg) rotateX(80deg) scale(1.05); }
+}
+@keyframes ringFive {
+  from { transform:rotate(16deg) rotateX(75deg); }
+  to { transform:rotate(32deg) rotateX(69deg) scale(.92); }
 }
 
 .hero h2 {
-  font-size: 21px;
-  letter-spacing: 1.5px;
-  margin: -1px 0 4px;
+  font-size:23px;
+  line-height:1.3;
+  letter-spacing:.5px;
+  margin:-3px 0 6px;
 }
 
-.hero .tagline {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
+.hero h2 span {
+  background:linear-gradient(90deg,#d6a0ff,#ffb0ef,#8eabff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.subtitle {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.mode-section {
+  padding:12px 16px 8px;
+  flex-shrink:0;
+}
+
+.section-label {
+  font-size:9px;
+  color:#a99abd;
+  letter-spacing:2px;
+  margin:0 0 9px 2px;
+}
+
+.modes {
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:1px 1px 4px;
+}
+
+.modes::-webkit-scrollbar,
+.quick::-webkit-scrollbar { display:none; }
+
+.mode {
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 12px;
+  color:#c0b4d8;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#151027bb;
+  font-size:11px;
+}
+
+.mode .symbol { font-size:13px; }
+
+.mode.active {
+  color:#fff;
+  border-color:#bd8aff99;
+  background:linear-gradient(130deg,#6f38a84d,#4033a84d);
+  box-shadow:0 0 12px #a56bff0c;
 }
 
 .chat {
-  flex: 1;
-  min-height: 80px;
-  overflow-y: auto;
-  padding: 12px 16px 18px;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: #253b62 transparent;
+  flex:1;
+  min-height:60px;
+  overflow-y:auto;
+  padding:8px 16px 15px;
+  scrollbar-width:thin;
+  scrollbar-color:#493369 transparent;
+  scroll-behavior:smooth;
+  overscroll-behavior:contain;
 }
 
 .message {
-  display: flex;
-  margin: 10px 0;
-  animation: appear .25s ease-out;
+  display:flex;
+  margin:10px 0;
+  animation:appear .22s ease-out;
 }
 
-@keyframes appear {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.message.user { justify-content: flex-end; }
+.message.user { justify-content:flex-end; }
 
 .bubble {
-  max-width: 88%;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 16px 16px 16px 4px;
-  background: rgba(13, 25, 47, .92);
-  font-size: 14px;
-  line-height: 1.55;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
+  max-width:90%;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:15px 15px 15px 4px;
+  background:linear-gradient(145deg,#1a1430,#100c20);
+  font-size:13px;
+  line-height:1.65;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  box-shadow:0 8px 22px #00000018;
 }
 
 .user .bubble {
-  background: linear-gradient(135deg, #1459bc, #173c82);
-  border-color: #408dff55;
-  border-radius: 16px 16px 4px 16px;
+  border-color:#b079ff65;
+  border-radius:15px 15px 4px 15px;
+  background:linear-gradient(135deg,#55328e,#39256a);
 }
 
-.bubble strong { color: #80dfff; }
+.bubble strong { color:#e4c5ff; }
 
 .typing {
-  color: var(--cyan);
-  font-size: 12px;
-  letter-spacing: 1px;
-  padding: 8px 14px;
+  color:#d5a8ff;
+  font-size:12px;
+  letter-spacing:.5px;
+  animation:thinkingPulse 1.3s ease-in-out infinite alternate;
 }
 
-.quick-actions {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 9px 15px;
-  scrollbar-width: none;
+@keyframes thinkingPulse {
+  from { opacity:.55; }
+  to { opacity:1; }
 }
 
-.quick-actions::-webkit-scrollbar { display: none; }
+@keyframes appear {
+  from { opacity:0;transform:translateY(5px); }
+  to { opacity:1;transform:translateY(0); }
+}
 
-.quick-actions button {
-  flex-shrink: 0;
-  padding: 8px 12px;
-  color: #c5d9f9;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: #0a1427;
-  font-size: 11px;
+.quick {
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding:8px 15px 11px;
+  scrollbar-width:none;
+  flex-shrink:0;
+}
+
+.quick button {
+  flex-shrink:0;
+  padding:8px 11px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:#160f27;
+  color:#d8c8f4;
+  font-size:10px;
+}
+
+.quick button:active,
+.mode:active {
+  border-color:#c091ff;
+  background:#392358;
 }
 
 .composer-wrap {
-  padding: 8px 13px calc(12px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, transparent, #030713 25%);
+  padding:8px 13px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,transparent,#090615 20%);
+  flex-shrink:0;
 }
 
 .composer {
-  display: flex;
-  align-items: flex-end;
-  gap: 9px;
-  padding: 8px;
-  border: 1px solid #24436d;
-  border-radius: 20px;
-  background: rgba(9, 19, 37, .96);
-  box-shadow: 0 0 28px #006bff0d;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  padding:8px;
+  border:1px solid #7653a0;
+  border-radius:19px;
+  background:#120d21ed;
+  box-shadow:0 0 28px #a56bff10,inset 0 1px #ffffff08;
+}
+
+.composer:focus-within {
+  border-color:#c091ff;
+  box-shadow:0 0 24px #a56bff20;
 }
 
 #messageInput {
-  flex: 1;
-  min-width: 0;
-  max-height: 110px;
-  resize: none;
-  padding: 9px 5px;
-  border: 0;
-  outline: none;
-  color: white;
-  background: transparent;
-  font: inherit;
-  font-size: 14px;
+  flex:1;
+  min-width:0;
+  max-height:105px;
+  resize:none;
+  padding:10px 6px;
+  outline:none;
+  border:0;
+  color:white;
+  background:transparent;
+  font-size:13px;
+  line-height:1.5;
 }
 
-#messageInput::placeholder { color: #7183a2; }
+#messageInput::placeholder { color:#9485ae; }
 
 #sendButton {
-  flex-shrink: 0;
-  width: 43px;
-  height: 43px;
-  border: 0;
-  border-radius: 14px;
-  color: white;
-  background: linear-gradient(135deg, #29baff, #2856ee);
-  font-size: 21px;
-  box-shadow: 0 0 18px #1679ff44;
+  width:42px;
+  height:42px;
+  flex-shrink:0;
+  border:0;
+  border-radius:14px;
+  color:white;
+  font-size:20px;
+  background:linear-gradient(135deg,#d48cff,#9a5bff 52%,#676bff);
+  box-shadow:0 0 20px #a56bff40,inset 0 1px #ffffff66;
 }
 
-#sendButton:disabled {
-  opacity: .45;
-}
+#sendButton:disabled { opacity:.45; }
 
 .footer {
-  text-align: center;
-  color: #657592;
-  font-size: 10px;
-  padding: 10px 0 0;
-  letter-spacing: .3px;
+  text-align:center;
+  color:#77688f;
+  font-size:9px;
+  letter-spacing:1.5px;
+  padding-top:10px;
 }
 
-button { cursor: pointer; }
-button:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 3px;
+button:focus-visible,
+textarea:focus-visible {
+  outline:2px solid var(--pink);
+  outline-offset:3px;
 }
 
-@media (min-width: 600px) {
-  .hero { padding-top: 14px; }
-  .orb-stage { height: 185px; }
-  .chat { padding-left: 28px; padding-right: 28px; }
+@media (max-height:730px) {
+  .eyebrow { margin-top:5px; }
+  .orb-stage { height:140px;width:230px; }
+  .orb { width:72px;height:72px; }
+  .hero h2 { font-size:19px; }
+  .mode-section { padding-top:8px; }
+  .subtitle { font-size:11px; }
+}
+
+@media (max-width:380px) {
+  header { gap:8px;padding:10px; }
+  .logo { width:43px;height:43px; }
+  .logo svg { width:38px;height:38px; }
+  .brand h1 { font-size:17px; }
+  .brand .brand-subtitle { font-size:8px;letter-spacing:1px; }
+  .brand .brand-studio { font-size:7px; }
+  .status { font-size:8px;gap:4px; }
+}
+
+@media (min-width:600px) {
+  .orb-stage { height:210px; }
+  .chat { padding-left:28px;padding-right:28px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .orb,.orb::before,.orb::after,.orb-glow,
+  .ring,.status-dot,.typing {
+    animation:none !important;
+  }
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-  <header>
-    <div class="logo">E</div>
-    <div class="brand">
-      <h1>El,ai</h1>
-      <p>ELHAM STUDIOS</p>
-    </div>
-    <div class="status">
-      <span class="dot"></span>
-      <span id="connectionStatus">Connecting</span>
-    </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="orb-stage" aria-label="Animated blue planet with glowing rings">
-        <div class="orb-glow"></div>
-        <div class="ring ring-one"></div>
-        <div class="ring ring-two"></div>
-        <div class="ring ring-three"></div>
-        <div class="ring ring-four"></div>
-        <div class="planet"></div>
-      </div>
-      <h2>AT YOUR SERVICE, BOSS</h2>
-      <p class="tagline">Your ideas. Your vision. Your AI.</p>
-    </section>
+<header>
+  <div class="logo" aria-label="EL Personal Assistant logo">
+    <svg viewBox="0 0 100 100" fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="robotGlow" x1="10" y1="70" x2="90" y2="20"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#fa45e9"/>
+          <stop offset=".5" stop-color="#8d52ff"/>
+          <stop offset="1" stop-color="#39e5ff"/>
+        </linearGradient>
+      </defs>
+      <path d="M50 23V12" stroke="url(#robotGlow)" stroke-width="5"
+            stroke-linecap="round"/>
+      <circle cx="50" cy="9" r="6" fill="url(#robotGlow)"/>
+      <rect x="17" y="25" width="66" height="53" rx="25"
+            stroke="url(#robotGlow)" stroke-width="5"/>
+      <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/>
+      <rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
+      <circle cx="37" cy="49" r="5.5" fill="#a05bff"/>
+      <circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
+      <path d="M35 70Q50 79 65 70" stroke="url(#robotGlow)"
+            stroke-width="4" stroke-linecap="round"/>
+      <path d="M30 79Q17 82 12 94M70 79Q83 82 88 94"
+            stroke="url(#robotGlow)" stroke-width="5"
+            stroke-linecap="round"/>
+      <path d="M43 81Q50 86 57 81" stroke="url(#robotGlow)"
+            stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  </div>
 
-    <section class="chat" id="chat" aria-live="polite">
-      <div class="message">
-        <div class="bubble">
-          Welcome back, Boss. I'm <strong>El,ai</strong>, created by ELHAM STUDIOS.
-          <br><br>
-          What are we working on today?
-        </div>
-      </div>
-    </section>
+  <div class="brand">
+    <h1>El-Ai</h1>
+    <p class="brand-subtitle">EL PERSONAL ASSISTANT</p>
+    <p class="brand-studio">ELHAM STUDIOS</p>
+  </div>
 
-    <div class="quick-actions">
-      <button type="button" data-prompt="Introduce yourself and explain what you can do.">Meet El,ai</button>
-      <button type="button" data-prompt="Teach me something useful about artificial intelligence.">Learn AI</button>
-      <button type="button" data-prompt="Help me plan my priorities for today.">Plan my day</button>
+  <div class="status">
+    <span class="status-dot"></span>
+    <span id="connectionStatus">CONNECTING</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
+
+    <div class="orb-stage" role="img" aria-label="Living purple holographic AI orb">
+      <div class="orb-glow"></div>
+      <div class="ring ring5"></div>
+      <div class="ring ring2"></div>
+      <div class="ring ring4"></div>
+      <div class="ring ring1"></div>
+      <div class="orb"></div>
+      <div class="ring ring3"></div>
     </div>
 
-    <div class="composer-wrap">
-      <form class="composer" id="chatForm">
-        <textarea
-          id="messageInput"
-          rows="1"
-          maxlength="8000"
-          placeholder="Ask El,ai anything, Boss..."
-          aria-label="Your message"
-          required
-        ></textarea>
-        <button id="sendButton" type="submit" aria-label="Send message">➤</button>
-      </form>
-      <div class="footer">EL,AI · POWERED BY ELHAM STUDIOS</div>
+    <h2>How can I help you <span>today?</span></h2>
+    <p class="subtitle">Your vision. Your ideas. Let's make them happen.</p>
+  </section>
+
+  <section class="mode-section">
+    <p class="section-label">CHOOSE YOUR MODE</p>
+    <div class="modes" id="modes">
+      <button class="mode active" type="button" data-mode="Default">
+        <span class="symbol">✦</span> Default
+      </button>
+      <button class="mode" type="button" data-mode="Historian">
+        <span class="symbol">◷</span> Historian
+      </button>
+      <button class="mode" type="button" data-mode="Storyteller">
+        <span class="symbol">✎</span> Storyteller
+      </button>
+      <button class="mode" type="button" data-mode="Data Scientist">
+        <span class="symbol">⌘</span> Data Scientist
+      </button>
     </div>
-  </main>
+  </section>
+
+  <section class="chat" id="chat" aria-live="polite">
+    <div class="message assistant">
+      <div class="bubble">Welcome back, Boss. ✨
+
+I'm <strong>El,ai</strong>, your personal assistant created by ELHAM STUDIOS.
+
+Choose a mode or simply ask me anything. What are we creating today?</div>
+    </div>
+  </section>
+
+  <div class="quick">
+    <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El,ai</button>
+    <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
+    <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
+  </div>
+
+  <div class="composer-wrap">
+    <form class="composer" id="chatForm">
+      <textarea
+        id="messageInput"
+        rows="1"
+        maxlength="8000"
+        placeholder="Ask me anything, Boss..."
+        aria-label="Message El,ai"
+        required
+      ></textarea>
+      <button id="sendButton" type="submit" aria-label="Send message">↑</button>
+    </form>
+    <div class="footer">EL,AI · AN ELHAM STUDIOS CREATION</div>
+  </div>
+</main>
 </div>
 
 <script>
@@ -462,6 +740,39 @@ button:focus-visible, textarea:focus-visible {
   const statusText = document.getElementById("connectionStatus");
 
   let busy = false;
+  let selectedMode = "Default";
+
+  const modeInstructions = {
+    "Default": "",
+    "Historian":
+      "Respond as a careful history expert. Distinguish established facts from disputed interpretations.",
+    "Storyteller":
+      "Use vivid, engaging storytelling when appropriate, while remaining accurate for factual questions.",
+    "Data Scientist":
+      "Approach the request analytically. Explain evidence, assumptions, numbers, and limitations where relevant."
+  };
+
+  function setStatus(text, color) {
+    statusText.textContent = text;
+    statusText.style.color = color;
+  }
+
+  document.querySelectorAll(".mode").forEach(button => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".mode").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      selectedMode = button.dataset.mode;
+
+      input.placeholder = selectedMode === "Default"
+        ? "Ask me anything, Boss..."
+        : "Ask " + selectedMode + ", Boss...";
+
+      input.focus();
+    });
+  });
 
   function addMessage(text, role) {
     const row = document.createElement("div");
@@ -474,63 +785,93 @@ button:focus-visible, textarea:focus-visible {
     row.appendChild(bubble);
     chat.appendChild(row);
     chat.scrollTop = chat.scrollHeight;
+
     return row;
   }
 
   async function checkConnection() {
     try {
       const response = await fetch(API_BASE + "/health");
-      const data = await response.json();
 
       if (!response.ok) throw new Error("Backend unavailable");
 
-      statusText.textContent = data.ai_configured ? "AI Online" : "Key Missing";
-      statusText.style.color = data.ai_configured ? "#a9f6d0" : "#ffcc7a";
+      const data = await response.json();
+
+      if (data.ai_configured) {
+        setStatus("AI ONLINE", "#c5a9ff");
+      } else {
+        setStatus("KEY MISSING", "#ffd08a");
+      }
     } catch {
-      statusText.textContent = "Offline";
-      statusText.style.color = "#ff9caa";
+      setStatus("OFFLINE", "#ff9baa");
     }
   }
 
-  async function sendMessage(message) {
-    if (busy || !message.trim()) return;
+  async function sendMessage(rawText) {
+    const text = rawText.trim();
+    if (!text || busy) return;
 
     busy = true;
     sendButton.disabled = true;
     input.disabled = true;
 
-    addMessage(message.trim(), "user");
+    addMessage(text, "user");
     input.value = "";
+    input.style.height = "auto";
 
-    const typing = addMessage("El,ai is thinking...", "assistant");
-    typing.querySelector(".bubble").classList.add("typing");
+    const pending = addMessage("El,ai is thinking, Boss...", "assistant");
+    const pendingBubble = pending.querySelector(".bubble");
+    pendingBubble.classList.add("typing");
+
+    const instructions = modeInstructions[selectedMode] || "";
+    const finalMessage = instructions
+      ? "For this response, follow this approach: " +
+        instructions + "\n\nUser's message: " + text
+      : text;
 
     try {
+      setStatus("THINKING", "#c5a9ff");
+
       const response = await fetch(API_BASE + "/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: message.trim() })
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Accept":"application/json"
+        },
+        body:JSON.stringify({message:finalMessage})
       });
 
-      const data = await response.json();
+      let data;
 
-      if (!response.ok) {
-        throw new Error(data.detail || "The AI request failed.");
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("The server returned an invalid response. Please try again.");
       }
 
-      typing.querySelector(".bubble").textContent =
-        data.reply || "Sorry, Boss. I received an empty response.";
+      if (!response.ok) {
+        const detail = typeof data.detail === "string"
+          ? data.detail
+          : "The request failed with status " + response.status + ".";
+        throw new Error(detail);
+      }
 
-      statusText.textContent = "AI Online";
-      statusText.style.color = "#a9f6d0";
+      if (typeof data.reply !== "string" || !data.reply.trim()) {
+        throw new Error("The server responded, but no reply was provided.");
+      }
+
+      pendingBubble.textContent = data.reply;
+      setStatus("AI ONLINE", "#c5a9ff");
+
     } catch (error) {
-      typing.querySelector(".bubble").textContent =
-        "Sorry, Boss. I couldn't get a reply. " +
+      pendingBubble.textContent =
+        "Sorry, Boss. I couldn't get a reply.\n\n" +
         (error.message || "Check your internet connection and try again.");
 
-      statusText.textContent = "Request Failed";
-      statusText.style.color = "#ff9caa";
+      setStatus("REQUEST FAILED", "#ff9baa");
+
     } finally {
+      pendingBubble.classList.remove("typing");
       busy = false;
       sendButton.disabled = false;
       input.disabled = false;
@@ -546,11 +887,11 @@ button:focus-visible, textarea:focus-visible {
 
   input.addEventListener("input", () => {
     input.style.height = "auto";
-    input.style.height = Math.min(input.scrollHeight, 110) + "px";
+    input.style.height = Math.min(input.scrollHeight, 105) + "px";
   });
 
   input.addEventListener("keydown", event => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
       form.requestSubmit();
     }
