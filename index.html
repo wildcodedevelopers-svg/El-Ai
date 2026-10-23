@@ -7,6 +7,21 @@
 <title>El,ai | ELHAM STUDIOS</title>
 
 <style>
+  .orb-stage {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.orb-stage:active .orb {
+  transform: scale(.94);
+}
+
+.orb-stage:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: -5px;
+  border-radius: 50%;
+}
 :root {
   --bg:#090615;
   --purple:#a56bff;
@@ -271,37 +286,49 @@ main {
 
 /* Two restrained energy rings */
 .ring {
-  position:absolute;
-  left:50%;
-  top:50%;
-  border:1px solid transparent;
-  border-radius:50%;
-  pointer-events:none;
-  transform-style:preserve-3d;
+  position: absolute;
+  inset: 14%;
+  border: 2px solid rgba(185, 135, 255, 0.55);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(165, 107, 255, 0.16);
 }
 
 .ring-one {
-  width:155px;
-  height:57px;
-  margin:-28px 0 0 -77px;
-  border-top-color:#e7b4ffb0;
-  border-left-color:#e184ff70;
-  border-right-color:#866bff70;
-  box-shadow:0 -1px 5px #df80ff22;
-  animation:ringOne 9s ease-in-out infinite alternate;
+  transform: rotateX(68deg) rotateZ(-25deg);
 }
 
 .ring-two {
-  width:175px;
-  height:70px;
-  margin:-35px 0 0 -87px;
-  border-top-color:#a1a0ff90;
-  border-bottom-color:#fa91ff85;
-  opacity:.75;
-  animation:ringTwo 12s ease-in-out infinite alternate;
+  inset: 19%;
+  border-color: rgba(250, 128, 255, 0.42);
+  transform: rotateX(68deg) rotateZ(48deg);
+  box-shadow: 0 0 8px rgba(250, 128, 255, 0.12);
+}
+  .ring-three {
+  inset: 10%;
+  border-color: rgba(102, 141, 255, 0.42);
+  transform: rotateX(72deg) rotateZ(85deg);
+  animation: ringSpinThree 12s linear infinite;
 }
 
-@keyframes ringOne {
+.ring-four {
+  inset: 23%;
+  border-color: rgba(250, 128, 255, 0.38);
+  transform: rotateX(62deg) rotateZ(-65deg);
+  animation: ringSpinFour 16s linear infinite;
+}
+
+@keyframes ringSpinThree {
+  from { transform: rotateX(72deg) rotateZ(85deg); }
+  to { transform: rotateX(72deg) rotateZ(445deg); }
+}
+
+@keyframes ringSpinFour {
+  from { transform: rotateX(62deg) rotateZ(-65deg); }
+  to { transform: rotateX(62deg) rotateZ(295deg); }
+}
+
+ @keyframes ringOne {
   from { transform:rotate(-25deg) rotateX(65deg); }
   to { transform:rotate(-14deg) rotateX(58deg) scale(1.04); }
 }
@@ -309,6 +336,23 @@ main {
 @keyframes ringTwo {
   from { transform:rotate(45deg) rotateX(68deg); }
   to { transform:rotate(61deg) rotateX(74deg) scale(.96); }
+}
+  @keyframes ringSpinThree {
+  from {
+    transform: rotateX(72deg) rotateZ(85deg);
+  }
+  to {
+    transform: rotateX(72deg) rotateZ(445deg);
+  }
+}
+
+@keyframes ringSpinFour {
+  from {
+    transform: rotateX(62deg) rotateZ(-65deg);
+  }
+  to {
+    transform: rotateX(62deg) rotateZ(295deg);
+  }
 }
 
 .orb-stage.listening .orb {
@@ -635,10 +679,16 @@ button:focus-visible,textarea:focus-visible {
   <section class="hero">
     <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
 
-    <div class="orb-stage" id="orbStage">
+    <div class="orb-stage" id="orbStage"
+     role="button"
+     tabindex="0"
+     aria-label="Tap the orb to speak to El,ai"
+     title="Tap to speak">
       <div class="orb-glow"></div>
       <div class="ring ring-one"></div>
       <div class="ring ring-two"></div>
+      <div class="ring ring-three"></div>
+      <div class="ring ring-four"></div>
       <div class="orb"></div>
     </div>
 
@@ -658,9 +708,9 @@ button:focus-visible,textarea:focus-visible {
 
   <section class="chat" id="chat" aria-live="polite">
     <div class="message assistant">
-      <div class="bubble">Welcome back, Boss. ✨
+      <div class="bubble">Welcome back, Boss ✨
 
-I'm <strong>El,ai</strong>, your personal assistant created by ELHAM STUDIOS.
+I'm <strong>El Ai</strong>, your personal assistant created by ELHAM STUDIOS.
 
 Choose a mode or simply ask me anything. What are we creating today?</div>
     </div>
@@ -954,6 +1004,25 @@ Choose a mode or simply ask me anything. What are we creating today?</div>
       startListening();
     }
   });
+
+  function toggleOrbVoice() {
+  if (busy) return;
+
+  if (isListening) {
+    stopListening(true);
+  } else {
+    startListening();
+  }
+}
+
+orbStage.addEventListener("click", toggleOrbVoice);
+
+orbStage.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    toggleOrbVoice();
+  }
+});
 
   document.querySelectorAll(".mode").forEach(button => {
     button.addEventListener("click", () => {
