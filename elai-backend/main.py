@@ -8,7 +8,7 @@ from groq import Groq, APIError
 app = FastAPI(
     title="El,ai API",
     description="AI assistant by ELHAM STUDIOS",
-    version="1.0.0",
+    version="1.1.0",
 )
 
 app.add_middleware(
@@ -31,14 +31,14 @@ class ChatResponse(BaseModel):
 SYSTEM_PROMPT = """
 You are El,ai, an AI assistant created by ELHAM STUDIOS.
 
-Your personality is intelligent, clear, respectful, practical,
-and conversational.
+You are intelligent, friendly, practical, and conversational.
+Help with learning, coding, creativity, planning, and
+problem-solving.
 
-Help users with learning, programming, creativity, planning,
-problem-solving, and everyday questions.
-
-Be honest about uncertainty. Never pretend to have performed
-actions you have not performed. Keep answers focused and useful.
+Give clear, useful answers. Be honest when uncertain.
+Never claim you performed an action you did not perform.
+Keep simple answers concise and explain difficult topics
+step by step.
 """
 
 
@@ -74,7 +74,7 @@ def ask(request: ChatRequest):
     if not api_key:
         raise HTTPException(
             status_code=503,
-            detail="AI service is not configured yet.",
+            detail="GROQ_API_KEY is missing from Render.",
         )
 
     try:
@@ -85,7 +85,7 @@ def ask(request: ChatRequest):
         )
 
         result = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             messages=[
                 {
                     "role": "system",
@@ -97,7 +97,7 @@ def ask(request: ChatRequest):
                 },
             ],
             temperature=0.7,
-            max_tokens=700,
+            max_completion_tokens=700,
         )
 
         reply = result.choices[0].message.content
@@ -114,19 +114,33 @@ def ask(request: ChatRequest):
         raise
 
     except APIError as error:
-        # Do not expose provider errors or secret keys.
+        status = getattr(error, "status_code", None)
+
         print(
-            f"Groq API error: "
-            f"{getattr(error, 'status_code', 'unknown')}"
+            f"Groq API error: HTTP {status}; "
+            f"{type(error).__name__}: {error}"
         )
+
+        if status == 401:
+            detail = "Groq rejected the API key. Check GROQ_API_KEY in Render."
+        elif status == 429:
+            detail = "Groq rate limit reached. Try again later."
+        elif status == 404:
+            detail = "The selected model is unavailable. Check Groq's model list."
+        else:
+            detail = (
+                f"Groq request failed (HTTP {status}). "
+                "Check the Render logs for details."
+            )
+
         raise HTTPException(
             status_code=502,
-            detail="The AI provider could not complete the request.",
+            detail=detail,
         )
 
     except Exception as error:
         print(f"Unexpected AI error: {type(error).__name__}")
         raise HTTPException(
             status_code=502,
-            detail="An unexpected AI error occurred.",
+            detail="Unexpected server error. Check the Render logs.",
         )
