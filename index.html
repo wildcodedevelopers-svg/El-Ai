@@ -4,655 +4,455 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#090615">
-<title>El,ai | ELHAM STUDIOS</title>
-
+<title>El-Ai | ELHAM STUDIOS</title>
 <style>
-:root {
-  --bg:#090615;
-  --purple:#a56bff;
-  --pink:#fa80ff;
-  --blue:#668dff;
-  --text:#f7f2ff;
-  --muted:#9d93b7;
-  --line:rgba(188,143,255,.19);
-  --lime:#c7ff83;
-}
-* { box-sizing:border-box; }
-html,body { margin:0; min-height:100%; background:var(--bg); }
-body {
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,sans-serif;
-  background:
-    radial-gradient(ellipse at 50% 19%,#28124d 0%,transparent 37%),
-    radial-gradient(ellipse at 5% 75%,#171039 0%,transparent 40%),
-    radial-gradient(ellipse at 95% 85%,#170d34 0%,transparent 36%),
-    var(--bg);
-}
-body::before {
-  content:""; position:fixed; inset:0; pointer-events:none; opacity:.14;
-  background-image:linear-gradient(#b38aff12 1px,transparent 1px),linear-gradient(90deg,#b38aff12 1px,transparent 1px);
-  background-size:38px 38px;
-  mask-image:linear-gradient(to bottom,black,transparent 90%);
-}
-button,textarea { font:inherit; }
-button { cursor:pointer; }
-button:disabled { cursor:wait; opacity:.5; }
-.app {
-  max-width:760px; height:100vh; height:100dvh; margin:auto;
-  display:flex; flex-direction:column; position:relative; overflow:hidden;
-}
-header {
-  display:flex; align-items:center; gap:11px; padding:12px 15px;
-  border-bottom:1px solid var(--line); background:#0b0715e8;
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  z-index:3; flex-shrink:0;
-}
-.logo {
-  width:49px; height:49px; flex-shrink:0; display:grid; place-items:center;
-  border-radius:15px; background:#10051f; border:1px solid #a56bff55;
-  box-shadow:0 0 18px #a56bff25; overflow:hidden;
-}
-.logo svg { width:43px; height:43px; filter:drop-shadow(0 0 4px #8f59ff); }
-.brand { flex:1; min-width:0; }
-.brand h1 { margin:0; font-size:19px; letter-spacing:1.5px; }
-.brand-subtitle { margin:3px 0 0; font-size:9px; letter-spacing:1.5px; color:#d5b5ff; }
-.brand-studio { margin:3px 0 0; font-size:8px; letter-spacing:2px; color:var(--muted); }
-.status { display:flex; align-items:center; gap:6px; font-size:9px; white-space:nowrap; color:#c5a9ff; }
-.status-dot { width:7px; height:7px; border-radius:50%; background:#b994ff; box-shadow:0 0 8px #b994ff; animation:statusPulse 2s ease-in-out infinite; }
-@keyframes statusPulse { 50% { opacity:.45; } }
-main { flex:1; min-height:0; display:flex; flex-direction:column; }
-.hero { flex-shrink:0; text-align:center; padding:5px 12px 0; }
-.eyebrow { margin:10px 0 0; color:#c29aff; font-size:9px; letter-spacing:3px; font-weight:700; }
-
-/* Animated energy core */
-.orb-stage {
-  height:190px; width:260px; max-width:100%; margin:0 auto;
-  position:relative; display:grid; place-items:center;
-  perspective:700px; isolation:isolate; cursor:pointer;
-  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-}
-.orb-stage:focus-visible { outline:2px solid var(--purple); outline-offset:-5px; border-radius:50%; }
-.orb-glow {
-  position:absolute; width:112px; height:112px; border-radius:50%;
-  background:radial-gradient(circle,#a56bff 0%,#6935c9 38%,transparent 72%);
-  filter:blur(26px); opacity:.42; animation:glowBreath 5s ease-in-out infinite;
-  pointer-events:none;
-}
-.energy-wave {
-  position:absolute; z-index:1; width:100px; height:100px;
-  border:1px solid rgba(165,107,255,.48); border-radius:50%;
-  opacity:0; transform:scale(.72); pointer-events:none;
-  animation:energyPulse 4.2s ease-out infinite;
-}
-.wave-two { border-color:rgba(250,128,255,.42); animation-delay:1.4s; }
-.wave-three { border-color:rgba(102,141,255,.46); animation-delay:2.8s; }
-.orb {
-  position:relative; z-index:2; width:88px; height:88px;
-  border-radius:43% 57% 62% 38% / 42% 40% 60% 58%;
-  background:
-    radial-gradient(ellipse at 32% 25%,#fff 0%,#f8d5ff 5%,transparent 24%),
-    radial-gradient(ellipse at 65% 68%,#fa63ff 0%,transparent 36%),
-    radial-gradient(ellipse at 30% 70%,#388dff 0%,transparent 42%),
-    conic-gradient(from 20deg,#4b2cff,#f26bff,#3420c7,#50dcff,#852dff,#4b2cff);
-  box-shadow:inset -10px -12px 20px #080315a8,inset 5px 4px 13px #ffe5ff66,0 0 16px #b46aff55,0 0 30px #a33bff25;
-  animation:livingCore 5s ease-in-out infinite; pointer-events:none;
-}
-.orb::before {
-  content:""; position:absolute; inset:-5px; border-radius:inherit;
-  background:conic-gradient(from 0deg,transparent,#cda1ff,#73eaff,transparent,#ff9cff,transparent);
-  filter:blur(9px); opacity:.42; animation:energyTurn 12s linear infinite;
-}
-.orb::after {
-  content:""; position:absolute; inset:9px;
-  border-radius:57% 43% 38% 62% / 48% 62% 38% 52%;
-  background:radial-gradient(ellipse at 35% 30%,#fff 0%,#f8caff 8%,transparent 30%),radial-gradient(ellipse at 65% 65%,#a24dff 0%,#5634ff 36%,transparent 70%);
-  mix-blend-mode:screen; filter:blur(5px); animation:innerFlow 4s ease-in-out infinite alternate;
-}
-.sound-field {
-  position:absolute; z-index:3; inset:0; display:flex; align-items:center;
-  justify-content:center; gap:5px; opacity:.28; pointer-events:none;
-  transition:opacity .25s ease;
-}
-.sound-field span {
-  width:3px; height:7px; border-radius:5px;
-  background:linear-gradient(to top,#668dff,#fa80ff);
-  box-shadow:0 0 6px rgba(165,107,255,.35);
-  animation:soundIdle 1.5s ease-in-out infinite;
-}
-.sound-field span:nth-child(2n) { animation-delay:.1s; }
-.sound-field span:nth-child(3n) { animation-delay:.2s; }
-.sound-field span:nth-child(4n) { animation-delay:.3s; }
-.sound-field span:nth-child(5n) { animation-delay:.4s; }
-
-@keyframes livingCore {
-  0%,100% { transform:scale(.94) rotate(-7deg); border-radius:43% 57% 62% 38% / 42% 40% 60% 58%; }
-  25% { transform:scale(1.03,.97) rotate(5deg); border-radius:58% 42% 45% 55% / 53% 35% 65% 47%; }
-  50% { transform:scale(1.08) rotate(12deg); border-radius:37% 63% 55% 45% / 39% 59% 41% 61%; }
-  75% { transform:scale(.98,1.04) rotate(-8deg); border-radius:61% 39% 36% 64% / 59% 43% 57% 41%; }
-}
-@keyframes glowBreath { 0%,100% { transform:scale(.85); opacity:.28; } 50% { transform:scale(1.2); opacity:.5; } }
-@keyframes energyTurn { to { transform:rotate(360deg); } }
-@keyframes innerFlow { from { transform:scale(.9) rotate(-12deg); } to { transform:scale(1.08) rotate(18deg); } }
-@keyframes energyPulse {
-  0% { transform:scale(.72); opacity:0; }
-  15% { opacity:.48; }
-  75% { opacity:.15; }
-  100% { transform:scale(2.15); opacity:0; }
-}
-@keyframes soundIdle { 0%,100% { height:5px; } 50% { height:12px; } }
-
-.orb-stage.listening .energy-wave {
-  animation-duration:1.8s; border-width:2px; border-color:rgba(199,255,131,.62);
-}
-.orb-stage.listening .orb {
-  box-shadow:inset -10px -12px 20px #080315a8,inset 5px 4px 13px #ffe5ff66,0 0 20px #c7ff8366,0 0 35px #c7ff8325;
-}
-.orb-stage.listening .orb-glow {
-  background:radial-gradient(circle,#c7ff83 0%,#7bba4c 38%,transparent 72%); opacity:.55;
-}
-.orb-stage.listening .sound-field,.orb-stage.speaking .sound-field { opacity:.95; }
-.orb-stage.listening .sound-field span { animation-duration:.45s; }
-.orb-stage.speaking .energy-wave { animation-duration:1.2s; border-color:rgba(250,128,255,.66); }
-.orb-stage.speaking .sound-field span { animation-duration:.28s; }
-.orb-stage:active .orb { filter:brightness(1.12); }
-
-.hero h2 { font-size:23px; line-height:1.3; letter-spacing:.5px; margin:-3px 0 6px; }
-.hero h2 span { background:linear-gradient(90deg,#d6a0ff,#ffb0ef,#8eabff); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.subtitle { margin:0; color:var(--muted); font-size:12px; }
-.mode-section { padding:12px 16px 8px; flex-shrink:0; }
-.section-label { font-size:9px; color:#a99abd; letter-spacing:2px; margin:0 0 9px 2px; }
-.modes { display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; padding:1px 1px 4px; }
-.modes::-webkit-scrollbar,.quick::-webkit-scrollbar { display:none; }
-.mode { flex-shrink:0; display:flex; align-items:center; gap:6px; padding:9px 12px; color:#c0b4d8; border:1px solid var(--line); border-radius:12px; background:#151027bb; font-size:11px; }
-.mode .symbol { font-size:13px; }
-.mode.active { color:#fff; border-color:#bd8aff99; background:linear-gradient(130deg,#6f38a84d,#4033a84d); }
-.chat { flex:1; min-height:60px; overflow-y:auto; padding:8px 16px 15px; scrollbar-width:thin; scrollbar-color:#493369 transparent; scroll-behavior:smooth; overscroll-behavior:contain; }
-.message { display:flex; margin:10px 0; animation:appear .22s ease-out; }
-.message.user { justify-content:flex-end; }
-.bubble { max-width:90%; padding:12px 14px; border:1px solid var(--line); border-radius:15px 15px 15px 4px; background:linear-gradient(145deg,#1a1430,#100c20); font-size:13px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; box-shadow:0 8px 22px #00000018; }
-.user .bubble { border-color:#b079ff65; border-radius:15px 15px 4px 15px; background:linear-gradient(135deg,#55328e,#39256a); }
-.bubble strong { color:#e4c5ff; }
-.typing { color:#d5a8ff; font-size:12px; animation:thinkingPulse 1.3s ease-in-out infinite alternate; }
-@keyframes thinkingPulse { from { opacity:.55; } to { opacity:1; } }
-@keyframes appear { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
-.quick { display:flex; gap:7px; overflow-x:auto; padding:8px 15px 11px; scrollbar-width:none; flex-shrink:0; }
-.quick button { flex-shrink:0; padding:8px 11px; border-radius:20px; border:1px solid var(--line); background:#160f27; color:#d8c8f4; font-size:10px; }
-.quick button:active,.mode:active { border-color:#c091ff; background:#392358; }
-.composer-wrap { padding:8px 13px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(180deg,transparent,#090615 20%); flex-shrink:0; }
-.composer { display:flex; align-items:flex-end; gap:7px; padding:8px; border:1px solid #7653a0; border-radius:19px; background:#120d21ed; box-shadow:0 0 20px #a56bff0a,inset 0 1px #ffffff08; }
-.composer:focus-within { border-color:#c091ff; box-shadow:0 0 20px #a56bff18; }
-#messageInput { flex:1; min-width:0; max-height:105px; resize:none; padding:10px 6px; outline:none; border:0; color:white; background:transparent; font-size:13px; line-height:1.5; }
-#messageInput::placeholder { color:#9485ae; }
-#voiceButton,#sendButton { width:42px; height:42px; flex-shrink:0; display:grid; place-items:center; border-radius:14px; color:white; }
-#voiceButton { border:1px solid #c7ff8344; background:#c7ff8310; color:var(--lime); transition:background .2s,border-color .2s; }
-#voiceButton svg { width:21px;height:21px; }
-#voiceButton.listening { background:#c7ff8325; border-color:var(--lime); animation:micPulse 1.2s ease-in-out infinite; }
-@keyframes micPulse { 50% { box-shadow:0 0 12px #c7ff8338; } }
-#sendButton { border:0; font-size:20px; background:linear-gradient(135deg,#d48cff,#9a5bff 52%,#676bff); box-shadow:0 0 16px #a56bff25,inset 0 1px #ffffff55; }
-.voice-hint { min-height:13px; text-align:center; color:#a8c97e; font-size:9px; padding-top:5px; }
-.footer { text-align:center; color:#77688f; font-size:9px; letter-spacing:1.5px; padding-top:7px; }
-button:focus-visible,textarea:focus-visible { outline:2px solid var(--pink); outline-offset:3px; }
-
-@media (max-height:730px) {
-  .eyebrow { margin-top:5px; }
-  .orb-stage { height:140px;width:230px; }
-  .orb { width:72px;height:72px; }
-  .hero h2 { font-size:19px; }
-  .mode-section { padding-top:8px; }
-  .subtitle { font-size:11px; }
-}
-@media (max-width:380px) {
-  header { gap:8px;padding:10px; }
-  .logo { width:43px;height:43px; }
-  .logo svg { width:38px;height:38px; }
-  .brand h1 { font-size:17px; }
-  .brand-subtitle { font-size:8px;letter-spacing:1px; }
-  .brand-studio { font-size:7px; }
-  .status { font-size:8px;gap:4px; }
-  .composer { gap:5px;padding:6px; }
-  #voiceButton,#sendButton { width:39px;height:39px; }
-}
-@media (min-width:600px) {
-  .orb-stage { height:210px; }
-  .chat { padding-left:28px;padding-right:28px; }
-}
-@media (prefers-reduced-motion:reduce) {
-  .orb,.orb::before,.orb::after,.orb-glow,.energy-wave,.sound-field span,
-  .status-dot,.typing,#voiceButton { animation:none !important; }
-}
+:root{--bg:#090615;--purple:#a56bff;--pink:#fa80ff;--blue:#668dff;--text:#f7f2ff;--muted:#9d93b7;--line:rgba(188,143,255,.19);--lime:#c7ff83}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% 19%,#28124d 0%,transparent 37%),radial-gradient(ellipse at 5% 75%,#171039 0%,transparent 40%),radial-gradient(ellipse at 95% 85%,#170d34 0%,transparent 36%),var(--bg)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(#b38aff12 1px,transparent 1px),linear-gradient(90deg,#b38aff12 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+.app{max-width:760px;height:100vh;height:100dvh;margin:auto;display:flex;flex-direction:column;position:relative;overflow:hidden}
+header{display:flex;align-items:center;gap:11px;padding:12px 15px;border-bottom:1px solid var(--line);background:#0b0715e8;backdrop-filter:blur(20px);z-index:3;flex-shrink:0}
+.logo{width:49px;height:49px;flex-shrink:0;display:grid;place-items:center;border-radius:15px;background:#10051f;border:1px solid #a56bff55;box-shadow:0 0 18px #a56bff25;overflow:hidden}
+.logo svg{width:43px;height:43px;filter:drop-shadow(0 0 4px #8f59ff)}
+.brand{flex:1;min-width:0}
+.brand h1{margin:0;font-size:19px;letter-spacing:1.5px}
+.brand-subtitle{margin:3px 0 0;font-size:9px;letter-spacing:1.5px;color:#d5b5ff}
+.brand-studio{margin:3px 0 0;font-size:8px;letter-spacing:2px;color:var(--muted)}
+.status{display:flex;align-items:center;gap:6px;font-size:9px;white-space:nowrap;color:#c5a9ff}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#b994ff;box-shadow:0 0 8px #b994ff;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+main{flex:1;min-height:0;display:flex;flex-direction:column}
+.hero{flex-shrink:0;text-align:center;padding:5px 12px 0}
+.eyebrow{margin:10px 0 0;color:#c29aff;font-size:9px;letter-spacing:3px;font-weight:700}
+.orb-stage{height:165px;width:260px;max-width:100%;margin:0 auto;position:relative;display:grid;place-items:center;perspective:700px;isolation:isolate;cursor:pointer;touch-action:manipulation}
+.orb-glow{position:absolute;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle,#a56bff,#6935c9 38%,transparent 72%);filter:blur(26px);opacity:.42;animation:glow 5s infinite;pointer-events:none}
+.energy-wave{position:absolute;z-index:1;width:100px;height:100px;border:1px solid #a56bff77;border-radius:50%;opacity:0;pointer-events:none;animation:wave 4.2s infinite}
+.wave-two{animation-delay:1.4s;border-color:#fa80ff66}.wave-three{animation-delay:2.8s;border-color:#668dff77}
+.orb{position:relative;z-index:2;width:88px;height:88px;border-radius:43% 57% 62% 38%/42% 40% 60% 58%;background:radial-gradient(ellipse at 32% 25%,#fff,transparent 24%),radial-gradient(ellipse at 65% 68%,#fa63ff,transparent 36%),radial-gradient(ellipse at 30% 70%,#388dff,transparent 42%),conic-gradient(#4b2cff,#f26bff,#3420c7,#50dcff,#852dff,#4b2cff);box-shadow:inset -10px -12px 20px #080315a8,inset 5px 4px 13px #ffe5ff66,0 0 30px #a33bff55;animation:core 5s ease-in-out infinite;pointer-events:none}
+.orb:before{content:"";position:absolute;inset:-5px;border-radius:inherit;background:conic-gradient(transparent,#cda1ff,#73eaff,transparent,#ff9cff,transparent);filter:blur(9px);opacity:.42;animation:turn 12s linear infinite}
+.orb:after{content:"";position:absolute;inset:9px;border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#fff,transparent 30%),radial-gradient(ellipse at 65% 65%,#a24dff,#5634ff 36%,transparent 70%);filter:blur(5px);animation:inner 4s infinite alternate}
+.sound-field{position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;opacity:.28;pointer-events:none}
+.sound-field span{width:3px;height:7px;border-radius:5px;background:linear-gradient(#668dff,#fa80ff);animation:sound 1.5s infinite}
+.sound-field span:nth-child(3n){animation-delay:.2s}
+@keyframes core{0%,100%{transform:scale(.94) rotate(-7deg)}50%{transform:scale(1.08) rotate(12deg)}}
+@keyframes glow{50%{transform:scale(1.2);opacity:.5}}
+@keyframes turn{to{transform:rotate(360deg)}}
+@keyframes inner{to{transform:scale(1.08) rotate(18deg)}}
+@keyframes wave{0%{transform:scale(.72);opacity:0}15%{opacity:.48}100%{transform:scale(2.15);opacity:0}}
+@keyframes sound{50%{height:12px}}
+.orb-stage.listening .orb-glow{background:radial-gradient(circle,#c7ff83,#7bba4c 38%,transparent 72%);opacity:.7}
+.orb-stage.listening .energy-wave{animation-duration:1.8s;border-color:#c7ff83}
+.orb-stage.speaking .sound-field{opacity:1}
+.hero h2{font-size:23px;line-height:1.3;letter-spacing:.5px;margin:-3px 0 6px}
+.hero h2 span{background:linear-gradient(90deg,#d6a0ff,#ffb0ef,#8eabff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{margin:0;color:var(--muted);font-size:12px}
+.mode-section{padding:12px 16px 8px;flex-shrink:0}
+.section-label{font-size:9px;color:#a99abd;letter-spacing:2px;margin:0 0 9px 2px}
+.modes{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 4px}
+.mode{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:9px 12px;color:#c0b4d8;border:1px solid var(--line);border-radius:12px;background:#151027bb;font-size:11px}
+.mode.active{color:#fff;border-color:#bd8aff99;background:linear-gradient(130deg,#6f38a84d,#4033a84d)}
+.chat{flex:1;min-height:60px;overflow-y:auto;padding:8px 16px 15px;scrollbar-width:thin;scrollbar-color:#493369 transparent;overscroll-behavior:contain}
+.message{display:flex;margin:10px 0;animation:appear .22s ease-out}
+.message.user{justify-content:flex-end}
+.bubble{max-width:90%;padding:12px 14px;border:1px solid var(--line);border-radius:15px 15px 15px 4px;background:linear-gradient(145deg,#1a1430,#100c20);font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.user .bubble{border-color:#b079ff65;border-radius:15px 15px 4px 15px;background:linear-gradient(135deg,#55328e,#39256a)}
+.typing{color:#d5a8ff;animation:pulse 1.3s infinite alternate}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.quick{display:flex;gap:7px;overflow-x:auto;padding:8px 15px 11px;scrollbar-width:none;flex-shrink:0}
+.quick button,.small-button{flex-shrink:0;padding:8px 11px;border-radius:20px;border:1px solid var(--line);background:#160f27;color:#d8c8f4;font-size:10px}
+.composer-wrap{padding:8px 13px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,#090615 20%);flex-shrink:0}
+.composer{display:flex;align-items:flex-end;gap:7px;padding:8px;border:1px solid #7653a0;border-radius:19px;background:#120d21ed}
+#messageInput{flex:1;min-width:0;max-height:105px;resize:none;padding:10px 6px;outline:none;border:0;color:white;background:transparent;font-size:13px;line-height:1.5}
+#messageInput::placeholder{color:#9485ae}
+#voiceButton,#sendButton{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:14px;color:white}
+#voiceButton{border:1px solid #c7ff8344;background:#c7ff8310;color:var(--lime)}
+#sendButton{border:0;font-size:20px;background:linear-gradient(135deg,#d48cff,#9a5bff 52%,#676bff)}
+.voice-hint{min-height:13px;text-align:center;color:#a8c97e;font-size:9px;padding-top:5px}
+.footer{text-align:center;color:#77688f;font-size:9px;letter-spacing:1.5px;padding-top:7px}
+.auth-screen{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 15%,#28124d,#090615 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.auth-card{width:100%;max-width:390px;padding:25px 21px;border:1px solid #a56bff55;border-radius:24px;background:#100b20ed;box-shadow:0 0 45px #8b4cff18}
+.auth-card h2{margin:0 0 7px;font-size:26px;text-align:center}
+.auth-card p{font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+.auth-card label{display:block;font-size:11px;color:#d7c5f4;margin:14px 0 6px}
+.auth-card input{width:100%;padding:13px;border-radius:12px;border:1px solid #6c4a91;background:#090615;color:white;outline:none}
+.auth-card input:focus{border-color:#c091ff}
+.auth-submit{width:100%;padding:13px;margin-top:17px;border:0;border-radius:12px;background:linear-gradient(135deg,#d48cff,#7951ff);color:white;font-weight:700}
+.auth-switch{width:100%;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:transparent;color:#d9bdff}
+.auth-error{color:#ff9baa!important;min-height:18px}
+.account-tools{display:flex;gap:6px;align-items:center}
+.account-tools button{padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:#160f27;color:#d8c8f4;font-size:10px}
+.memory-panel{position:fixed;inset:0;z-index:15;background:#05030bdc;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.memory-panel.open{display:flex}
+.memory-card{width:100%;max-width:650px;max-height:75dvh;overflow:auto;border:1px solid #a56bff66;border-radius:20px;background:#100b20;padding:18px}
+.memory-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.memory-head h3{margin:0}
+.memory-head button{border:1px solid var(--line);background:#160f27;color:white;border-radius:10px;padding:8px 12px}
+.memory-form{display:flex;gap:7px;margin:12px 0}
+.memory-form input{flex:1;min-width:0;background:#090615;color:white;border:1px solid #6c4a91;border-radius:10px;padding:11px}
+.memory-form button{border:0;border-radius:10px;padding:10px;background:#8050ce;color:white}
+.memory-item{padding:11px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.memory-item button{float:right;margin-left:8px;background:transparent;border:1px solid #9b5570;color:#ffb6c4;border-radius:8px;padding:4px 7px}
+.hidden{display:none!important}
+@media(max-height:730px){.eyebrow{margin-top:4px}.orb-stage{height:125px;width:230px}.orb{width:72px;height:72px}.hero h2{font-size:19px}.mode-section{padding-top:7px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<div class="app">
+
+<div class="auth-screen" id="authScreen">
+  <form class="auth-card" id="authForm">
+    <h2>El-Ai <span style="color:#c9a0ff">✦</span></h2>
+    <p>YOUR PERSONAL INTELLIGENCE<br>Created by ELHAM STUDIOS</p>
+    <div id="registerFields" class="hidden">
+      <label for="authName">Your preferred name</label>
+      <input id="authName" autocomplete="name" maxlength="80" placeholder="What should El-Ai call you?">
+    </div>
+    <label for="authEmail">Email address</label>
+    <input id="authEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+    <label for="authPassword">Password</label>
+    <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="At least 8 characters">
+    <button class="auth-submit" id="authSubmit" type="submit">Sign in</button>
+    <button class="auth-switch" id="authSwitch" type="button">New to El-Ai? Create account</button>
+    <p id="authError" class="auth-error" role="alert"></p>
+    <p style="font-size:10px">Use a unique password. Your account is stored on the El-Ai backend.</p>
+  </form>
+</div>
+
+<div class="app" id="app">
 <header>
   <div class="logo" aria-label="EL Personal Assistant logo">
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="robotGlow" x1="10" y1="70" x2="90" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
-      <path d="M50 23V12" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="50" cy="9" r="6" fill="url(#robotGlow)"/>
+      <defs><linearGradient id="robotGlow" x1="10" y1="70" x2="90" y2="20"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
+      <path d="M50 23V12" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="9" r="6" fill="url(#robotGlow)"/>
       <rect x="17" y="25" width="66" height="53" rx="25" stroke="url(#robotGlow)" stroke-width="5"/>
-      <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/>
-      <rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
-      <circle cx="37" cy="49" r="5.5" fill="#a05bff"/>
-      <circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
+      <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/><rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
+      <circle cx="37" cy="49" r="5.5" fill="#a05bff"/><circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
       <path d="M35 70Q50 79 65 70" stroke="url(#robotGlow)" stroke-width="4" stroke-linecap="round"/>
       <path d="M30 79Q17 82 12 94M70 79Q83 82 88 94" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/>
-      <path d="M43 81Q50 86 57 81" stroke="url(#robotGlow)" stroke-width="4" stroke-linecap="round"/>
     </svg>
   </div>
   <div class="brand">
-    <h1>El-Ai</h1>
-    <p class="brand-subtitle">EL PERSONAL ASSISTANT</p>
-    <p class="brand-studio">ELHAM STUDIOS</p>
+    <h1>El-Ai</h1><p class="brand-subtitle">EL PERSONAL ASSISTANT</p><p class="brand-studio">ELHAM STUDIOS</p>
+  </div>
+  <div class="account-tools">
+    <button id="memoryButton" type="button">Memory</button>
+    <button id="logoutButton" type="button">Sign out</button>
   </div>
   <div class="status"><span class="status-dot"></span><span id="connectionStatus">CONNECTING</span></div>
 </header>
 
 <main>
-  <section class="hero">
-    <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
-    <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap the orb to speak to El,ai" title="Tap to speak">
-      <div class="energy-wave wave-one"></div>
-      <div class="energy-wave wave-two"></div>
-      <div class="energy-wave wave-three"></div>
-      <div class="orb-glow"></div>
-      <div class="orb"></div>
-      <div class="sound-field" id="soundField">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-    </div>
-    <h2>How can I help you <span>today?</span></h2>
-    <p class="subtitle">Your vision. Your ideas. Let's make them happen.</p>
-  </section>
-
-  <section class="mode-section">
-    <p class="section-label">CHOOSE YOUR MODE</p>
-    <div class="modes" id="modes">
-      <button class="mode active" type="button" data-mode="Default"><span class="symbol">✦</span> Default</button>
-      <button class="mode" type="button" data-mode="Historian"><span class="symbol">◷</span> Historian</button>
-      <button class="mode" type="button" data-mode="Storyteller"><span class="symbol">✎</span> Storyteller</button>
-      <button class="mode" type="button" data-mode="Data Scientist"><span class="symbol">⌘</span> Data Scientist</button>
-    </div>
-  </section>
-
-  <section class="chat" id="chat" aria-live="polite">
-    <div class="message assistant"><div class="bubble">Welcome back, Boss ✨
-
-I'm <strong>El Ai</strong>, your personal assistant created by ELHAM STUDIOS.
-
-Choose a mode or simply ask me anything. What are we creating today?</div></div>
-  </section>
-
-  <div class="quick">
-    <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El,ai</button>
-    <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
-    <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
+<section class="hero">
+  <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
+  <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap the orb to speak to El-Ai">
+    <div class="energy-wave wave-one"></div><div class="energy-wave wave-two"></div><div class="energy-wave wave-three"></div>
+    <div class="orb-glow"></div><div class="orb"></div>
+    <div class="sound-field"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
   </div>
+  <h2>How can I help you <span>today?</span></h2>
+  <p class="subtitle" id="greeting">Your vision. Your ideas. Let's make them happen.</p>
+</section>
 
-  <div class="composer-wrap">
-    <form class="composer" id="chatForm">
-      <textarea id="messageInput" rows="1" maxlength="8000" placeholder="Ask me anything, Boss..." aria-label="Message El,ai" required></textarea>
-      <button id="voiceButton" type="button" aria-label="Start voice input" title="Speak to El,ai">
-        <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M8.5 21h7"></path></svg>
-      </button>
-      <button id="sendButton" type="submit" aria-label="Send message">↑</button>
-    </form>
-    <div class="voice-hint" id="voiceHint" aria-live="polite">Tap the microphone to speak</div>
-    <div class="footer">EL,AI · AN ELHAM STUDIOS CREATION</div>
+<section class="mode-section">
+  <p class="section-label">CHOOSE YOUR MODE</p>
+  <div class="modes" id="modes">
+    <button class="mode active" type="button" data-mode="Default">✦ Default</button>
+    <button class="mode" type="button" data-mode="Historian">◷ Historian</button>
+    <button class="mode" type="button" data-mode="Storyteller">✎ Storyteller</button>
+    <button class="mode" type="button" data-mode="Data Scientist">⌘ Data Scientist</button>
   </div>
+</section>
+
+<section class="chat" id="chat" aria-live="polite"></section>
+
+<div class="quick">
+  <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El-Ai</button>
+  <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
+  <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
+</div>
+
+<div class="composer-wrap">
+  <form class="composer" id="chatForm">
+    <textarea id="messageInput" rows="1" maxlength="8000" placeholder="Ask me anything, Boss..." aria-label="Message El-Ai" required></textarea>
+    <button id="voiceButton" type="button" aria-label="Start voice input" title="Speak to El-Ai">🎙</button>
+    <button id="sendButton" type="submit" aria-label="Send message">↑</button>
+  </form>
+  <div class="voice-hint" id="voiceHint" aria-live="polite">Tap the microphone to speak</div>
+  <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
+</div>
 </main>
+</div>
+
+<div class="memory-panel" id="memoryPanel">
+  <div class="memory-card">
+    <div class="memory-head"><h3>Your saved memories</h3><button id="closeMemory" type="button">Close</button></div>
+    <p style="font-size:11px;color:#9d93b7">Only your signed-in account can access these memories. Saved memories may be included in future AI replies.</p>
+    <form class="memory-form" id="memoryForm"><input id="memoryInput" maxlength="3000" required placeholder="Something El-Ai should remember"><button type="submit">Save</button></form>
+    <div id="memoryList"></div>
+  </div>
 </div>
 
 <script>
 (() => {
-  "use strict";
+"use strict";
 
-  const API_BASE = "https://elai-backend.onrender.com";
-  const chat = document.getElementById("chat");
-  const form = document.getElementById("chatForm");
-  const input = document.getElementById("messageInput");
-  const sendButton = document.getElementById("sendButton");
-  const voiceButton = document.getElementById("voiceButton");
-  const micIcon = document.getElementById("micIcon");
-  const voiceHint = document.getElementById("voiceHint");
-  const statusText = document.getElementById("connectionStatus");
-  const orbStage = document.getElementById("orbStage");
+const API_BASE="https://elai-backend.onrender.com";
+const $=id=>document.getElementById(id);
+const chat=$("chat"),form=$("chatForm"),input=$("messageInput");
+const sendButton=$("sendButton"),voiceButton=$("voiceButton");
+const voiceHint=$("voiceHint"),statusText=$("connectionStatus");
+const orbStage=$("orbStage"),authScreen=$("authScreen");
+let token="",currentUser=null,busy=false,selectedMode="Default";
+let recognition=null,isListening=false,manualStop=false,finalTranscript="";
+let voiceRequest=false,registerMode=false,audioContext=null;
 
-  let busy = false;
-  let selectedMode = "Default";
-  let recognition = null;
-  let isListening = false;
-  let manualStop = false;
-  let finalTranscript = "";
-  let voiceRequest = false;
-  let audioContext = null;
+const modeInstructions={
+ "Default":"",
+ "Historian":"Respond as a careful history expert. Distinguish established facts from disputed interpretations.",
+ "Storyteller":"Use vivid, engaging storytelling when appropriate, while remaining accurate for factual questions.",
+ "Data Scientist":"Approach the request analytically. Explain evidence, assumptions, numbers, and limitations where relevant."
+};
 
-  const modeInstructions = {
-    "Default": "",
-    "Historian": "Respond as a careful history expert. Distinguish established facts from disputed interpretations.",
-    "Storyteller": "Use vivid, engaging storytelling when appropriate, while remaining accurate for factual questions.",
-    "Data Scientist": "Approach the request analytically. Explain evidence, assumptions, numbers, and limitations where relevant."
-  };
+function setStatus(text,color="#c5a9ff"){statusText.textContent=text;statusText.style.color=color}
+function setHint(text){voiceHint.textContent=text}
+function cleanForSpeech(text){
+ return String(text||"")
+  .replace(/```[\s\S]*?```/g,"I've omitted a code block.")
+  .replace(/https?:\/\/\S+/g,"a web link")
+  .replace(/[*_#>`~|\\^]/g,"")
+  .replace(/[^\p{L}\p{N}\s.,!?;:'"()\-]/gu," ")
+  .replace(/[ \t]{2,}/g," ")
+  .replace(/\n{3,}/g,"\n\n").trim();
+}
+function authHeaders(extra={}){
+ return {...extra,Authorization:"Bearer "+token};
+}
+async function api(path,options={}){
+ const headers={...(options.headers||{})};
+ if(token)headers.Authorization="Bearer "+token;
+ const response=await fetch(API_BASE+path,{...options,headers});
+ let data={};
+ try{data=await response.json()}catch(_){}
+ if(!response.ok){
+  if(response.status===401&&token){signOut(false);showAuth("Your session expired. Please sign in again.")}
+  throw new Error(typeof data.detail==="string"?data.detail:"Request failed ("+response.status+").");
+ }
+ return data;
+}
+function showAuth(message=""){
+ authScreen.classList.remove("hidden");
+ $("authError").textContent=message;
+}
+function hideAuth(){authScreen.classList.add("hidden")}
+function setRegisterMode(value){
+ registerMode=value;
+ $("registerFields").classList.toggle("hidden",!value);
+ $("authName").required=value;
+ $("authPassword").autocomplete=value?"new-password":"current-password";
+ $("authSubmit").textContent=value?"Create account":"Sign in";
+ $("authSwitch").textContent=value?"Already have an account? Sign in":"New to El-Ai? Create account";
+ $("authError").textContent="";
+}
+$("authSwitch").addEventListener("click",()=>setRegisterMode(!registerMode));
 
-  function setStatus(text, color) {
-    statusText.textContent = text;
-    statusText.style.color = color;
+function addMessage(text,role){
+ const row=document.createElement("div");row.className="message "+role;
+ const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
+ row.appendChild(bubble);chat.appendChild(row);chat.scrollTop=chat.scrollHeight;return row;
+}
+function welcome(){
+ chat.replaceChildren();
+ addMessage("Welcome, Boss "+currentUser.name+".\n\nI'm El-Ai, your personal assistant created by ELHAM STUDIOS.\n\nYour account is connected. Ask me anything, or tap the orb to speak.","assistant");
+ $("greeting").textContent="Ready when you are, Boss "+currentUser.name+".";
+}
+async function establishSession(data){
+ if(!data.token||!data.user||!data.user.name)throw new Error("The server did not return a valid account session.");
+ token=data.token;currentUser=data.user;
+ try{sessionStorage.setItem("elai_session",token)}catch(_){}
+ hideAuth();welcome();setStatus("AI ONLINE");
+}
+async function restoreSession(){
+ try{token=sessionStorage.getItem("elai_session")||""}catch(_){token=""}
+ if(!token){showAuth();return}
+ try{
+  const data=await api("/auth/me");
+  currentUser=data.user;hideAuth();welcome();setStatus("AI ONLINE");
+ }catch(_){token="";currentUser=null;try{sessionStorage.removeItem("elai_session")}catch(__){}showAuth()}
+}
+$("authForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const button=$("authSubmit");button.disabled=true;$("authError").textContent="";
+ const email=$("authEmail").value.trim().toLowerCase();
+ const password=$("authPassword").value;
+ try{
+  let data;
+  if(registerMode){
+   const name=$("authName").value.trim();
+   if(!name)throw new Error("Enter your preferred name.");
+   data=await api("/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,name,password})});
+  }else{
+   data=await api("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})});
   }
-  function setVoiceHint(text) { voiceHint.textContent = text; }
+  await establishSession(data);
+ }catch(error){$("authError").textContent=error.message||"Could not sign in. Try again."}
+ finally{button.disabled=false}
+});
 
-  function playWakeSound() {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!audioContext) audioContext = new AudioCtx();
-      if (audioContext.state === "suspended") audioContext.resume();
+function signOut(showMessage=true){
+ token="";currentUser=null;
+ try{sessionStorage.removeItem("elai_session")}catch(_){}
+ if("speechSynthesis" in window)window.speechSynthesis.cancel();
+ $("memoryPanel").classList.remove("open");chat.replaceChildren();
+ showAuth(showMessage?"You have signed out.":"");
+}
+$("logoutButton").addEventListener("click",()=>signOut(true));
 
-      [440,660,880].forEach((frequency,index) => {
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        const start = audioContext.currentTime + index * .075;
-        oscillator.type = "sine";
-        oscillator.frequency.value = frequency;
-        gain.gain.setValueAtTime(.0001,start);
-        gain.gain.exponentialRampToValueAtTime(.055,start+.025);
-        gain.gain.exponentialRampToValueAtTime(.0001,start+.16);
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-        oscillator.start(start);
-        oscillator.stop(start+.17);
-      });
-    } catch (_) {}
+function getPreferredVoice(){
+ if(!("speechSynthesis" in window))return null;
+ const voices=window.speechSynthesis.getVoices();
+ const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));
+ return english.find(v=>/en-ZA/i.test(v.lang))||english.find(v=>/en-GB/i.test(v.lang))||english[0]||null;
+}
+function speakText(text){
+ if(!("speechSynthesis" in window)||!voiceRequest){voiceRequest=false;return}
+ window.speechSynthesis.cancel();
+ const clean=cleanForSpeech(text);if(!clean){voiceRequest=false;return}
+ const utterance=new SpeechSynthesisUtterance(clean);
+ utterance.lang="en-ZA";utterance.rate=.94;utterance.pitch=.95;utterance.volume=1;
+ const voice=getPreferredVoice();if(voice)utterance.voice=voice;
+ orbStage.classList.add("speaking");
+ utterance.onend=utterance.onerror=()=>{orbStage.classList.remove("speaking");setHint("Tap the microphone to speak")};
+ window.speechSynthesis.speak(utterance);setHint("El-Ai is speaking...");
+ voiceRequest=false;
+}
+function updateListeningUI(value){
+ isListening=value;voiceButton.classList.toggle("listening",value);orbStage.classList.toggle("listening",value);
+ voiceButton.textContent=value?"■":"🎙";
+ voiceButton.setAttribute("aria-label",value?"Stop voice input":"Start voice input");
+}
+function stopListening(manual=true){
+ manualStop=manual;if(recognition&&isListening){try{recognition.stop()}catch(_){}}
+ updateListeningUI(false);if(!busy)setHint("Tap the microphone to speak");
+}
+function setupRecognition(){
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){setHint("Voice input isn't supported in this browser.");voiceButton.disabled=true;return false}
+ recognition=new SpeechRecognition();recognition.lang="en-ZA";recognition.continuous=false;recognition.interimResults=true;recognition.maxAlternatives=1;
+ recognition.onstart=()=>{updateListeningUI(true);setHint("Listening... speak now")};
+ recognition.onresult=event=>{
+  let interim="";finalTranscript="";
+  for(let i=event.resultIndex;i<event.results.length;i++){
+   const phrase=event.results[i][0].transcript;
+   if(event.results[i].isFinal)finalTranscript+=phrase;else interim+=phrase;
   }
+  input.value=(finalTranscript||interim).trim();
+  input.style.height="auto";input.style.height=Math.min(input.scrollHeight,105)+"px";
+ };
+ recognition.onerror=event=>{
+  updateListeningUI(false);
+  if(event.error==="not-allowed"||event.error==="service-not-allowed")setHint("Allow microphone access in browser settings.");
+  else if(event.error==="no-speech")setHint("No speech detected. Try again.");
+  else if(event.error!=="aborted")setHint("Voice input failed. Check your connection.");
+ };
+ recognition.onend=()=>{
+  updateListeningUI(false);
+  if(manualStop){manualStop=false;return}
+  const spoken=(finalTranscript||input.value).trim();
+  if(spoken){input.value=spoken;voiceRequest=true;sendMessage(spoken)}else setHint("Tap the microphone to speak");
+ };
+ return true;
+}
+function startListening(){
+ if(busy||!token)return;
+ if(!recognition&&!setupRecognition())return;
+ if("speechSynthesis" in window)window.speechSynthesis.cancel();
+ orbStage.classList.remove("speaking");finalTranscript="";manualStop=false;input.value="";
+ try{recognition.start()}catch(_){setHint("Wait a moment, then try again.")}
+}
+function toggleVoice(){if(busy||!token)return;if(isListening)stopListening(true);else startListening()}
+voiceButton.addEventListener("click",toggleVoice);
+orbStage.addEventListener("click",toggleVoice);
+orbStage.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();toggleVoice()}});
 
-  function updateListeningUI(listening) {
-    isListening = listening;
-    voiceButton.classList.toggle("listening",listening);
-    orbStage.classList.toggle("listening",listening);
-    voiceButton.setAttribute("aria-label",listening ? "Stop voice input" : "Start voice input");
-    micIcon.innerHTML = listening
-      ? '<rect x="6" y="6" width="12" height="12" rx="2"></rect>'
-      : '<rect x="9" y="2.5" width="6" height="12" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M8.5 21h7"></path>';
-  }
+document.querySelectorAll(".mode").forEach(button=>button.addEventListener("click",()=>{
+ document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"));
+ button.classList.add("active");selectedMode=button.dataset.mode;
+ input.placeholder=selectedMode==="Default"?"Ask me anything, Boss...":"Ask "+selectedMode+", Boss...";
+}));
 
-  function stopListening(manual = true) {
-    manualStop = manual;
-    if (recognition && isListening) {
-      try { recognition.stop(); } catch (_) {}
-    }
-    updateListeningUI(false);
-    if (!busy) setVoiceHint("Tap the microphone to speak");
-  }
+async function sendMessage(rawText){
+ const text=rawText.trim();if(!text||busy||!token)return;
+ if(isListening)stopListening(true);
+ busy=true;sendButton.disabled=true;voiceButton.disabled=true;input.disabled=true;
+ addMessage(text,"user");input.value="";input.style.height="auto";
+ const pending=addMessage("El-Ai is thinking, Boss...","assistant");
+ const bubble=pending.querySelector(".bubble");bubble.classList.add("typing");
+ const instructions=modeInstructions[selectedMode]||"";
+ const message=instructions?"For this response, follow this approach: "+instructions+"\n\nUser's message: "+text:text;
+ try{
+  setStatus("THINKING");
+  const data=await api("/ask",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({message})});
+  if(typeof data.reply!=="string"||!data.reply.trim())throw new Error("The server returned no reply.");
+  bubble.textContent=data.reply;setStatus("AI ONLINE");
+  if(voiceRequest)speakText(data.reply);
+ }catch(error){
+  bubble.textContent="Sorry, Boss "+(currentUser?.name||"")+". "+(error.message||"I couldn't get a reply.");
+  setStatus("REQUEST FAILED","#ff9baa");voiceRequest=false;
+ }finally{
+  bubble.classList.remove("typing");busy=false;sendButton.disabled=false;voiceButton.disabled=false;input.disabled=false;chat.scrollTop=chat.scrollHeight;
+ }
+}
+form.addEventListener("submit",event=>{event.preventDefault();if(isListening)stopListening(true);voiceRequest=false;sendMessage(input.value)});
+input.addEventListener("input",()=>{input.style.height="auto";input.style.height=Math.min(input.scrollHeight,105)+"px"});
+input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){event.preventDefault();form.requestSubmit()}});
+document.querySelectorAll("[data-prompt]").forEach(button=>button.addEventListener("click",()=>{voiceRequest=false;sendMessage(button.dataset.prompt)}));
 
-  function getPreferredVoice() {
-    if (!("speechSynthesis" in window)) return null;
-    const voices = window.speechSynthesis.getVoices();
-    const english = voices.filter(v => /^en(-|_)/i.test(v.lang));
-    return english.find(v => /male|daniel|david|james|mark|guy|alex/i.test(v.name))
-      || english.find(v => /en-ZA/i.test(v.lang))
-      || english.find(v => /en-GB/i.test(v.lang))
-      || english[0] || null;
-  }
-
-  function speakText(text) {
-    if (!("speechSynthesis" in window) || !voiceRequest) {
-      voiceRequest = false;
-      return;
-    }
-    window.speechSynthesis.cancel();
-
-    const cleanText = text
-      .replace(/```[\s\S]*?```/g," Code omitted. ")
-      .replace(/https?:\/\/\S+/g,"link")
-      .replace(/[*_#>`]/g,"")
-      .trim();
-
-    if (!cleanText) {
-      voiceRequest = false;
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = "en-ZA";
-    utterance.rate = .94;
-    utterance.pitch = .9;
-    utterance.volume = 1;
-    const voice = getPreferredVoice();
-    if (voice) utterance.voice = voice;
-
-    orbStage.classList.add("speaking");
-    utterance.onend = () => {
-      orbStage.classList.remove("speaking");
-      voiceRequest = false;
-      setVoiceHint("Tap the microphone to speak");
-    };
-    utterance.onerror = () => {
-      orbStage.classList.remove("speaking");
-      voiceRequest = false;
-      setVoiceHint("Tap the microphone to speak");
-    };
-
-    window.speechSynthesis.speak(utterance);
-    setVoiceHint("El,ai is speaking...");
-    voiceRequest = false;
-  }
-
-  function setupRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setVoiceHint("Voice input isn't supported in this browser.");
-      voiceButton.disabled = true;
-      return false;
-    }
-
-    recognition = new SpeechRecognition();
-    recognition.lang = "en-ZA";
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      updateListeningUI(true);
-      setVoiceHint("Listening... speak now");
-    };
-
-    recognition.onresult = event => {
-      let interim = "";
-      finalTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) finalTranscript += transcript;
-        else interim += transcript;
-      }
-      if (finalTranscript.trim()) input.value = finalTranscript.trim();
-      else if (interim.trim()) input.value = interim.trim();
-      input.style.height = "auto";
-      input.style.height = Math.min(input.scrollHeight,105) + "px";
-    };
-
-    recognition.onerror = event => {
-      updateListeningUI(false);
-      if (event.error === "not-allowed" || event.error === "service-not-allowed")
-        setVoiceHint("Allow microphone access in your browser settings.");
-      else if (event.error === "no-speech")
-        setVoiceHint("No speech detected. Tap the microphone to try again.");
-      else if (event.error !== "aborted")
-        setVoiceHint("Voice input failed. Check your connection and try again.");
-    };
-
-    recognition.onend = () => {
-      updateListeningUI(false);
-      if (manualStop) {
-        manualStop = false;
-        if (!busy) setVoiceHint("Tap the microphone to speak");
-        return;
-      }
-      const spokenText = finalTranscript.trim() || input.value.trim();
-      if (spokenText) {
-        input.value = spokenText;
-        voiceRequest = true;
-        sendMessage(spokenText);
-      } else if (!busy) {
-        setVoiceHint("Tap the microphone to speak");
-      }
-    };
-    return true;
-  }
-
-  function startListening() {
-    if (busy) return;
-    if (!recognition && !setupRecognition()) return;
-    if (!recognition) return;
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    orbStage.classList.remove("speaking");
-    finalTranscript = "";
-    manualStop = false;
-    input.value = "";
-    try {
-      playWakeSound();
-      recognition.start();
-    } catch (_) {
-      setVoiceHint("Please wait a moment, then try the microphone again.");
-    }
-  }
-
-  function toggleOrbVoice() {
-    if (busy) return;
-    if (isListening) stopListening(true);
-    else startListening();
-  }
-  voiceButton.addEventListener("click",toggleOrbVoice);
-  orbStage.addEventListener("click",toggleOrbVoice);
-  orbStage.addEventListener("keydown",event => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleOrbVoice();
-    }
+async function openMemories(){
+ if(!token)return;
+ $("memoryPanel").classList.add("open");$("memoryList").textContent="Loading memories...";
+ try{await loadMemories()}catch(error){$("memoryList").textContent=error.message}
+}
+async function loadMemories(){
+ const data=await api("/memory");
+ const list=$("memoryList");list.replaceChildren();
+ if(!data.memories||!data.memories.length){list.textContent="No saved memories yet.";return}
+ data.memories.forEach(memory=>{
+  const item=document.createElement("div");item.className="memory-item";
+  const content=document.createElement("span");content.textContent=memory.content;
+  const remove=document.createElement("button");remove.type="button";remove.textContent="Delete";
+  remove.addEventListener("click",async()=>{
+   remove.disabled=true;
+   try{await api("/memory/"+encodeURIComponent(memory.id),{method:"DELETE"});await loadMemories()}
+   catch(error){remove.disabled=false;alert(error.message)}
   });
+  item.append(content,remove);list.appendChild(item);
+ });
+}
+$("memoryButton").addEventListener("click",openMemories);
+$("closeMemory").addEventListener("click",()=>$("memoryPanel").classList.remove("open"));
+$("memoryPanel").addEventListener("click",event=>{if(event.target===$("memoryPanel"))$("memoryPanel").classList.remove("open")});
+$("memoryForm").addEventListener("submit",async event=>{
+ event.preventDefault();const field=$("memoryInput"),content=field.value.trim();if(!content)return;
+ const button=$("memoryForm").querySelector("button");button.disabled=true;
+ try{await api("/memory",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content})});field.value="";await loadMemories()}
+ catch(error){alert(error.message)}
+ finally{button.disabled=false}
+});
 
-  document.querySelectorAll(".mode").forEach(button => {
-    button.addEventListener("click",() => {
-      document.querySelectorAll(".mode").forEach(item => item.classList.remove("active"));
-      button.classList.add("active");
-      selectedMode = button.dataset.mode;
-      input.placeholder = selectedMode === "Default"
-        ? "Ask me anything, Boss..."
-        : "Ask " + selectedMode + ", Boss...";
-    });
-  });
-
-  function addMessage(text,role) {
-    const row = document.createElement("div");
-    row.className = "message " + role;
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = text;
-    row.appendChild(bubble);
-    chat.appendChild(row);
-    chat.scrollTop = chat.scrollHeight;
-    return row;
-  }
-
-  async function checkConnection() {
-    try {
-      const response = await fetch(API_BASE + "/health");
-      if (!response.ok) throw new Error("Backend unavailable");
-      const data = await response.json();
-      if (data.ai_configured) setStatus("AI ONLINE","#c5a9ff");
-      else setStatus("KEY MISSING","#ffd08a");
-    } catch (_) {
-      setStatus("OFFLINE","#ff9baa");
-    }
-  }
-
-  async function sendMessage(rawText) {
-    const text = rawText.trim();
-    if (!text || busy) return;
-    if (isListening) stopListening(true);
-
-    busy = true;
-    sendButton.disabled = true;
-    voiceButton.disabled = true;
-    input.disabled = true;
-    addMessage(text,"user");
-    input.value = "";
-    input.style.height = "auto";
-
-    const pending = addMessage("El,ai is thinking, Boss...","assistant");
-    const pendingBubble = pending.querySelector(".bubble");
-    pendingBubble.classList.add("typing");
-
-    const instructions = modeInstructions[selectedMode] || "";
-    const finalMessage = instructions
-      ? "For this response, follow this approach: " + instructions + "\n\nUser's message: " + text
-      : text;
-
-    try {
-      setStatus("THINKING","#c5a9ff");
-      const response = await fetch(API_BASE + "/ask",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Accept":"application/json"},
-        body:JSON.stringify({message:finalMessage})
-      });
-
-      let data;
-      try { data = await response.json(); }
-      catch (_) { throw new Error("The server returned an invalid response. Please try again."); }
-
-      if (!response.ok) {
-        const detail = typeof data.detail === "string"
-          ? data.detail : "The request failed with status " + response.status + ".";
-        throw new Error(detail);
-      }
-      if (typeof data.reply !== "string" || !data.reply.trim())
-        throw new Error("The server responded, but no reply was provided.");
-
-      pendingBubble.textContent = data.reply;
-      setStatus("AI ONLINE","#c5a9ff");
-      if (voiceRequest) speakText(data.reply);
-    } catch (error) {
-      pendingBubble.textContent = "Sorry, Boss. I couldn't get a reply.\n\n" +
-        (error.message || "Check your internet connection and try again.");
-      setStatus("REQUEST FAILED","#ff9baa");
-      voiceRequest = false;
-    } finally {
-      pendingBubble.classList.remove("typing");
-      busy = false;
-      sendButton.disabled = false;
-      voiceButton.disabled = false;
-      input.disabled = false;
-      chat.scrollTop = chat.scrollHeight;
-    }
-  }
-
-  form.addEventListener("submit",event => {
-    event.preventDefault();
-    if (isListening) stopListening(true);
-    voiceRequest = false;
-    sendMessage(input.value);
-  });
-
-  input.addEventListener("input",() => {
-    input.style.height = "auto";
-    input.style.height = Math.min(input.scrollHeight,105) + "px";
-  });
-
-  input.addEventListener("keydown",event => {
-    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
-      event.preventDefault();
-      form.requestSubmit();
-    }
-  });
-
-  document.querySelectorAll("[data-prompt]").forEach(button => {
-    button.addEventListener("click",() => {
-      voiceRequest = false;
-      sendMessage(button.dataset.prompt);
-    });
-  });
-
-  checkConnection();
+async function checkConnection(){
+ try{
+  const response=await fetch(API_BASE+"/health");
+  if(!response.ok)throw new Error();
+  const data=await response.json();
+  setStatus(data.ai_configured?"AI ONLINE":"KEY MISSING",data.ai_configured?"#c5a9ff":"#ffd08a");
+ }catch(_){setStatus("OFFLINE","#ff9baa")}
+}
+checkConnection();
+restoreSession();
 })();
 </script>
 </body>
