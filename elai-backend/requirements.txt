@@ -1,7 +1,5 @@
-<CodeBlock language="text"editable>
 fastapi
 uvicorn[standard]
 groq
 psycopg[binary]
 email-validator
-</CodeBlock>
