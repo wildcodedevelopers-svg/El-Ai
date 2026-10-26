@@ -32,6 +32,14 @@ jobs:
         with:
           gradle-version: '8.7'
 
+          
+      - name: Diagnose Android manifest
+        run: |
+          echo "Checking manifest contents..."
+          nl -ba app/src/main/AndroidManifest.xml
+          python3 -c "import xml.etree.ElementTree as ET; ET.parse('app/src/main/AndroidManifest.xml'); print('XML syntax is valid')"
+
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace --info
 
