@@ -4,1045 +4,941 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#08050f">
-<title>El-Ai | ELHAM STUDIOS</title>
+<meta name="theme-color" content="#090612">
+<title>El-AI | ELHAM STUDIOS</title>
 
 <style>
-:root{
-  --bg:#08050f;--panel:#110b1c;--panel2:#191025;
-  --purple:#a970ff;--violet:#7440db;--pink:#e78cff;
-  --white:#f8f3ff;--muted:#a99ab9;--line:#352347;
-  --green:#c6ff8a;--red:#ff879d
+:root {
+  --bg:#090612;
+  --panel:#130d20;
+  --panel2:#1c1230;
+  --purple:#a855f7;
+  --pink:#f472b6;
+  --text:#f8f4ff;
+  --muted:#a69ab8;
+  --border:rgba(192,132,252,.22);
+  --danger:#fb7185;
+  --green:#86efac;
 }
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;background:var(--bg)}
-body{
- color:var(--white);font-family:Inter,system-ui,-apple-system,sans-serif;
- background:radial-gradient(ellipse at 50% 0%,#291347 0,transparent 48%),var(--bg)
+body {
+  margin:0;background:
+  radial-gradient(ellipse at 50% -20%,#39205a 0,transparent 55%),
+  var(--bg);
+  color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  min-height:100dvh;
 }
-body:before{
- content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;
- background-image:linear-gradient(#b88bff12 1px,transparent 1px),
- linear-gradient(90deg,#b88bff12 1px,transparent 1px);
- background-size:34px 34px
-}
-button,input,textarea{font:inherit}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-button:disabled{opacity:.5;cursor:wait}
+button:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}
-button:focus-visible,input:focus-visible,textarea:focus-visible{
- outline:2px solid var(--purple);outline-offset:3px
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.error{color:var(--danger);font-size:13px;white-space:pre-wrap}
+.success{color:var(--green);font-size:13px;white-space:pre-wrap}
+#app{min-height:100dvh}
+.screen{min-height:100dvh}
+.center-screen{display:flex;align-items:center;justify-content:center;padding:22px}
+.auth-card{
+  width:100%;max-width:420px;padding:28px 23px;
+  border:1px solid var(--border);border-radius:26px;
+  background:rgba(19,13,32,.94);
+  box-shadow:0 0 65px rgba(168,85,247,.12);
 }
-#app{
- width:100%;max-width:780px;height:100dvh;min-height:0;margin:auto;
- display:flex;flex-direction:column;overflow:hidden;visibility:hidden;
- position:relative
-}
-#app.ready{visibility:visible}
-header{
- flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 13px;
- border-bottom:1px solid var(--line);background:#0b0715ed;
- backdrop-filter:blur(18px);z-index:3
-}
+.brand{text-align:center}
 .logo{
- width:45px;height:45px;flex-shrink:0;display:grid;place-items:center;
- border-radius:15px;border:1px solid #a970ff55;
- background:linear-gradient(145deg,#241239,#0b0713);
- box-shadow:0 0 23px #984dff20
+  width:115px;height:125px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 0 9px #a855f7)
+         drop-shadow(0 0 25px rgba(168,85,247,.8));
+  animation:float 3s ease-in-out infinite;
 }
-.logo svg{width:35px;height:35px}
-.brand{flex:1;min-width:0}
-.brand h1{margin:0;font-size:19px;letter-spacing:2px}
-.brand small{display:block;margin-top:3px;font-size:8px;letter-spacing:1.8px;color:#c8a9ff}
-.brand .studio{color:#8e7d9f;letter-spacing:2px;margin-top:4px}
-.tools{display:flex;gap:5px;align-items:center}
-.tools button{
- border:1px solid var(--line);background:#171020;color:#e5d6fa;
- border-radius:9px;padding:7px 8px;font-size:10px
+.logo svg{width:100%;height:100%;overflow:visible}
+@keyframes float{50%{transform:translateY(-5px)}}
+.brand h1{font-size:27px;letter-spacing:4px;margin:4px 0}
+.brand p{color:var(--muted);font-size:12px;letter-spacing:2px;margin:0 0 22px}
+h2{font-size:21px;margin:0 0 7px}
+.field{margin:14px 0}
+.field label{display:block;font-size:12px;color:#d7c8e8;margin-bottom:7px}
+.field input,.field select,.field textarea,
+.chat-input{
+  width:100%;border:1px solid var(--border);border-radius:12px;
+  background:#0d0816;color:var(--text);padding:13px;
+  outline:none;min-width:0;
 }
-.status{display:flex;align-items:center;gap:5px;font-size:8px;color:#d4b5ff;white-space:nowrap}
-.dot{width:6px;height:6px;background:var(--purple);border-radius:50%;box-shadow:0 0 9px var(--purple)}
-main{flex:1;min-height:0;display:flex;flex-direction:column}
-.view{display:flex;flex:1;min-height:0;flex-direction:column}
-.hero{text-align:center;padding:10px 12px 0;flex-shrink:0}
-.kicker{font-size:9px;letter-spacing:3px;color:#c59aff;font-weight:700;margin:7px 0}
-.hero h2{font-size:22px;line-height:1.3;margin:0 0 5px}
-.hero h2 span{
- background:linear-gradient(90deg,#d9b1ff,#f1a7ff,#a3a9ff);
- -webkit-background-clip:text;background-clip:text;color:transparent
+.field input:focus,.field textarea:focus,.chat-input:focus{
+  border-color:var(--purple);box-shadow:0 0 0 3px #a855f71c;
 }
-.sub{font-size:11px;color:var(--muted);margin:0}
-.orb-stage{
- position:relative;width:260px;max-width:100%;height:180px;margin:0 auto;
- display:grid;place-items:center;cursor:pointer;touch-action:manipulation;
- perspective:700px
+.password-wrap{display:flex;gap:7px}
+.password-wrap input{flex:1;min-width:0}
+.eye-btn{
+  border:1px solid var(--border);background:#241533;color:#e9d5ff;
+  border-radius:10px;padding:0 12px;font-size:12px;
 }
-.flame-glow{
- position:absolute;width:120px;height:130px;border-radius:50%;
- background:radial-gradient(ellipse,#a970ff80,#7629e233 40%,transparent 72%);
- filter:blur(23px);animation:glow 4s ease-in-out infinite
+.primary,.secondary,.danger-btn{
+  border:0;border-radius:12px;padding:13px 16px;font-weight:650;
 }
-.flame-svg{position:relative;width:100px;height:130px;z-index:2;overflow:visible;
- filter:drop-shadow(0 0 9px #a970ff66);animation:flameFloat 3s ease-in-out infinite}
-.ring{
- position:absolute;width:115px;height:45px;border:1px solid #ba87ff9c;
- border-radius:50%;transform:rotate(-28deg);z-index:1;
- box-shadow:0 0 12px #a970ff19
+.primary{
+  width:100%;color:white;
+  background:linear-gradient(110deg,#7c3aed,#c026d3);
+  box-shadow:0 6px 25px #9333ea35;
 }
-.ring.r2{width:145px;height:53px;transform:rotate(38deg);border-color:#dc91ff65}
-.ring.r3{width:100px;height:34px;transform:rotate(90deg);border-color:#8554ff65}
-.pulse{
- position:absolute;width:100px;height:100px;border:1px solid #ba87ff;
- border-radius:50%;opacity:0;animation:wave 3s infinite
+.secondary{background:#241533;color:#eadcff;border:1px solid var(--border)}
+.danger-btn{background:#451526;color:#fecdd3}
+.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:15px}
+.link-btn{border:0;background:none;color:#d8b4fe;padding:5px 0;font-size:13px}
+.status-line{font-size:12px;color:var(--muted);margin-top:14px;text-align:center}
+header{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;padding:12px 15px;
+  background:#0b0714ed;backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border)
 }
-.pulse.p2{animation-delay:1.5s}
-.orb-stage.listening .flame-glow{background:radial-gradient(ellipse,#c6ff8a88,transparent 70%)}
-.orb-stage.listening .ring{border-color:#c6ff8a}
-.orb-stage.listening .pulse{border-color:var(--green);animation-duration:1.5s}
-.orb-stage.speaking .flame-svg{animation:flameTalk .4s ease-in-out infinite alternate}
-@keyframes glow{50%{transform:scale(1.2);opacity:.65}}
-@keyframes flameFloat{50%{transform:translateY(-7px) scale(1.04)}}
-@keyframes flameTalk{to{transform:scale(1.09) translateY(-3px)}}
-@keyframes wave{0%{transform:scale(.8);opacity:0}20%{opacity:.5}100%{transform:scale(2.2);opacity:0}}
-.chat{
- flex:1;min-height:50px;overflow-y:auto;padding:9px 15px 15px;
- overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#52336f transparent
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:1px}
+.mini-logo{width:34px;height:38px;filter:drop-shadow(0 0 8px #a855f7)}
+.header-actions{display:flex;gap:7px}
+.icon-btn{border:1px solid var(--border);background:#1a1028;color:#f3e8ff;
+  border-radius:10px;padding:9px 11px}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100dvh - 61px)}
+.sidebar{padding:16px;border-right:1px solid var(--border);background:#0c0714}
+.side-btn{
+  width:100%;text-align:left;border:1px solid transparent;background:transparent;
+  color:#ddd0ed;padding:12px;border-radius:11px;margin-bottom:6px
 }
-.message{display:flex;margin:10px 0;animation:appear .2s ease-out}
+.side-btn.active,.side-btn:hover{background:#241333;border-color:var(--border)}
+.side-title{font-size:10px;color:#897a9c;letter-spacing:2px;margin:18px 10px 9px}
+.mode-select{width:100%;padding:11px;border-radius:10px;color:white;background:#130d20;border:1px solid var(--border)}
+.main{min-width:0;display:flex;flex-direction:column;min-height:calc(100dvh - 61px)}
+.view{padding:22px;width:100%;max-width:950px;margin:0 auto;flex:1}
+.welcome{text-align:center;padding-top:25px}
+.welcome .logo{width:140px;height:150px}
+.welcome h2{font-size:27px}
+.welcome p{color:var(--muted);line-height:1.6}
+.quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:24px auto;max-width:520px}
+.quick-card{text-align:left;border:1px solid var(--border);border-radius:15px;padding:15px;background:#160e23;color:white}
+.quick-card b{display:block;margin-bottom:5px}
+.quick-card span{font-size:12px;color:var(--muted)}
+#chatView{display:flex;flex-direction:column;min-height:calc(100dvh - 100px);padding-bottom:0}
+.chat-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+#messages{flex:1;padding-bottom:20px}
+.message{display:flex;margin:14px 0}
 .message.user{justify-content:flex-end}
-.bubble{
- max-width:90%;padding:11px 13px;border:1px solid var(--line);
- border-radius:15px 15px 15px 4px;background:linear-gradient(145deg,#1c1429,#110b1a);
- font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere
-}
-.message.user .bubble{
- border-color:#9560d866;border-radius:15px 15px 4px 15px;
- background:linear-gradient(135deg,#59338a,#35204e)
-}
-.typing{color:#c6a0ff;animation:glow 1.2s infinite alternate}
-@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.voice-controls{
- flex-shrink:0;padding:12px 15px calc(12px + env(safe-area-inset-bottom));
- text-align:center;background:linear-gradient(transparent,#08050f 18%)
-}
-.mic-main{
- width:65px;height:65px;border:1px solid #d0a0ff88;border-radius:23px;
- color:white;background:linear-gradient(145deg,#a970ff,#6332b6);
- font-size:25px;box-shadow:0 0 25px #9956ff33
-}
-.mic-main.listening{background:linear-gradient(145deg,#c6ff8a,#689a3b);color:#141b0c}
-.voice-state{font-size:11px;color:#c9b6e3;margin:9px 0 3px}
-.voice-hint{font-size:10px;color:#9181a6;min-height:15px}
-.footer{font-size:8px;letter-spacing:2px;color:#766583;text-align:center;margin-top:11px}
-.mode-bar{padding:12px 14px 6px;flex-shrink:0}
-.section-label{font-size:9px;letter-spacing:2px;color:#a994bb;margin:0 0 8px}
-.modes{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:5px}
-.mode{
- flex-shrink:0;border:1px solid var(--line);border-radius:11px;
- background:#171020;color:#cbb8df;padding:9px 11px;font-size:10px
-}
-.mode.active{border-color:#b58aff;background:#4a2a6b;color:white}
-.quick{display:flex;gap:7px;overflow-x:auto;flex-shrink:0;padding:8px 14px}
-.quick button{
- flex-shrink:0;padding:8px 10px;border:1px solid var(--line);
- border-radius:20px;background:#171020;color:#d6c2f0;font-size:10px
-}
-.composer-wrap{padding:8px 13px calc(12px + env(safe-area-inset-bottom));flex-shrink:0}
-.composer{
- display:flex;align-items:flex-end;gap:8px;padding:8px;
- border:1px solid #62447e;border-radius:18px;background:#130d20
-}
-#textInput{
- flex:1;min-width:0;max-height:120px;resize:none;padding:10px 5px;
- outline:none;border:0;color:white;background:transparent;font-size:13px;line-height:1.5
-}
-#textInput::placeholder{color:#8e7da3}
-.send{
- width:42px;height:42px;flex-shrink:0;border:0;border-radius:13px;
- color:white;font-size:20px;background:linear-gradient(135deg,#d58bff,#8050ef)
-}
-.auth-screen,.overlay-screen{
- position:fixed;inset:0;z-index:20;display:flex;align-items:center;
- justify-content:center;padding:20px;overflow-y:auto;
- background:radial-gradient(ellipse at 50% 12%,#321653,#08050f 68%)
-}
-.overlay-screen{z-index:30;text-align:center}
-.card{
- width:100%;max-width:390px;padding:24px 21px;border:1px solid #75499b88;
- border-radius:25px;background:#100a1bec;box-shadow:0 0 55px #9c53ff12
-}
-.card h2{font-size:25px;margin:0 0 8px;text-align:center}
-.card p{font-size:12px;color:var(--muted);line-height:1.6;text-align:center}
-.card label{display:block;margin:13px 0 6px;font-size:11px;color:#dfcdf7}
-.card input,.settings-input{
- width:100%;padding:13px;border:1px solid #52386c;border-radius:12px;
- background:#090610;color:white;outline:none
-}
-.card input:focus,.settings-input:focus{border-color:var(--purple)}
-.primary,.secondary,.switch{
- width:100%;padding:13px;border-radius:12px;margin-top:12px;
- font-weight:650
-}
-.primary{border:0;background:linear-gradient(135deg,#d48bff,#7545dc);color:white}
-.secondary,.switch{border:1px solid var(--line);background:transparent;color:#d9c5f5;font-weight:400}
-.error{color:#ff9cae!important;min-height:15px}
-.screen-flame{
- width:112px;height:125px;margin:0 auto 18px;display:grid;place-items:center;
- background:radial-gradient(ellipse,#3b2058,#100a1c 70%);
- border:1px solid #8355b6;border-radius:32px;box-shadow:0 0 45px #9b5aff25
-}
-.screen-flame svg{width:86px;height:110px;filter:drop-shadow(0 0 10px #9d66ff)}
-.screen-kicker{letter-spacing:3px;font-size:9px!important;color:#c7a1ff!important}
-.choice{
- display:flex;align-items:center;gap:13px;width:100%;text-align:left;
- padding:16px;margin-top:12px;border:1px solid #62447c;border-radius:15px;
- background:linear-gradient(135deg,#25143a,#171020);color:white
-}
-.choice-icon{font-size:25px;width:32px;text-align:center}
-.choice strong{display:block;font-size:13px}
-.choice small{display:block;font-size:10px;color:#b9a7ce;margin-top:5px;line-height:1.5}
-.panel{
- position:fixed;inset:0;z-index:40;display:none;align-items:flex-end;
- justify-content:center;padding:12px;background:#05030bdc
-}
-.panel.open{display:flex}
-.panel-card{
- width:100%;max-width:650px;max-height:78dvh;overflow-y:auto;
- border:1px solid #8e60bc;border-radius:21px;background:#100a1c;padding:18px
-}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.panel-head h3{margin:0;font-size:17px}
-.panel-head button,.memory-item button{
- border:1px solid var(--line);background:#1b1226;color:white;
- border-radius:9px;padding:8px;font-size:10px
-}
-.memory-form{display:flex;gap:7px;margin:12px 0}
-.memory-form input{flex:1;min-width:0;background:#090610;color:white;border:1px solid #62447c;border-radius:10px;padding:11px}
-.memory-form button{border:0;border-radius:10px;padding:10px;background:#8050ce;color:white}
-.memory-item{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.memory-item button{float:right;margin-left:8px;border-color:#9b5570;color:#ffb6c4}
-@media(max-width:440px){
- header{gap:7px;padding:9px}
- .tools{gap:4px}
- .tools button{padding:7px 6px;font-size:9px}
- .status{font-size:7px}
- .brand h1{font-size:17px}
- .orb-stage{height:160px}
-}
-@media(max-height:700px){
- .hero{padding-top:3px}
- .orb-stage{height:125px}
- .flame-svg{height:100px}
- .hero h2{font-size:19px}
- .voice-controls{padding-top:6px}
- .mic-main{width:53px;height:53px;border-radius:18px}
-}
-@media(prefers-reduced-motion:reduce){
- *,*:before,*:after{animation:none!important;scroll-behavior:auto!important}
+.bubble{max-width:88%;padding:13px 15px;border-radius:17px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.user .bubble{background:linear-gradient(130deg,#6d28d9,#9333ea);border-bottom-right-radius:5px}
+.assistant .bubble{background:#171022;border:1px solid var(--border);border-bottom-left-radius:5px}
+.message-label{font-size:10px;color:#b9a7cf;margin-bottom:5px}
+.composer{position:sticky;bottom:0;background:#0b0714ed;padding:12px 0 max(14px,env(safe-area-inset-bottom));border-top:1px solid var(--border)}
+.composer-inner{display:flex;gap:8px;align-items:flex-end}
+.chat-input{resize:none;min-height:48px;max-height:130px;flex:1}
+.send-btn{height:48px;min-width:49px;background:linear-gradient(135deg,#9333ea,#c026d3);color:white;border:0;border-radius:12px;font-size:18px}
+.mic-btn{height:48px;min-width:46px;background:#20132e;border:1px solid var(--border);color:white;border-radius:12px}
+.mic-btn.recording{background:#7f1d1d;border-color:#fb7185}
+.view h2{margin:0 0 7px}
+.panel{border:1px solid var(--border);background:#130d20;border-radius:16px;padding:17px;margin:15px 0}
+.panel h3{margin:0 0 12px;font-size:15px}
+.item{padding:13px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+.item:last-child{border-bottom:0}
+.item-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.item-actions button{font-size:12px;padding:7px 10px}
+.empty{text-align:center;color:var(--muted);padding:35px 10px}
+.footer{text-align:center;font-size:11px;color:#796b8c;padding:18px}
+.mobile-nav{display:none}
+@media(max-width:700px){
+  .layout{display:block}
+  .sidebar{display:none}
+  .view{padding:17px 14px}
+  #chatView{min-height:calc(100dvh - 65px)}
+  header{padding:10px 12px}
+  .quick-actions{grid-template-columns:1fr 1fr}
+  .bubble{max-width:94%}
+  .mobile-nav{
+    display:flex;position:sticky;bottom:0;z-index:4;
+    justify-content:space-around;background:#100a1b;border-top:1px solid var(--border);
+    padding:8px 4px max(8px,env(safe-area-inset-bottom))
+  }
+  .mobile-nav button{background:none;border:0;color:#cbb8e1;font-size:11px;padding:7px 9px}
+  .mobile-nav button.active{color:#d8b4fe}
+  .header-actions .secondary{padding:8px 10px;font-size:12px}
 }
 </style>
 </head>
 
 <body>
+<!-- Shared SVG gradients: available to every flame on the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="flameGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6d28d9"/>
+      <stop offset="45%" stop-color="#c026d3"/>
+      <stop offset="100%" stop-color="#f0abfc"/>
+    </linearGradient>
+    <linearGradient id="flameCore" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#fff7ff"/>
+    </linearGradient>
+  </defs>
+</svg>
 
-<!-- SIGN IN -->
-<div class="auth-screen" id="authScreen">
- <form class="card" id="authForm">
-  <div class="screen-flame">
-   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
-    <defs>
-     <linearGradient id="flameGradient" x1="15" y1="100" x2="85" y2="8" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5f2cc2"/><stop offset=".5" stop-color="#a970ff"/><stop offset="1" stop-color="#f1a0ff"/>
-     </linearGradient>
-     <linearGradient id="innerGradient" x1="35" y1="95" x2="65" y2="35" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#8e55ff"/><stop offset="1" stop-color="#fff0ff"/>
-     </linearGradient>
-    </defs>
-    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
-    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
-    <path d="M48 79C53 85 49 91 45 93" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-   </svg>
-  </div>
-  <h2>El-Ai <span style="color:#bd91ff">✦</span></h2>
-  <p>YOUR PERSONAL INTELLIGENCE<br>CREATED BY ELHAM STUDIOS</p>
-
-  <div id="registerFields" class="hidden">
-   <label for="authName">Your name</label>
-   <input id="authName" autocomplete="name" maxlength="80" placeholder="Your name">
-   <label for="authTitle">What should El-Ai call you?</label>
-   <input id="authTitle" maxlength="50" placeholder="e.g. Captain, Alex">
-  </div>
-
-  <label for="authEmail">Email address</label>
-  <input id="authEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
-  <label for="authPassword">Password</label>
-  <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="At least 8 characters">
-  <button class="primary" id="authSubmit" type="submit">Sign in</button>
-  <button class="switch" id="authSwitch" type="button">New to El-Ai? Create account</button>
-  <p class="error" id="authError" role="alert"></p>
-  <p style="font-size:10px">Use a unique password for your El-Ai account.</p>
- </form>
-</div>
-
-<!-- WELCOME -->
-<div class="overlay-screen hidden" id="welcomeScreen">
- <div class="card" style="border:0;background:transparent;box-shadow:none">
-  <div class="screen-flame">
-   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
-    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
-    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
-   </svg>
-  </div>
-  <p class="screen-kicker">ELHAM STUDIOS PRESENTS</p>
-  <h2 id="welcomeTitle">Welcome to El-Ai</h2>
-  <p id="welcomeMessage">Your personal intelligence is ready.</p>
-  <p style="font-size:9px;letter-spacing:2px">PREPARING YOUR EXPERIENCE</p>
- </div>
-</div>
-
-<!-- CHOOSE EXPERIENCE -->
-<div class="overlay-screen hidden" id="choiceScreen">
- <div class="card">
-  <p class="screen-kicker">YOUR EXPERIENCE · 01</p>
-  <h2>How do you want to connect?</h2>
-  <p>Choose your interface. You can switch whenever you want.</p>
-  <button class="choice" id="chooseAudio" type="button">
-   <span class="choice-icon">◉</span>
-   <span><strong>Live Voice</strong><small>Speak naturally. Hear El-Ai's replies. No typing in this mode.</small></span>
-  </button>
-  <button class="choice" id="chooseText" type="button">
-   <span class="choice-icon">✧</span>
-   <span><strong>Text Studio</strong><small>A focused chat workspace with selectable AI modes.</small></span>
-  </button>
-  <p id="choiceHint" role="status"></p>
- </div>
-</div>
-
-<!-- MAIN APPLICATION -->
 <div id="app">
- <header>
-  <div class="logo" aria-label="El-Ai digital flame logo">
-   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
-    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
-    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
-   </svg>
-  </div>
-  <div class="brand">
-   <h1>El-Ai</h1>
-   <small>PERSONAL INTELLIGENCE</small>
-   <small class="studio">ELHAM STUDIOS</small>
-  </div>
-  <div class="tools">
-   <button id="titleButton" type="button">Title</button>
-   <button id="memoryButton" type="button">Memory</button>
-   <button id="changeModeButton" type="button">Mode</button>
-   <button id="logoutButton" type="button">Exit</button>
-  </div>
-  <div class="status"><span class="dot"></span><span id="connectionStatus">CONNECTING</span></div>
- </header>
+  <!-- AUTHENTICATION -->
+  <section id="authScreen" class="screen center-screen">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="logo">
+          <svg viewBox="0 0 100 120" role="img" aria-label="El-AI flame">
+            <path fill="url(#flameGradient)" d="M51 3C55 26 82 34 81 61C80 87 65 106 45 108C21 110 7 90 12 68C15 52 27 43 31 28C36 42 42 47 43 59C57 46 60 25 51 3Z"/>
+            <path fill="url(#flameCore)" d="M48 51C53 65 66 72 60 88C56 100 43 103 34 94C25 85 34 74 39 66C42 62 45 57 48 51Z"/>
+          </svg>
+        </div>
+        <h1>EL-AI</h1>
+        <p>INTELLIGENCE BY ELHAM STUDIOS</p>
+      </div>
 
- <main>
-  <!-- VOICE-ONLY SCREEN -->
-  <section class="view" id="audioInterface">
-   <div class="hero">
-    <p class="kicker">LIVE VOICE · 02</p>
-    <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap to start or stop speaking">
-     <div class="flame-glow"></div>
-     <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
-     <div class="pulse"></div><div class="pulse p2"></div>
-     <svg class="flame-svg" viewBox="0 0 100 120" fill="none" aria-hidden="true">
-      <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
-      <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
-     </svg>
+      <div id="loginPanel">
+        <h2>Welcome back</h2>
+        <p class="muted small">Sign in to continue your journey.</p>
+        <form id="loginForm">
+          <div class="field">
+            <label for="loginEmail">Email address</label>
+            <input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <div class="password-wrap">
+              <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password">
+              <button class="eye-btn" type="button" data-toggle="loginPassword">Show</button>
+            </div>
+          </div>
+          <button class="primary" type="submit">Sign in</button>
+        </form>
+        <div class="auth-links">
+          <button class="link-btn" id="showRegister">Create account</button>
+          <button class="link-btn" id="showRecovery">Forgot password?</button>
+        </div>
+      </div>
+
+      <div id="registerPanel" class="hidden">
+        <h2>Create your account</h2>
+        <p class="muted small">Your own space, powered by El-AI.</p>
+        <form id="registerForm">
+          <div class="field">
+            <label for="registerName">Display name</label>
+            <input id="registerName" autocomplete="name" required maxlength="60" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="registerEmail">Email address</label>
+            <input id="registerEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="registerPassword">Password (at least 8 characters)</label>
+            <div class="password-wrap">
+              <input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Create a password">
+              <button class="eye-btn" type="button" data-toggle="registerPassword">Show</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirm password</label>
+            <div class="password-wrap">
+              <input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Repeat your password">
+              <button class="eye-btn" type="button" data-toggle="confirmPassword">Show</button>
+            </div>
+          </div>
+          <button class="primary" type="submit">Create account</button>
+        </form>
+        <div class="auth-links">
+          <button class="link-btn" id="backToLogin">Already have an account? Sign in</button>
+        </div>
+      </div>
+
+      <div id="recoveryPanel" class="hidden">
+        <h2>Recover your account</h2>
+        <p class="muted small">Enter the email address associated with your account.</p>
+        <form id="recoveryForm">
+          <div class="field">
+            <label for="recoveryEmail">Email address</label>
+            <input id="recoveryEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+          <button class="primary" type="submit">Request recovery</button>
+        </form>
+        <p class="muted small">Password recovery requires a recovery endpoint configured on the El-AI server.</p>
+        <button class="link-btn" id="recoveryBack">Back to sign in</button>
+      </div>
+
+      <div id="authMessage" class="status-line" role="status"></div>
+      <div id="backendStatus" class="status-line">Connecting to El-AI…</div>
     </div>
-    <h2 id="audioHeading">Your voice. <span>Your ideas.</span></h2>
-    <p class="sub" id="greeting">Your personal intelligence is ready.</p>
-   </div>
-   <div class="chat" id="chat" aria-live="polite"></div>
-   <div class="voice-controls">
-    <button class="mic-main" id="voiceButton" type="button" aria-label="Start listening">🎙</button>
-    <div class="voice-state" id="voiceState">Tap the microphone to begin</div>
-    <div class="voice-hint" id="voiceHint">Speak naturally. El-Ai will answer aloud.</div>
-    <div class="footer">EL-AI · VOICE EXPERIENCE</div>
-   </div>
   </section>
 
-  <!-- TEXT-ONLY SCREEN -->
-  <section class="view hidden" id="textInterface">
-   <div class="hero" style="padding:17px 12px 9px">
-    <p class="kicker">TEXT STUDIO · 03</p>
-    <h2>Let's build something <span>great.</span></h2>
-    <p class="sub" id="textGreeting">Welcome to El-Ai.</p>
-   </div>
-   <div class="mode-bar">
-    <p class="section-label">CHOOSE AN APPROACH</p>
-    <div class="modes" id="modes">
-     <button class="mode active" data-mode="Default" type="button">✦ Default</button>
-     <button class="mode" data-mode="Historian" type="button">◷ Historian</button>
-     <button class="mode" data-mode="Storyteller" type="button">✎ Storyteller</button>
-     <button class="mode" data-mode="Data Scientist" type="button">⌘ Data Scientist</button>
+  <!-- MAIN APP -->
+  <section id="mainScreen" class="screen hidden">
+    <header>
+      <div class="header-brand">
+        <svg class="mini-logo" viewBox="0 0 100 120" aria-hidden="true">
+          <path fill="url(#flameGradient)" d="M51 3C55 26 82 34 81 61C80 87 65 106 45 108C21 110 7 90 12 68C15 52 27 43 31 28C36 42 42 47 43 59C57 46 60 25 51 3Z"/>
+          <path fill="url(#flameCore)" d="M48 51C53 65 66 72 60 88C56 100 43 103 34 94C25 85 34 74 39 66C42 62 45 57 48 51Z"/>
+        </svg>
+        <span>EL-AI</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="newChatBtn" title="New chat">＋</button>
+        <button class="secondary" id="logoutBtn">Sign out</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <button class="side-btn active" data-view="homeView">⌂ &nbsp; Home</button>
+        <button class="side-btn" data-view="chatView">✧ &nbsp; Chat with El-AI</button>
+        <button class="side-btn" data-view="memoryView">◈ &nbsp; Memory</button>
+        <button class="side-btn" data-view="profileView">⚙ &nbsp; Profile & settings</button>
+        <div class="side-title">AI MODE</div>
+        <select id="modeSelect" class="mode-select">
+          <option value="balanced">Balanced</option>
+          <option value="creative">Creative</option>
+          <option value="coding">Coding</option>
+          <option value="study">Study</option>
+        </select>
+        <p class="small muted">Your chosen mode is sent with each message.</p>
+        <div class="side-title">CONNECTION</div>
+        <div id="connectionLabel" class="small muted">Checking connection…</div>
+      </aside>
+
+      <main class="main">
+        <div id="homeView" class="view">
+          <div class="welcome">
+            <div class="logo">
+              <svg viewBox="0 0 100 120" aria-label="El-AI flame">
+                <path fill="url(#flameGradient)" d="M51 3C55 26 82 34 81 61C80 87 65 106 45 108C21 110 7 90 12 68C15 52 27 43 31 28C36 42 42 47 43 59C57 46 60 25 51 3Z"/>
+                <path fill="url(#flameCore)" d="M48 51C53 65 66 72 60 88C56 100 43 103 34 94C25 85 34 74 39 66C42 62 45 57 48 51Z"/>
+              </svg>
+            </div>
+            <h2 id="welcomeTitle">Welcome to El-AI</h2>
+            <p>Your ideas. Your questions. Your intelligence companion.<br>What shall we work on today?</p>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-card" data-prompt="Help me understand a difficult topic step by step."><b>📚 Learn something</b><span>Understand a topic clearly</span></button>
+            <button class="quick-card" data-prompt="Help me plan and organize my goals."><b>🎯 Plan my goals</b><span>Turn ideas into action</span></button>
+            <button class="quick-card" data-prompt="Help me write or improve something."><b>✍️ Write with me</b><span>Draft, refine, and create</span></button>
+            <button class="quick-card" data-prompt="Help me debug code. Ask me for the code and error if needed."><b>💻 Coding help</b><span>Build and troubleshoot</span></button>
+          </div>
+          <div class="footer">ELHAM STUDIOS · Built to help you think bigger.</div>
+        </div>
+
+        <div id="chatView" class="view hidden">
+          <div class="chat-top">
+            <div>
+              <h2>El-AI Assistant</h2>
+              <div class="small muted">Mode: <span id="currentMode">Balanced</span></div>
+            </div>
+            <button class="secondary" id="clearChatBtn">Clear chat</button>
+          </div>
+          <div id="messages" aria-live="polite">
+            <div class="empty" id="emptyChat">Start a conversation. What are you thinking about?</div>
+          </div>
+          <div class="composer">
+            <div class="composer-inner">
+              <textarea id="chatInput" class="chat-input" rows="1" maxlength="12000" placeholder="Message El-AI…"></textarea>
+              <button id="micBtn" class="mic-btn" aria-label="Use voice input" title="Voice input">🎙</button>
+              <button id="sendBtn" class="send-btn" aria-label="Send message">➤</button>
+            </div>
+            <div class="small muted" style="margin-top:8px">AI can make mistakes. Check important information.</div>
+          </div>
+        </div>
+
+        <div id="memoryView" class="view hidden">
+          <h2>Your Memory</h2>
+          <p class="muted">Manage information saved to your account.</p>
+          <div class="panel">
+            <h3>Save a memory</h3>
+            <form id="memoryForm">
+              <div class="field">
+                <label for="memoryText">What should El-AI remember?</label>
+                <textarea id="memoryText" rows="3" maxlength="3000" required placeholder="A preference, goal, or useful detail…"></textarea>
+              </div>
+              <button class="primary" type="submit">Save memory</button>
+            </form>
+          </div>
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+              <h3>Saved memories</h3>
+              <button class="secondary" id="refreshMemoryBtn">Refresh</button>
+            </div>
+            <div id="memoryList"><div class="empty">Loading memories…</div></div>
+          </div>
+        </div>
+
+        <div id="profileView" class="view hidden">
+          <h2>Profile & settings</h2>
+          <p class="muted">Personalize your El-AI experience.</p>
+          <div class="panel">
+            <h3>Your profile</h3>
+            <form id="profileForm">
+              <div class="field">
+                <label for="profileName">Display name</label>
+                <input id="profileName" maxlength="60" placeholder="Your name">
+              </div>
+              <div class="field">
+                <label for="profileTitle">Preferred title (optional)</label>
+                <input id="profileTitle" maxlength="60" placeholder="e.g. Boss">
+              </div>
+              <div class="field">
+                <label for="profileStyle">Response style</label>
+                <select id="profileStyle">
+                  <option value="balanced">Balanced</option>
+                  <option value="concise">Short and direct</option>
+                  <option value="detailed">Detailed explanations</option>
+                  <option value="friendly">Friendly and conversational</option>
+                </select>
+              </div>
+              <button class="primary" type="submit">Save profile</button>
+            </form>
+            <div id="profileMessage" class="small muted" style="margin-top:10px"></div>
+          </div>
+          <div class="panel">
+            <h3>Account</h3>
+            <p id="accountEmail" class="muted small">Email: —</p>
+            <button class="danger-btn" id="profileLogoutBtn">Sign out</button>
+          </div>
+        </div>
+      </main>
     </div>
-   </div>
-   <div class="chat" id="textChat" aria-live="polite"></div>
-   <div class="quick" id="quickPrompts">
-    <button data-prompt="Introduce yourself and explain what you can help me with." type="button">✦ Explore El-Ai</button>
-    <button data-prompt="Help me plan my most important tasks for today." type="button">◷ Plan my day</button>
-    <button data-prompt="Teach me something fascinating and useful." type="button">✧ Teach me</button>
-   </div>
-   <div class="composer-wrap">
-    <form class="composer" id="textForm">
-     <textarea id="textInput" rows="1" maxlength="8000" placeholder="Message El-Ai..." aria-label="Type a message" required></textarea>
-     <button class="send" id="textSendButton" type="submit" aria-label="Send message">↑</button>
-    </form>
-    <div class="footer">EL-AI · TEXT EXPERIENCE</div>
-   </div>
+
+    <nav class="mobile-nav">
+      <button data-view="homeView" class="active">⌂<br>Home</button>
+      <button data-view="chatView">✧<br>Chat</button>
+      <button data-view="memoryView">◈<br>Memory</button>
+      <button data-view="profileView">⚙<br>Profile</button>
+    </nav>
   </section>
- </main>
-</div>
-
-<!-- PERSONAL TITLE -->
-<div class="panel" id="titlePanel">
- <div class="panel-card">
-  <div class="panel-head"><h3>Personalize El-Ai</h3><button id="closeTitle" type="button">Close</button></div>
-  <p style="font-size:11px;color:var(--muted)">Choose how El-Ai addresses you.</p>
-  <label for="preferredTitle" style="display:block;font-size:11px;margin:12px 0 6px">Preferred title or name</label>
-  <input class="settings-input" id="preferredTitle" maxlength="50" placeholder="e.g. Captain, Alex">
-  <button class="primary" id="saveTitle" type="button">Save preference</button>
-  <p id="titleMessage" role="status"></p>
- </div>
-</div>
-
-<!-- MEMORY -->
-<div class="panel" id="memoryPanel">
- <div class="panel-card">
-  <div class="panel-head"><h3>Your memories</h3><button id="closeMemory" type="button">Close</button></div>
-  <p style="font-size:11px;color:var(--muted)">Review, add, or delete saved memories. Automatic storage requires the updated backend.</p>
-  <form class="memory-form" id="memoryForm">
-   <input id="memoryInput" maxlength="3000" required placeholder="What should El-Ai remember?">
-   <button type="submit">Save</button>
-  </form>
-  <div id="memoryList"></div>
- </div>
 </div>
 
 <script>
-(()=>{
-"use strict";
+(() => {
+  "use strict";
 
-const API_BASE="https://elai-backend.onrender.com";
-const $=id=>document.getElementById(id);
+  const API_BASE = "https://elai-backend.onrender.com";
+  const $ = id => document.getElementById(id);
 
-const authScreen=$("authScreen"),welcomeScreen=$("welcomeScreen");
-const choiceScreen=$("choiceScreen"),app=$("app");
-const audioInterface=$("audioInterface"),textInterface=$("textInterface");
-const audioChat=$("chat"),textChat=$("textChat");
-const voiceButton=$("voiceButton"),voiceHint=$("voiceHint");
-const voiceState=$("voiceState"),orbStage=$("orbStage");
+  let token = localStorage.getItem("elai_token") || "";
+  let currentUser = null;
+  let memories = [];
+  let busy = false;
+  let recognition = null;
+  let isRecording = false;
+  let chatHistory = [];
 
-let token="",currentUser=null,profileData={},preferredTitle="";
-let registerMode=false,busy=false,selectedMode="Default",conversationMode="";
-let recognition=null,isListening=false,manualStop=false;
-let finalTranscript="",welcomeTimer=null,requestNumber=0;
+  const authScreen = $("authScreen");
+  const mainScreen = $("mainScreen");
 
-const modeInstructions={
- "Default":"",
- "Historian":"Respond as a careful history expert. Separate established facts from disputed interpretations.",
- "Storyteller":"Use engaging storytelling where appropriate, while remaining accurate.",
- "Data Scientist":"Analyze evidence, assumptions, numbers, and limitations clearly."
-};
+  async function api(path, options = {}) {
+    const headers = { ...(options.headers || {}) };
+    if (options.body && !(options.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
+    if (token) headers.Authorization = "Bearer " + token;
 
-function setStatus(text,color="#d4b5ff"){
- $("connectionStatus").textContent=text;
- $("connectionStatus").style.color=color;
-}
-function setVoiceState(text){voiceState.textContent=text}
-function setVoiceHint(text){voiceHint.textContent=text}
+    const response = await fetch(API_BASE + path, {
+      ...options,
+      headers
+    });
 
-async function api(path,options={}){
- const headers={...(options.headers||{})};
- if(token)headers.Authorization="Bearer "+token;
+    const raw = await response.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; }
+    catch { data = { detail: raw }; }
 
- const response=await fetch(API_BASE+path,{...options,headers});
- let data={};
- try{data=await response.json()}catch(_){}
-
- if(!response.ok){
-  if(response.status===401&&token){
-   signOut(false);
-   showAuth("Your session expired. Please sign in again.");
+    if (!response.ok) {
+      const message = data.detail || data.message || data.error ||
+        ("Request failed (" + response.status + ")");
+      throw new Error(typeof message === "string" ? message : JSON.stringify(message));
+    }
+    return data;
   }
-  throw new Error(typeof data.detail==="string"?data.detail:"Request failed ("+response.status+").");
- }
- return data;
-}
 
-function showAuth(message=""){
- authScreen.classList.remove("hidden");
- $("authError").textContent=message;
-}
-function hideAuth(){authScreen.classList.add("hidden")}
-
-function setRegisterMode(value){
- registerMode=value;
- $("registerFields").classList.toggle("hidden",!value);
- $("authName").required=value;
- $("authTitle").required=value;
- $("authPassword").autocomplete=value?"new-password":"current-password";
- $("authSubmit").textContent=value?"Create account":"Sign in";
- $("authSwitch").textContent=value?"Already registered? Sign in":"New to El-Ai? Create account";
- $("authError").textContent="";
-}
-$("authSwitch").addEventListener("click",()=>setRegisterMode(!registerMode));
-
-function addMessageTo(target,text,role){
- const row=document.createElement("div");
- row.className="message "+role;
- const bubble=document.createElement("div");
- bubble.className="bubble";
- bubble.textContent=text;
- row.appendChild(bubble);
- target.appendChild(row);
- target.scrollTop=target.scrollHeight;
- return row;
-}
-function activeChat(){
- return conversationMode==="text"?textChat:audioChat;
-}
-function addMessage(text,role){return addMessageTo(activeChat(),text,role)}
-function addressUser(){return preferredTitle||currentUser?.name||"there"}
-function greetingText(){return "Welcome, "+addressUser()+". What are we working on today?"}
-
-function welcome(){
- audioChat.replaceChildren();
- textChat.replaceChildren();
- const intro="Welcome to El-Ai, "+addressUser()+".\n\nI'm your personal assistant, created by ELHAM STUDIOS. What can I help you with today?";
- addMessageTo(audioChat,intro,"assistant");
- addMessageTo(textChat,intro,"assistant");
- $("greeting").textContent=greetingText();
- $("textGreeting").textContent=greetingText();
-}
-
-function showChoice(){
- clearTimeout(welcomeTimer);
- app.classList.remove("ready");
- welcomeScreen.classList.add("hidden");
- choiceScreen.classList.remove("hidden");
-}
-function showConversation(mode){
- conversationMode=mode;
- choiceScreen.classList.add("hidden");
- welcomeScreen.classList.add("hidden");
- app.classList.add("ready");
- audioInterface.classList.toggle("hidden",mode!=="audio");
- textInterface.classList.toggle("hidden",mode!=="text");
-
- if(mode==="audio"){
-  setVoiceState("Tap the microphone to begin");
-  setVoiceHint("Speak naturally. El-Ai will answer aloud.");
- }else{
-  $("textInput").focus({preventScroll:true});
- }
- try{sessionStorage.setItem("elai_mode",mode)}catch(_){}
-}
-function showWelcome(isNew){
- clearTimeout(welcomeTimer);
- app.classList.remove("ready");
- choiceScreen.classList.add("hidden");
- welcomeScreen.classList.remove("hidden");
- $("welcomeTitle").textContent=isNew?"Welcome to El-Ai":"Welcome back, "+addressUser();
- $("welcomeMessage").textContent=isNew
-  ?"Your account is ready. Your next idea starts here."
-  :"Good to have you back, "+addressUser()+".";
- welcomeTimer=setTimeout(showChoice,3500);
-}
-
-async function loadProfile(){
- profileData={};
- try{
-  const data=await api("/profile");
-  if(data.profile&&typeof data.profile==="object")profileData=data.profile;
- }catch(_){}
- preferredTitle=String(profileData.preferred_title||"").trim().slice(0,50);
- $("preferredTitle").value=preferredTitle;
-}
-
-async function establishSession(data,isNew){
- if(!data.token||!data.user||!data.user.name){
-  throw new Error("The server did not return a valid account session.");
- }
- token=data.token;
- currentUser=data.user;
- try{sessionStorage.setItem("elai_session",token)}catch(_){}
- await loadProfile();
- welcome();
- hideAuth();
- setStatus("AI ONLINE");
- showWelcome(isNew);
-}
-
-async function restoreSession(){
- try{token=sessionStorage.getItem("elai_session")||""}catch(_){token=""}
- if(!token){showAuth();return}
- try{
-  const data=await api("/auth/me");
-  currentUser=data.user;
-  await loadProfile();
-  welcome();
-  hideAuth();
-  setStatus("AI ONLINE");
-  showWelcome(false);
- }catch(_){
-  token="";currentUser=null;
-  try{sessionStorage.removeItem("elai_session")}catch(__){}
-  showAuth();
- }
-}
-
-$("authForm").addEventListener("submit",async event=>{
- event.preventDefault();
- const button=$("authSubmit");
- button.disabled=true;
- $("authError").textContent="";
- const email=$("authEmail").value.trim().toLowerCase();
- const password=$("authPassword").value;
-
- try{
-  let data;
-  if(registerMode){
-   const name=$("authName").value.trim();
-   const title=$("authTitle").value.trim();
-   if(!name)throw new Error("Enter your name.");
-   if(!title)throw new Error("Choose what El-Ai should call you.");
-
-   data=await api("/auth/register",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({email,name,password})
-   });
-
-   token=data.token;
-   currentUser=data.user;
-   try{sessionStorage.setItem("elai_session",token)}catch(_){}
-   await saveProfileTitle(title);
-   await establishSession(data,true);
-  }else{
-   data=await api("/auth/login",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({email,password})
-   });
-   await establishSession(data,false);
+  function setMessage(id, message, type = "") {
+    const el = $(id);
+    el.textContent = message || "";
+    el.className = type === "error" ? "error" :
+      type === "success" ? "success" : "status-line";
   }
- }catch(error){
-  $("authError").textContent=error.message||"Could not sign in. Try again.";
- }finally{
-  button.disabled=false;
- }
-});
 
-function signOut(showMessage=true){
- clearTimeout(welcomeTimer);
- stopListening(true);
- if("speechSynthesis" in window)window.speechSynthesis.cancel();
-
- token="";currentUser=null;profileData={};preferredTitle="";
- requestNumber++;
- try{
-  sessionStorage.removeItem("elai_session");
-  sessionStorage.removeItem("elai_mode");
- }catch(_){}
- $("memoryPanel").classList.remove("open");
- $("titlePanel").classList.remove("open");
- app.classList.remove("ready");
- welcomeScreen.classList.add("hidden");
- choiceScreen.classList.add("hidden");
- audioChat.replaceChildren();
- textChat.replaceChildren();
- showAuth(showMessage?"You have signed out.":"");
-}
-$("logoutButton").addEventListener("click",()=>signOut(true));
-
-async function saveProfileTitle(value){
- const clean=String(value||"").trim().slice(0,50);
- const updated={...profileData,preferred_title:clean};
- const data=await api("/profile",{
-  method:"PUT",headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({profile:updated})
- });
- profileData=data.profile&&typeof data.profile==="object"?data.profile:updated;
- preferredTitle=clean;
- $("preferredTitle").value=clean;
- $("greeting").textContent=greetingText();
- $("textGreeting").textContent=greetingText();
- return true;
-}
-
-$("titleButton").addEventListener("click",()=>{
- $("preferredTitle").value=preferredTitle;
- $("titleMessage").textContent="";
- $("titlePanel").classList.add("open");
-});
-$("closeTitle").addEventListener("click",()=>$("titlePanel").classList.remove("open"));
-$("titlePanel").addEventListener("click",e=>{
- if(e.target===$("titlePanel"))$("titlePanel").classList.remove("open");
-});
-$("saveTitle").addEventListener("click",async()=>{
- const button=$("saveTitle");
- button.disabled=true;
- $("titleMessage").textContent="Saving...";
- try{
-  await saveProfileTitle($("preferredTitle").value);
-  $("titleMessage").textContent="Preference saved.";
-  welcome();
- }catch(error){
-  $("titleMessage").textContent="Could not save: "+error.message;
- }finally{button.disabled=false}
-});
-
-$("chooseAudio").addEventListener("click",()=>showConversation("audio"));
-$("chooseText").addEventListener("click",()=>showConversation("text"));
-$("changeModeButton").addEventListener("click",()=>{
- stopListening(true);
- if("speechSynthesis" in window)window.speechSynthesis.cancel();
- showChoice();
-});
-
-function updateListeningUI(value){
- isListening=value;
- voiceButton.classList.toggle("listening",value);
- orbStage.classList.toggle("listening",value);
- voiceButton.textContent=value?"■":"🎙";
- voiceButton.setAttribute("aria-label",value?"Stop listening":"Start listening");
-}
-
-function stopListening(manual=true){
- manualStop=manual;
- if(recognition&&isListening){
-  try{recognition.stop()}catch(_){}
- }
- updateListeningUI(false);
- if(!busy){
-  setVoiceState("Tap the microphone to begin");
-  setVoiceHint("Speak naturally. El-Ai will answer aloud.");
- }
-}
-
-function setupRecognition(){
- const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){
-  setVoiceState("Voice recognition unavailable");
-  setVoiceHint("This browser does not support speech recognition. Try a supported browser.");
-  return false;
- }
-
- recognition=new SpeechRecognition();
- recognition.lang="en-ZA";
- recognition.continuous=false;
- recognition.interimResults=true;
- recognition.maxAlternatives=1;
-
- recognition.onstart=()=>{
-  updateListeningUI(true);
-  setVoiceState("Listening...");
-  setVoiceHint("Go ahead. El-Ai is listening.");
- };
-
- recognition.onresult=event=>{
-  let interim="",finalText="";
-  for(let i=event.resultIndex;i<event.results.length;i++){
-   const phrase=event.results[i][0].transcript;
-   if(event.results[i].isFinal)finalText+=phrase;
-   else interim+=phrase;
+  async function checkHealth() {
+    try {
+      await api("/health");
+      $("backendStatus").textContent = "● Backend connected";
+      $("backendStatus").style.color = "#86efac";
+      $("connectionLabel").textContent = "● Connected";
+      $("connectionLabel").style.color = "#86efac";
+    } catch {
+      $("backendStatus").textContent = "Backend unavailable. Check your connection.";
+      $("connectionLabel").textContent = "Connection unavailable";
+      $("connectionLabel").style.color = "#fb7185";
+    }
   }
-  if(finalText.trim())finalTranscript=(finalTranscript+" "+finalText).trim();
-  setVoiceHint((finalTranscript||interim).trim()||"Listening...");
- };
 
- recognition.onerror=event=>{
-  updateListeningUI(false);
-  if(event.error==="not-allowed"||event.error==="service-not-allowed"){
-   setVoiceState("Microphone permission needed");
-   setVoiceHint("Allow microphone access in your browser settings.");
-  }else if(event.error==="no-speech"){
-   setVoiceState("No speech detected");
-   setVoiceHint("Tap the microphone and try again.");
-  }else if(event.error==="network"){
-   setVoiceState("Connection issue");
-   setVoiceHint("Speech recognition may require internet access.");
-  }else if(event.error!=="aborted"){
-   setVoiceState("Voice input unavailable");
-   setVoiceHint("Please try again.");
+  function showAuthPanel(panel) {
+    ["loginPanel", "registerPanel", "recoveryPanel"].forEach(id =>
+      $(id).classList.toggle("hidden", id !== panel)
+    );
+    setMessage("authMessage", "");
   }
- };
 
- recognition.onend=()=>{
-  updateListeningUI(false);
-  if(manualStop){
-   manualStop=false;
-   return;
-  }
-  const spoken=finalTranscript.trim();
-  finalTranscript="";
-  if(spoken){
-   setVoiceState("Preparing your reply...");
-   sendMessage(spoken,true);
-  }else if(!busy){
-   setVoiceState("Tap the microphone to begin");
-   setVoiceHint("No speech captured. Try again.");
-  }
- };
- return true;
-}
-
-function startListening(){
- if(busy||!token||conversationMode!=="audio")return;
- if(!recognition&&!setupRecognition())return;
- if("speechSynthesis" in window)window.speechSynthesis.cancel();
- orbStage.classList.remove("speaking");
- finalTranscript="";
- manualStop=false;
- try{recognition.start()}
- catch(_){setVoiceHint("Wait a moment, then tap the microphone again.")}
-}
-
-function toggleVoice(){
- if(busy||!token||conversationMode!=="audio")return;
- if(isListening)stopListening(true);
- else startListening();
-}
-voiceButton.addEventListener("click",toggleVoice);
-orbStage.addEventListener("click",toggleVoice);
-orbStage.addEventListener("keydown",event=>{
- if(event.key==="Enter"||event.key===" "){
-  event.preventDefault();
-  toggleVoice();
- }
-});
-
-function cleanForSpeech(text){
- return String(text||"")
-  .replace(/```[\s\S]*?```/g,"I've left out a code block.")
-  .replace(/https?:\/\/\S+/g,"a web link")
-  .replace(/[*_#>`~|\\^]/g,"")
-  .replace(/[ \t]{2,}/g," ")
-  .replace(/\n{3,}/g,"\n\n").trim();
-}
-
-function speakText(text){
- if(!("speechSynthesis" in window)){
-  setVoiceState("Reply received");
-  setVoiceHint("Speech playback is not supported by this browser.");
-  return;
- }
- const clean=cleanForSpeech(text);
- if(!clean)return;
-
- window.speechSynthesis.cancel();
- const utterance=new SpeechSynthesisUtterance(clean);
- utterance.lang="en-ZA";
- utterance.rate=.94;
- utterance.pitch=.95;
- utterance.volume=1;
-
- const voices=window.speechSynthesis.getVoices();
- const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));
- const selected=english.find(v=>/en-ZA/i.test(v.lang))
-  ||english.find(v=>/en-GB/i.test(v.lang))
-  ||english[0];
- if(selected)utterance.voice=selected;
-
- orbStage.classList.add("speaking");
- setVoiceState("El-Ai is speaking...");
- setVoiceHint("Listen to the reply. Tap the microphone when you're ready.");
-
- utterance.onend=()=>{
-  orbStage.classList.remove("speaking");
-  setVoiceState("Your turn");
-  setVoiceHint("Tap the microphone to continue.");
- };
- utterance.onerror=()=>{
-  orbStage.classList.remove("speaking");
-  setVoiceState("Reply received");
-  setVoiceHint("Tap the microphone to continue.");
- };
- window.speechSynthesis.speak(utterance);
-}
-
-document.querySelectorAll(".mode").forEach(button=>{
- button.addEventListener("click",()=>{
-  document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"));
-  button.classList.add("active");
-  selectedMode=button.dataset.mode;
-  $("textInput").placeholder=selectedMode==="Default"?"Message El-Ai...":"Ask "+selectedMode+"...";
- });
-});
-
-async function sendMessage(rawText,fromVoice=false){
- const text=String(rawText||"").trim();
- if(!text||busy||!token)return;
-
- if(isListening)stopListening(true);
- busy=true;
- const myRequest=++requestNumber;
-
- $("textSendButton").disabled=true;
- $("voiceButton").disabled=true;
- $("textInput").disabled=true;
-
- addMessage(text,"user");
- const target=activeChat();
- const pending=addMessageTo(target,"El-Ai is thinking...","assistant");
- const bubble=pending.querySelector(".bubble");
- bubble.classList.add("typing");
-
- const instructions=modeInstructions[selectedMode]||"";
- const message=instructions
-  ?"For this response, follow this approach: "+instructions+"\n\nUser's message: "+text
-  :text;
-
- try{
-  setStatus("THINKING");
-  const data=await api("/ask",{
-   method:"POST",
-   headers:{"Content-Type":"application/json","Accept":"application/json"},
-   body:JSON.stringify({message})
+  $("showRegister").addEventListener("click", () => showAuthPanel("registerPanel"));
+  $("backToLogin").addEventListener("click", () => showAuthPanel("loginPanel"));
+  $("showRecovery").addEventListener("click", () => {
+    $("recoveryEmail").value = $("loginEmail").value;
+    showAuthPanel("recoveryPanel");
   });
-  if(myRequest!==requestNumber)return;
-  if(typeof data.reply!=="string"||!data.reply.trim()){
-   throw new Error("The server returned no reply.");
-  }
-  bubble.textContent=data.reply;
-  setStatus("AI ONLINE");
+  $("recoveryBack").addEventListener("click", () => showAuthPanel("loginPanel"));
 
-  if(fromVoice&&conversationMode==="audio"){
-   speakText(data.reply);
-  }
- }catch(error){
-  if(myRequest!==requestNumber)return;
-  bubble.textContent="Sorry, "+addressUser()+". "+(error.message||"I couldn't get a reply.");
-  setStatus("REQUEST FAILED","#ff9baa");
-  if(fromVoice){
-   setVoiceState("I couldn't get a reply");
-   setVoiceHint("Check your connection and try again.");
-  }
- }finally{
-  if(myRequest===requestNumber){
-   bubble.classList.remove("typing");
-   busy=false;
-   $("textSendButton").disabled=false;
-   $("voiceButton").disabled=false;
-   $("textInput").disabled=false;
-   audioChat.scrollTop=audioChat.scrollHeight;
-   textChat.scrollTop=textChat.scrollHeight;
-  }
- }
-}
-
-$("textForm").addEventListener("submit",event=>{
- event.preventDefault();
- const text=$("textInput").value;
- $("textInput").value="";
- $("textInput").style.height="auto";
- sendMessage(text,false);
-});
-
-$("textInput").addEventListener("input",()=>{
- const input=$("textInput");
- input.style.height="auto";
- input.style.height=Math.min(input.scrollHeight,120)+"px";
-});
-$("textInput").addEventListener("keydown",event=>{
- if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
-  event.preventDefault();
-  $("textForm").requestSubmit();
- }
-});
-
-document.querySelectorAll("[data-prompt]").forEach(button=>{
- button.addEventListener("click",()=>sendMessage(button.dataset.prompt,false));
-});
-
-async function openMemories(){
- if(!token)return;
- $("memoryPanel").classList.add("open");
- $("memoryList").textContent="Loading memories...";
- try{await loadMemories()}
- catch(error){$("memoryList").textContent="Could not load memories: "+error.message}
-}
-
-async function loadMemories(){
- const data=await api("/memory");
- const list=$("memoryList");
- list.replaceChildren();
-
- if(!Array.isArray(data.memories)||!data.memories.length){
-  list.textContent="No saved memories yet.";
-  return;
- }
-
- data.memories.forEach(memory=>{
-  const item=document.createElement("div");
-  item.className="memory-item";
-  const content=document.createElement("span");
-  content.textContent=memory.content;
-  const remove=document.createElement("button");
-  remove.type="button";
-  remove.textContent="Delete";
-
-  remove.addEventListener("click",async()=>{
-   remove.disabled=true;
-   try{
-    await api("/memory/"+encodeURIComponent(memory.id),{method:"DELETE"});
-    await loadMemories();
-   }catch(error){
-    remove.disabled=false;
-    alert("Could not delete memory: "+error.message);
-   }
+  document.querySelectorAll("[data-toggle]").forEach(button => {
+    button.addEventListener("click", () => {
+      const input = $(button.dataset.toggle);
+      const reveal = input.type === "password";
+      input.type = reveal ? "text" : "password";
+      button.textContent = reveal ? "Hide" : "Show";
+      button.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+    });
   });
 
-  item.append(content,remove);
-  list.appendChild(item);
- });
-}
+  $("loginForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    setMessage("authMessage", "Signing in…");
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
 
-$("memoryButton").addEventListener("click",openMemories);
-$("closeMemory").addEventListener("click",()=>$("memoryPanel").classList.remove("open"));
-$("memoryPanel").addEventListener("click",event=>{
- if(event.target===$("memoryPanel"))$("memoryPanel").classList.remove("open");
-});
-
-$("memoryForm").addEventListener("submit",async event=>{
- event.preventDefault();
- const field=$("memoryInput");
- const content=field.value.trim();
- if(!content)return;
-
- const button=$("memoryForm").querySelector("button");
- button.disabled=true;
- try{
-  await api("/memory",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({content})
+    try {
+      const data = await api("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
+      });
+      const newToken = data.access_token || data.token;
+      if (!newToken) throw new Error("The server did not return a login token.");
+      token = newToken;
+      localStorage.setItem("elai_token", token);
+      await startApp();
+    } catch (error) {
+      setMessage("authMessage", error.message, "error");
+    }
   });
-  field.value="";
-  await loadMemories();
- }catch(error){
-  alert("Could not save memory: "+error.message);
- }finally{button.disabled=false}
-});
 
-async function checkConnection(){
- try{
-  const response=await fetch(API_BASE+"/health");
-  if(!response.ok)throw new Error("Offline");
-  const data=await response.json();
-  setStatus(data.ai_configured?"AI ONLINE":"KEY MISSING",data.ai_configured?"#d4b5ff":"#ffd08a");
- }catch(_){
-  setStatus("OFFLINE","#ff879d");
- }
-}
+  $("registerForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const name = $("registerName").value.trim();
+    const email = $("registerEmail").value.trim();
+    const password = $("registerPassword").value;
+    const confirm = $("confirmPassword").value;
 
-checkConnection();
-restoreSession();
+    if (password.length < 8) {
+      setMessage("authMessage", "Your password must contain at least 8 characters.", "error");
+      return;
+    }
+    if (password !== confirm) {
+      setMessage("authMessage", "The passwords do not match.", "error");
+      $("confirmPassword").focus();
+      return;
+    }
+
+    setMessage("authMessage", "Creating your account…");
+    try {
+      const data = await api("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const newToken = data.access_token || data.token;
+      if (newToken) {
+        token = newToken;
+        localStorage.setItem("elai_token", token);
+        await startApp();
+      } else {
+        $("loginEmail").value = email;
+        $("loginPassword").value = "";
+        showAuthPanel("loginPanel");
+        setMessage("authMessage", "Account created. Sign in with your new account.", "success");
+      }
+    } catch (error) {
+      setMessage("authMessage", error.message, "error");
+    }
+  });
+
+  $("recoveryForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const email = $("recoveryEmail").value.trim();
+    setMessage("authMessage", "Sending recovery request…");
+
+    try {
+      const data = await api("/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email })
+      });
+      setMessage("authMessage", data.message || "If account recovery is enabled, follow the instructions sent to your email.", "success");
+    } catch (error) {
+      setMessage(
+        "authMessage",
+        "Account recovery is not available on the server yet, or the request failed. The backend must implement POST /auth/forgot-password before this feature can send recovery instructions.",
+        "error"
+      );
+    }
+  });
+
+  function switchView(viewId) {
+    ["homeView", "chatView", "memoryView", "profileView"].forEach(id =>
+      $(id).classList.toggle("hidden", id !== viewId)
+    );
+    document.querySelectorAll("[data-view]").forEach(button =>
+      button.classList.toggle("active", button.dataset.view === viewId)
+    );
+    if (viewId === "memoryView") loadMemories();
+    if (viewId === "profileView") loadProfile();
+    if (viewId === "chatView") setTimeout(() => $("chatInput").focus(), 100);
+  }
+
+  document.querySelectorAll("[data-view]").forEach(button =>
+    button.addEventListener("click", () => switchView(button.dataset.view))
+  );
+
+  document.querySelectorAll("[data-prompt]").forEach(button =>
+    button.addEventListener("click", () => {
+      $("chatInput").value = button.dataset.prompt;
+      switchView("chatView");
+      $("chatInput").focus();
+    })
+  );
+
+  $("modeSelect").addEventListener("change", () => {
+    const selected = $("modeSelect");
+    $("currentMode").textContent = selected.options[selected.selectedIndex].text;
+  });
+
+  function addMessage(role, text) {
+    const empty = $("emptyChat");
+    if (empty) empty.remove();
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "message " + (role === "user" ? "user" : "assistant");
+
+    const content = document.createElement("div");
+    content.className = "bubble";
+
+    const label = document.createElement("div");
+    label.className = "message-label";
+    label.textContent = role === "user" ? "YOU" : "EL-AI";
+
+    const body = document.createElement("div");
+    body.textContent = text;
+
+    content.append(label, body);
+    wrapper.appendChild(content);
+    $("messages").appendChild(wrapper);
+    $("messages").scrollTop = $("messages").scrollHeight;
+    wrapper.scrollIntoView({ behavior: "smooth", block: "end" });
+    return body;
+  }
+
+  function newChat() {
+    chatHistory = [];
+    $("messages").innerHTML = '<div class="empty" id="emptyChat">Start a conversation. What are you thinking about?</div>';
+    $("chatInput").value = "";
+    switchView("chatView");
+  }
+  $("newChatBtn").addEventListener("click", newChat);
+  $("clearChatBtn").addEventListener("click", newChat);
+
+  async function sendMessage() {
+    const input = $("chatInput");
+    const message = input.value.trim();
+    if (!message || busy) return;
+
+    busy = true;
+    $("sendBtn").disabled = true;
+    input.value = "";
+    addMessage("user", message);
+    const replyElement = addMessage("assistant", "Thinking…");
+
+    const mode = $("modeSelect").value;
+    const profileStyle = $("profileStyle").value || "balanced";
+
+    try {
+      const data = await api("/ask", {
+        method: "POST",
+        body: JSON.stringify({
+          message,
+          prompt: message,
+          mode,
+          style: profileStyle,
+          history: chatHistory
+        })
+      });
+
+      const reply = data.reply || data.response || data.answer ||
+        data.message || data.output || "I received a response, but it was empty.";
+      replyElement.textContent = reply;
+      chatHistory.push(
+        { role: "user", content: message },
+        { role: "assistant", content: reply }
+      );
+      if (chatHistory.length > 24) chatHistory = chatHistory.slice(-24);
+
+      if (data.speak === true || localStorage.getItem("elai_voice_output") === "true") {
+        speak(reply);
+      }
+    } catch (error) {
+      replyElement.textContent = "I couldn't get a response from the server.\n\n" +
+        error.message + "\n\nCheck your connection and make sure the backend's /ask endpoint is running.";
+    } finally {
+      busy = false;
+      $("sendBtn").disabled = false;
+      input.focus();
+    }
+  }
+
+  $("sendBtn").addEventListener("click", sendMessage);
+  $("chatInput").addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+  $("chatInput").addEventListener("input", () => {
+    $("chatInput").style.height = "auto";
+    $("chatInput").style.height = Math.min($("chatInput").scrollHeight, 130) + "px";
+  });
+
+  function speak(text) {
+    if (!("speechSynthesis" in window)) {
+      alert("Voice output is not supported by this browser.");
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function toggleVoiceOutput() {
+    const enabled = localStorage.getItem("elai_voice_output") === "true";
+    localStorage.setItem("elai_voice_output", enabled ? "false" : "true");
+    alert("Voice replies " + (enabled ? "disabled." : "enabled.") +
+      " Speech uses your device's built-in speech engine.");
+  }
+
+  function setupSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      $("micBtn").addEventListener("click", () => {
+        alert("Voice input is not supported in this browser. Try Chrome on your phone.");
+      });
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = navigator.language || "en-ZA";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      $("micBtn").classList.add("recording");
+      $("micBtn").textContent = "■";
+      $("chatInput").placeholder = "Listening…";
+    };
+    recognition.onresult = event => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      $("chatInput").value = transcript;
+      $("chatInput").dispatchEvent(new Event("input"));
+    };
+    recognition.onerror = event => {
+      if (event.error !== "no-speech" && event.error !== "aborted") {
+        console.warn("Voice recognition:", event.error);
+      }
+    };
+    recognition.onend = () => {
+      isRecording = false;
+      $("micBtn").classList.remove("recording");
+      $("micBtn").textContent = "🎙";
+      $("chatInput").placeholder = "Message El-AI…";
+    };
+
+    $("micBtn").addEventListener("click", () => {
+      try {
+        if (isRecording) recognition.stop();
+        else recognition.start();
+      } catch (error) {
+        console.warn(error);
+      }
+    });
+  }
+
+  async function loadMemories() {
+    $("memoryList").innerHTML = '<div class="empty">Loading memories…</div>';
+    try {
+      const data = await api("/memory");
+      memories = Array.isArray(data) ? data :
+        (data.memories || data.items || data.results || []);
+      renderMemories();
+    } catch (error) {
+      $("memoryList").innerHTML = "";
+      const message = document.createElement("p");
+      message.className = "error";
+      message.textContent = "Could not load memories: " + error.message;
+      $("memoryList").appendChild(message);
+    }
+  }
+
+  function renderMemories() {
+    const list = $("memoryList");
+    list.innerHTML = "";
+    if (!memories.length) {
+      list.innerHTML = '<div class="empty">No saved memories yet.</div>';
+      return;
+    }
+
+    memories.forEach(memory => {
+      const id = memory.id ?? memory.memory_id;
+      const text = memory.content ?? memory.text ?? memory.memory ?? memory.value ?? "";
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const body = document.createElement("div");
+      body.textContent = text || JSON.stringify(memory);
+
+      const actions = document.createElement("div");
+      actions.className = "item-actions";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "danger-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => deleteMemory(id));
+      actions.appendChild(deleteBtn);
+      item.append(body, actions);
+      list.appendChild(item);
+    });
+  }
+
+  $("memoryForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const text = $("memoryText").value.trim();
+    if (!text) return;
+
+    const button = $("memoryForm").querySelector("button[type=submit]");
+    button.disabled = true;
+    try {
+      await api("/memory", {
+        method: "POST",
+        body: JSON.stringify({ content: text, text })
+      });
+      $("memoryText").value = "";
+      await loadMemories();
+    } catch (error) {
+      alert("Couldn't save memory: " + error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  async function deleteMemory(id) {
+    if (id === undefined || id === null) {
+      alert("This memory has no ID, so it cannot be deleted from here.");
+      return;
+    }
+    if (!confirm("Delete this saved memory?")) return;
+
+    try {
+      await api("/memory/" + encodeURIComponent(id), { method: "DELETE" });
+      await loadMemories();
+    } catch (error) {
+      alert("Couldn't delete memory: " + error.message);
+    }
+  }
+  $("refreshMemoryBtn").addEventListener("click", loadMemories);
+
+  async function loadProfile() {
+    $("profileMessage").textContent = "Loading profile…";
+    try {
+      const data = await api("/profile");
+      const profile = data.profile || data;
+      $("profileName").value = profile.name || profile.display_name || currentUser?.name || "";
+      $("profileTitle").value = profile.title || profile.preferred_title || "";
+      $("profileStyle").value = profile.style || profile.response_style || "balanced";
+      $("accountEmail").textContent = "Email: " + (currentUser?.email || profile.email || "—");
+      $("profileMessage").textContent = "";
+    } catch (error) {
+      $("profileMessage").textContent = "Profile could not be loaded: " + error.message;
+      $("accountEmail").textContent = "Email: " + (currentUser?.email || "—");
+      $("profileName").value = currentUser?.name || "";
+    }
+  }
+
+  $("profileForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const payload = {
+      name: $("profileName").value.trim(),
+      title: $("profileTitle").value.trim(),
+      style: $("profileStyle").value
+    };
+    $("profileMessage").textContent = "Saving…";
+
+    try {
+      const data = await api("/profile", {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      });
+      currentUser = { ...(currentUser || {}), ...payload };
+      $("welcomeTitle").textContent = "Welcome, " + (payload.name || "to El-AI");
+      $("profileMessage").textContent = data.message || "Profile saved.";
+    } catch (error) {
+      $("profileMessage").textContent = "Couldn't save profile: " + error.message;
+    }
+  });
+
+  async function startApp() {
+    try {
+      const data = await api("/auth/me");
+      currentUser = data.user || data;
+      if (!currentUser || typeof currentUser !== "object") currentUser = {};
+    } catch (error) {
+      token = "";
+      localStorage.removeItem("elai_token");
+      authScreen.classList.remove("hidden");
+      mainScreen.classList.add("hidden");
+      showAuthPanel("loginPanel");
+      setMessage("authMessage", "Please sign in again. " + error.message, "error");
+      return;
+    }
+
+    authScreen.classList.add("hidden");
+    mainScreen.classList.remove("hidden");
+
+    const name = currentUser.name || currentUser.display_name || "";
+    $("welcomeTitle").textContent = name ? "Welcome, " + name : "Welcome to El-AI";
+    $("accountEmail").textContent = "Email: " + (currentUser.email || "—");
+    setupSpeechRecognition();
+    switchView("homeView");
+    loadProfile();
+    checkHealth();
+  }
+
+  function logout() {
+    token = "";
+    currentUser = null;
+    chatHistory = [];
+    localStorage.removeItem("elai_token");
+    if (recognition && isRecording) recognition.stop();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    mainScreen.classList.add("hidden");
+    authScreen.classList.remove("hidden");
+    $("loginPassword").value = "";
+    showAuthPanel("loginPanel");
+  }
+  $("logoutBtn").addEventListener("click", logout);
+  $("profileLogoutBtn").addEventListener("click", logout);
+
+  checkHealth();
+  if (token) startApp();
 })();
 </script>
 </body>
