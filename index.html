@@ -4,334 +4,468 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#090615">
+<meta name="theme-color" content="#08050f">
 <title>El-Ai | ELHAM STUDIOS</title>
+
 <style>
-:root{--bg:#090615;--purple:#a56bff;--pink:#fa80ff;--blue:#668dff;--text:#f7f2ff;--muted:#9d93b7;--line:rgba(188,143,255,.19);--lime:#c7ff83}
+:root{
+  --bg:#08050f;--panel:#110b1c;--panel2:#191025;
+  --purple:#a970ff;--violet:#7440db;--pink:#e78cff;
+  --white:#f8f3ff;--muted:#a99ab9;--line:#352347;
+  --green:#c6ff8a;--red:#ff879d
+}
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg)}
-body{color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% 19%,#28124d 0%,transparent 37%),radial-gradient(ellipse at 5% 75%,#171039 0%,transparent 40%),radial-gradient(ellipse at 95% 85%,#170d34 0%,transparent 36%),var(--bg)}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(#b38aff12 1px,transparent 1px),linear-gradient(90deg,#b38aff12 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+html,body{margin:0;width:100%;height:100%;background:var(--bg)}
+body{
+ color:var(--white);font-family:Inter,system-ui,-apple-system,sans-serif;
+ background:radial-gradient(ellipse at 50% 0%,#291347 0,transparent 48%),var(--bg)
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;
+ background-image:linear-gradient(#b88bff12 1px,transparent 1px),
+ linear-gradient(90deg,#b88bff12 1px,transparent 1px);
+ background-size:34px 34px
+}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.5;cursor:wait}
-.app{max-width:760px;height:100vh;height:100dvh;margin:auto;display:flex;flex-direction:column;position:relative;overflow:hidden}
-header{display:flex;align-items:center;gap:11px;padding:12px 15px;border-bottom:1px solid var(--line);background:#0b0715e8;backdrop-filter:blur(20px);z-index:3;flex-shrink:0}
-.logo{width:49px;height:49px;flex-shrink:0;display:grid;place-items:center;border-radius:15px;background:#10051f;border:1px solid #a56bff55;box-shadow:0 0 18px #a56bff25;overflow:hidden}
-.logo svg{width:43px;height:43px;filter:drop-shadow(0 0 4px #8f59ff)}
-.brand{flex:1;min-width:0}
-.brand h1{margin:0;font-size:19px;letter-spacing:1.5px}
-.brand-subtitle{margin:3px 0 0;font-size:9px;letter-spacing:1.5px;color:#d5b5ff}
-.brand-studio{margin:3px 0 0;font-size:8px;letter-spacing:2px;color:var(--muted)}
-.status{display:flex;align-items:center;gap:6px;font-size:9px;white-space:nowrap;color:#c5a9ff}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#b994ff;box-shadow:0 0 8px #b994ff;animation:pulse 2s infinite}
-@keyframes pulse{50%{opacity:.4}}
-main{flex:1;min-height:0;display:flex;flex-direction:column}
-.hero{flex-shrink:0;text-align:center;padding:5px 12px 0}
-.eyebrow{margin:10px 0 0;color:#c29aff;font-size:9px;letter-spacing:3px;font-weight:700}
-.orb-stage{height:165px;width:260px;max-width:100%;margin:0 auto;position:relative;display:grid;place-items:center;perspective:700px;isolation:isolate;cursor:pointer;touch-action:manipulation}
-.orb-glow{position:absolute;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle,#a56bff,#6935c9 38%,transparent 72%);filter:blur(26px);opacity:.42;animation:glow 5s infinite;pointer-events:none}
-.energy-wave{position:absolute;z-index:1;width:100px;height:100px;border:1px solid #a56bff77;border-radius:50%;opacity:0;pointer-events:none;animation:wave 4.2s infinite}
-.wave-two{animation-delay:1.4s;border-color:#fa80ff66}.wave-three{animation-delay:2.8s;border-color:#668dff77}
-.orb{position:relative;z-index:2;width:88px;height:88px;border-radius:43% 57% 62% 38%/42% 40% 60% 58%;background:radial-gradient(ellipse at 32% 25%,#fff,transparent 24%),radial-gradient(ellipse at 65% 68%,#fa63ff,transparent 36%),radial-gradient(ellipse at 30% 70%,#388dff,transparent 42%),conic-gradient(#4b2cff,#f26bff,#3420c7,#50dcff,#852dff,#4b2cff);box-shadow:inset -10px -12px 20px #080315a8,inset 5px 4px 13px #ffe5ff66,0 0 30px #a33bff55;animation:core 5s ease-in-out infinite;pointer-events:none}
-.orb:before{content:"";position:absolute;inset:-5px;border-radius:inherit;background:conic-gradient(transparent,#cda1ff,#73eaff,transparent,#ff9cff,transparent);filter:blur(9px);opacity:.42;animation:turn 12s linear infinite}
-.orb:after{content:"";position:absolute;inset:9px;border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#fff,transparent 30%),radial-gradient(ellipse at 65% 65%,#a24dff,#5634ff 36%,transparent 70%);filter:blur(5px);animation:inner 4s infinite alternate}
-.sound-field{position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;opacity:.28;pointer-events:none}
-.sound-field span{width:3px;height:7px;border-radius:5px;background:linear-gradient(#668dff,#fa80ff);animation:sound 1.5s infinite}
-.sound-field span:nth-child(3n){animation-delay:.2s}
-@keyframes core{0%,100%{transform:scale(.94) rotate(-7deg)}50%{transform:scale(1.08) rotate(12deg)}}
-@keyframes glow{50%{transform:scale(1.2);opacity:.5}}
-@keyframes turn{to{transform:rotate(360deg)}}
-@keyframes inner{to{transform:scale(1.08) rotate(18deg)}}
-@keyframes wave{0%{transform:scale(.72);opacity:0}15%{opacity:.48}100%{transform:scale(2.15);opacity:0}}
-@keyframes sound{50%{height:12px}}
-.orb-stage.listening .orb-glow{background:radial-gradient(circle,#c7ff83,#7bba4c 38%,transparent 72%);opacity:.7}
-.orb-stage.listening .energy-wave{animation-duration:1.8s;border-color:#c7ff83}
-.orb-stage.speaking .sound-field{opacity:1}
-.hero h2{font-size:23px;line-height:1.3;letter-spacing:.5px;margin:-3px 0 6px}
-.hero h2 span{background:linear-gradient(90deg,#d6a0ff,#ffb0ef,#8eabff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.subtitle{margin:0;color:var(--muted);font-size:12px}
-.mode-section{padding:12px 16px 8px;flex-shrink:0}
-.section-label{font-size:9px;color:#a99abd;letter-spacing:2px;margin:0 0 9px 2px}
-.modes{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 4px}
-.mode{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:9px 12px;color:#c0b4d8;border:1px solid var(--line);border-radius:12px;background:#151027bb;font-size:11px}
-.mode.active{color:#fff;border-color:#bd8aff99;background:linear-gradient(130deg,#6f38a84d,#4033a84d)}
-.chat{flex:1;min-height:60px;overflow-y:auto;padding:8px 16px 15px;scrollbar-width:thin;scrollbar-color:#493369 transparent;overscroll-behavior:contain}
-.message{display:flex;margin:10px 0;animation:appear .22s ease-out}
-.message.user{justify-content:flex-end}
-.bubble{max-width:90%;padding:12px 14px;border:1px solid var(--line);border-radius:15px 15px 15px 4px;background:linear-gradient(145deg,#1a1430,#100c20);font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
-.user .bubble{border-color:#b079ff65;border-radius:15px 15px 4px 15px;background:linear-gradient(135deg,#55328e,#39256a)}
-.typing{color:#d5a8ff;animation:pulse 1.3s infinite alternate}
-@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.quick{display:flex;gap:7px;overflow-x:auto;padding:8px 15px 11px;scrollbar-width:none;flex-shrink:0}
-.quick button,.small-button{flex-shrink:0;padding:8px 11px;border-radius:20px;border:1px solid var(--line);background:#160f27;color:#d8c8f4;font-size:10px}
-.composer-wrap{padding:8px 13px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,#090615 20%);flex-shrink:0}
-.composer{display:flex;align-items:flex-end;gap:7px;padding:8px;border:1px solid #7653a0;border-radius:19px;background:#120d21ed}
-#messageInput{flex:1;min-width:0;max-height:105px;resize:none;padding:10px 6px;outline:none;border:0;color:white;background:transparent;font-size:13px;line-height:1.5}
-#messageInput::placeholder{color:#9485ae}
-#voiceButton,#sendButton{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:14px;color:white}
-#voiceButton{border:1px solid #c7ff8344;background:#c7ff8310;color:var(--lime)}
-#sendButton{border:0;font-size:20px;background:linear-gradient(135deg,#d48cff,#9a5bff 52%,#676bff)}
-.voice-hint{min-height:13px;text-align:center;color:#a8c97e;font-size:9px;padding-top:5px}
-.footer{text-align:center;color:#77688f;font-size:9px;letter-spacing:1.5px;padding-top:7px}
-.auth-screen,.welcome-screen,.choice-screen{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 15%,#28124d,#090615 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.welcome-screen,.choice-screen{z-index:30;text-align:center}
-.auth-card,.screen-card{width:100%;max-width:390px;padding:25px 21px;border:1px solid #a56bff55;border-radius:24px;background:#100b20ed;box-shadow:0 0 45px #8b4cff18}
-.auth-card h2,.screen-card h2{margin:0 0 7px;font-size:26px;text-align:center}
-.auth-card p,.screen-card p{font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
-.auth-card label{display:block;font-size:11px;color:#d7c5f4;margin:14px 0 6px}
-.auth-card input,.settings-input{width:100%;padding:13px;border-radius:12px;border:1px solid #6c4a91;background:#090615;color:white;outline:none}
-.auth-card input:focus,.settings-input:focus{border-color:#c091ff}
-.auth-submit,.primary-button{width:100%;padding:13px;margin-top:17px;border:0;border-radius:12px;background:linear-gradient(135deg,#d48cff,#7951ff);color:white;font-weight:700}
-.auth-switch,.secondary-button{width:100%;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:transparent;color:#d9bdff}
-.auth-error{color:#ff9baa!important;min-height:18px}
-.account-tools{display:flex;gap:6px;align-items:center}
-.account-tools button{padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:#160f27;color:#d8c8f4;font-size:10px}
-.memory-panel{position:fixed;inset:0;z-index:40;background:#05030bdc;display:none;align-items:flex-end;justify-content:center;padding:12px}
-.memory-panel.open{display:flex}
-.memory-card{width:100%;max-width:650px;max-height:75dvh;overflow:auto;border:1px solid #a56bff66;border-radius:20px;background:#100b20;padding:18px}
-.memory-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.memory-head h3{margin:0}
-.memory-head button{border:1px solid var(--line);background:#160f27;color:white;border-radius:10px;padding:8px 12px}
-.memory-form{display:flex;gap:7px;margin:12px 0}
-.memory-form input{flex:1;min-width:0;background:#090615;color:white;border:1px solid #6c4a91;border-radius:10px;padding:11px}
-.memory-form button{border:0;border-radius:10px;padding:10px;background:#8050ce;color:white}
-.memory-item{padding:11px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.memory-item button{float:right;margin-left:8px;background:transparent;border:1px solid #9b5570;color:#ffb6c4;border-radius:8px;padding:4px 7px}
-.screen-logo{width:104px;height:104px;margin:0 auto 22px;display:grid;place-items:center;border-radius:30px;border:1px solid #b58aff77;background:#120823;box-shadow:0 0 45px #9b5aff35}
-.screen-logo svg{width:90px;height:90px;filter:drop-shadow(0 0 8px #9b5aff)}
-.screen-kicker{font-size:10px!important;letter-spacing:3px;color:#d4b2ff!important}
-.screen-card .choice-button{width:100%;padding:17px 14px;margin-top:12px;border:1px solid #9e70d866;border-radius:15px;background:linear-gradient(135deg,#24123c,#17102a);color:#fff;text-align:left;display:flex;align-items:center;gap:13px}
-.choice-icon{font-size:26px;width:36px;text-align:center}
-.choice-button strong{display:block;font-size:14px}
-.choice-button small{display:block;color:#b6a6d0;font-size:11px;margin-top:4px}
-.screen-card .back-button{width:100%;padding:10px;border:0;background:transparent;color:#bca9d7;margin-top:12px}
-.welcome-screen .screen-card{border:0;background:transparent;box-shadow:none}
-.welcome-screen .screen-logo{animation:core 4s ease-in-out infinite}
-#app{visibility:hidden}
-#app.ready{visibility:visible}
-.audio-view #textInterface{display:none!important}
-.text-view #audioInterface{display:none!important}
-.text-view .mode-section{display:block}
-.audio-view .mode-section{display:none}
-.audio-view #quickPrompts{display:none}
-.text-view #quickPrompts{display:flex}
 .hidden{display:none!important}
-@media(max-height:730px){.eyebrow{margin-top:4px}.orb-stage{height:125px;width:230px}.orb{width:72px;height:72px}.hero h2{font-size:19px}.mode-section{padding-top:7px}}
-@media(max-width:420px){header{gap:7px;padding:10px}.account-tools button{padding:7px;font-size:9px}.brand h1{font-size:17px}.status{font-size:8px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+button:focus-visible,input:focus-visible,textarea:focus-visible{
+ outline:2px solid var(--purple);outline-offset:3px
+}
+#app{
+ width:100%;max-width:780px;height:100dvh;min-height:0;margin:auto;
+ display:flex;flex-direction:column;overflow:hidden;visibility:hidden;
+ position:relative
+}
+#app.ready{visibility:visible}
+header{
+ flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 13px;
+ border-bottom:1px solid var(--line);background:#0b0715ed;
+ backdrop-filter:blur(18px);z-index:3
+}
+.logo{
+ width:45px;height:45px;flex-shrink:0;display:grid;place-items:center;
+ border-radius:15px;border:1px solid #a970ff55;
+ background:linear-gradient(145deg,#241239,#0b0713);
+ box-shadow:0 0 23px #984dff20
+}
+.logo svg{width:35px;height:35px}
+.brand{flex:1;min-width:0}
+.brand h1{margin:0;font-size:19px;letter-spacing:2px}
+.brand small{display:block;margin-top:3px;font-size:8px;letter-spacing:1.8px;color:#c8a9ff}
+.brand .studio{color:#8e7d9f;letter-spacing:2px;margin-top:4px}
+.tools{display:flex;gap:5px;align-items:center}
+.tools button{
+ border:1px solid var(--line);background:#171020;color:#e5d6fa;
+ border-radius:9px;padding:7px 8px;font-size:10px
+}
+.status{display:flex;align-items:center;gap:5px;font-size:8px;color:#d4b5ff;white-space:nowrap}
+.dot{width:6px;height:6px;background:var(--purple);border-radius:50%;box-shadow:0 0 9px var(--purple)}
+main{flex:1;min-height:0;display:flex;flex-direction:column}
+.view{display:flex;flex:1;min-height:0;flex-direction:column}
+.hero{text-align:center;padding:10px 12px 0;flex-shrink:0}
+.kicker{font-size:9px;letter-spacing:3px;color:#c59aff;font-weight:700;margin:7px 0}
+.hero h2{font-size:22px;line-height:1.3;margin:0 0 5px}
+.hero h2 span{
+ background:linear-gradient(90deg,#d9b1ff,#f1a7ff,#a3a9ff);
+ -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.sub{font-size:11px;color:var(--muted);margin:0}
+.orb-stage{
+ position:relative;width:260px;max-width:100%;height:180px;margin:0 auto;
+ display:grid;place-items:center;cursor:pointer;touch-action:manipulation;
+ perspective:700px
+}
+.flame-glow{
+ position:absolute;width:120px;height:130px;border-radius:50%;
+ background:radial-gradient(ellipse,#a970ff80,#7629e233 40%,transparent 72%);
+ filter:blur(23px);animation:glow 4s ease-in-out infinite
+}
+.flame-svg{position:relative;width:100px;height:130px;z-index:2;overflow:visible;
+ filter:drop-shadow(0 0 9px #a970ff66);animation:flameFloat 3s ease-in-out infinite}
+.ring{
+ position:absolute;width:115px;height:45px;border:1px solid #ba87ff9c;
+ border-radius:50%;transform:rotate(-28deg);z-index:1;
+ box-shadow:0 0 12px #a970ff19
+}
+.ring.r2{width:145px;height:53px;transform:rotate(38deg);border-color:#dc91ff65}
+.ring.r3{width:100px;height:34px;transform:rotate(90deg);border-color:#8554ff65}
+.pulse{
+ position:absolute;width:100px;height:100px;border:1px solid #ba87ff;
+ border-radius:50%;opacity:0;animation:wave 3s infinite
+}
+.pulse.p2{animation-delay:1.5s}
+.orb-stage.listening .flame-glow{background:radial-gradient(ellipse,#c6ff8a88,transparent 70%)}
+.orb-stage.listening .ring{border-color:#c6ff8a}
+.orb-stage.listening .pulse{border-color:var(--green);animation-duration:1.5s}
+.orb-stage.speaking .flame-svg{animation:flameTalk .4s ease-in-out infinite alternate}
+@keyframes glow{50%{transform:scale(1.2);opacity:.65}}
+@keyframes flameFloat{50%{transform:translateY(-7px) scale(1.04)}}
+@keyframes flameTalk{to{transform:scale(1.09) translateY(-3px)}}
+@keyframes wave{0%{transform:scale(.8);opacity:0}20%{opacity:.5}100%{transform:scale(2.2);opacity:0}}
+.chat{
+ flex:1;min-height:50px;overflow-y:auto;padding:9px 15px 15px;
+ overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#52336f transparent
+}
+.message{display:flex;margin:10px 0;animation:appear .2s ease-out}
+.message.user{justify-content:flex-end}
+.bubble{
+ max-width:90%;padding:11px 13px;border:1px solid var(--line);
+ border-radius:15px 15px 15px 4px;background:linear-gradient(145deg,#1c1429,#110b1a);
+ font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere
+}
+.message.user .bubble{
+ border-color:#9560d866;border-radius:15px 15px 4px 15px;
+ background:linear-gradient(135deg,#59338a,#35204e)
+}
+.typing{color:#c6a0ff;animation:glow 1.2s infinite alternate}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.voice-controls{
+ flex-shrink:0;padding:12px 15px calc(12px + env(safe-area-inset-bottom));
+ text-align:center;background:linear-gradient(transparent,#08050f 18%)
+}
+.mic-main{
+ width:65px;height:65px;border:1px solid #d0a0ff88;border-radius:23px;
+ color:white;background:linear-gradient(145deg,#a970ff,#6332b6);
+ font-size:25px;box-shadow:0 0 25px #9956ff33
+}
+.mic-main.listening{background:linear-gradient(145deg,#c6ff8a,#689a3b);color:#141b0c}
+.voice-state{font-size:11px;color:#c9b6e3;margin:9px 0 3px}
+.voice-hint{font-size:10px;color:#9181a6;min-height:15px}
+.footer{font-size:8px;letter-spacing:2px;color:#766583;text-align:center;margin-top:11px}
+.mode-bar{padding:12px 14px 6px;flex-shrink:0}
+.section-label{font-size:9px;letter-spacing:2px;color:#a994bb;margin:0 0 8px}
+.modes{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:5px}
+.mode{
+ flex-shrink:0;border:1px solid var(--line);border-radius:11px;
+ background:#171020;color:#cbb8df;padding:9px 11px;font-size:10px
+}
+.mode.active{border-color:#b58aff;background:#4a2a6b;color:white}
+.quick{display:flex;gap:7px;overflow-x:auto;flex-shrink:0;padding:8px 14px}
+.quick button{
+ flex-shrink:0;padding:8px 10px;border:1px solid var(--line);
+ border-radius:20px;background:#171020;color:#d6c2f0;font-size:10px
+}
+.composer-wrap{padding:8px 13px calc(12px + env(safe-area-inset-bottom));flex-shrink:0}
+.composer{
+ display:flex;align-items:flex-end;gap:8px;padding:8px;
+ border:1px solid #62447e;border-radius:18px;background:#130d20
+}
+#textInput{
+ flex:1;min-width:0;max-height:120px;resize:none;padding:10px 5px;
+ outline:none;border:0;color:white;background:transparent;font-size:13px;line-height:1.5
+}
+#textInput::placeholder{color:#8e7da3}
+.send{
+ width:42px;height:42px;flex-shrink:0;border:0;border-radius:13px;
+ color:white;font-size:20px;background:linear-gradient(135deg,#d58bff,#8050ef)
+}
+.auth-screen,.overlay-screen{
+ position:fixed;inset:0;z-index:20;display:flex;align-items:center;
+ justify-content:center;padding:20px;overflow-y:auto;
+ background:radial-gradient(ellipse at 50% 12%,#321653,#08050f 68%)
+}
+.overlay-screen{z-index:30;text-align:center}
+.card{
+ width:100%;max-width:390px;padding:24px 21px;border:1px solid #75499b88;
+ border-radius:25px;background:#100a1bec;box-shadow:0 0 55px #9c53ff12
+}
+.card h2{font-size:25px;margin:0 0 8px;text-align:center}
+.card p{font-size:12px;color:var(--muted);line-height:1.6;text-align:center}
+.card label{display:block;margin:13px 0 6px;font-size:11px;color:#dfcdf7}
+.card input,.settings-input{
+ width:100%;padding:13px;border:1px solid #52386c;border-radius:12px;
+ background:#090610;color:white;outline:none
+}
+.card input:focus,.settings-input:focus{border-color:var(--purple)}
+.primary,.secondary,.switch{
+ width:100%;padding:13px;border-radius:12px;margin-top:12px;
+ font-weight:650
+}
+.primary{border:0;background:linear-gradient(135deg,#d48bff,#7545dc);color:white}
+.secondary,.switch{border:1px solid var(--line);background:transparent;color:#d9c5f5;font-weight:400}
+.error{color:#ff9cae!important;min-height:15px}
+.screen-flame{
+ width:112px;height:125px;margin:0 auto 18px;display:grid;place-items:center;
+ background:radial-gradient(ellipse,#3b2058,#100a1c 70%);
+ border:1px solid #8355b6;border-radius:32px;box-shadow:0 0 45px #9b5aff25
+}
+.screen-flame svg{width:86px;height:110px;filter:drop-shadow(0 0 10px #9d66ff)}
+.screen-kicker{letter-spacing:3px;font-size:9px!important;color:#c7a1ff!important}
+.choice{
+ display:flex;align-items:center;gap:13px;width:100%;text-align:left;
+ padding:16px;margin-top:12px;border:1px solid #62447c;border-radius:15px;
+ background:linear-gradient(135deg,#25143a,#171020);color:white
+}
+.choice-icon{font-size:25px;width:32px;text-align:center}
+.choice strong{display:block;font-size:13px}
+.choice small{display:block;font-size:10px;color:#b9a7ce;margin-top:5px;line-height:1.5}
+.panel{
+ position:fixed;inset:0;z-index:40;display:none;align-items:flex-end;
+ justify-content:center;padding:12px;background:#05030bdc
+}
+.panel.open{display:flex}
+.panel-card{
+ width:100%;max-width:650px;max-height:78dvh;overflow-y:auto;
+ border:1px solid #8e60bc;border-radius:21px;background:#100a1c;padding:18px
+}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.panel-head h3{margin:0;font-size:17px}
+.panel-head button,.memory-item button{
+ border:1px solid var(--line);background:#1b1226;color:white;
+ border-radius:9px;padding:8px;font-size:10px
+}
+.memory-form{display:flex;gap:7px;margin:12px 0}
+.memory-form input{flex:1;min-width:0;background:#090610;color:white;border:1px solid #62447c;border-radius:10px;padding:11px}
+.memory-form button{border:0;border-radius:10px;padding:10px;background:#8050ce;color:white}
+.memory-item{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.memory-item button{float:right;margin-left:8px;border-color:#9b5570;color:#ffb6c4}
+@media(max-width:440px){
+ header{gap:7px;padding:9px}
+ .tools{gap:4px}
+ .tools button{padding:7px 6px;font-size:9px}
+ .status{font-size:7px}
+ .brand h1{font-size:17px}
+ .orb-stage{height:160px}
+}
+@media(max-height:700px){
+ .hero{padding-top:3px}
+ .orb-stage{height:125px}
+ .flame-svg{height:100px}
+ .hero h2{font-size:19px}
+ .voice-controls{padding-top:6px}
+ .mic-main{width:53px;height:53px;border-radius:18px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
+
 <body>
 
-<!-- SIGN-IN / SIGN-UP -->
+<!-- SIGN IN -->
 <div class="auth-screen" id="authScreen">
-  <form class="auth-card" id="authForm">
-    <h2>El-Ai <span style="color:#c9a0ff">✦</span></h2>
-    <p>YOUR PERSONAL INTELLIGENCE<br>Created by ELHAM STUDIOS</p>
-    <div id="registerFields" class="hidden">
-      <label for="authName">Your name</label>
-      <input id="authName" autocomplete="name" maxlength="80" placeholder="Your name">
-      <label for="authTitle">What should El-Ai call you?</label>
-      <input id="authTitle" maxlength="50" placeholder="e.g. Sir, Captain, Alex">
-    </div>
-    <label for="authEmail">Email address</label>
-    <input id="authEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
-    <label for="authPassword">Password</label>
-    <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="At least 8 characters">
-    <button class="auth-submit" id="authSubmit" type="submit">Sign in</button>
-    <button class="auth-switch" id="authSwitch" type="button">New to El-Ai? Create account</button>
-    <p id="authError" class="auth-error" role="alert"></p>
-    <p style="font-size:10px">Use a unique password. Your account is stored on the El-Ai backend.</p>
-  </form>
-</div>
-
-<!-- SCREEN A: FIVE-SECOND WELCOME -->
-<div class="welcome-screen hidden" id="welcomeScreen">
-  <div class="screen-card">
-    <div class="screen-logo">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="welcomeGlow" x1="10" y1="70" x2="90" y2="20"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
-        <path d="M50 23V12" stroke="url(#welcomeGlow)" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="9" r="6" fill="url(#welcomeGlow)"/>
-        <rect x="17" y="25" width="66" height="53" rx="25" stroke="url(#welcomeGlow)" stroke-width="5"/>
-        <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/><rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
-        <circle cx="37" cy="49" r="5.5" fill="#a05bff"/><circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
-        <path d="M35 70Q50 79 65 70" stroke="url(#welcomeGlow)" stroke-width="4" stroke-linecap="round"/>
-        <path d="M30 79Q17 82 12 94M70 79Q83 82 88 94" stroke="url(#welcomeGlow)" stroke-width="5" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <p class="screen-kicker">ELHAM STUDIOS PRESENTS</p>
-    <h2 id="welcomeTitle">Welcome to El-Ai</h2>
-    <p id="welcomeMessage">Your El-Ai account is ready. Let's get started.</p>
-    <p style="font-size:10px;letter-spacing:2px">INITIALIZING YOUR EXPERIENCE</p>
+ <form class="card" id="authForm">
+  <div class="screen-flame">
+   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
+    <defs>
+     <linearGradient id="flameGradient" x1="15" y1="100" x2="85" y2="8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5f2cc2"/><stop offset=".5" stop-color="#a970ff"/><stop offset="1" stop-color="#f1a0ff"/>
+     </linearGradient>
+     <linearGradient id="innerGradient" x1="35" y1="95" x2="65" y2="35" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8e55ff"/><stop offset="1" stop-color="#fff0ff"/>
+     </linearGradient>
+    </defs>
+    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
+    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
+    <path d="M48 79C53 85 49 91 45 93" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+   </svg>
   </div>
-</div>
+  <h2>El-Ai <span style="color:#bd91ff">✦</span></h2>
+  <p>YOUR PERSONAL INTELLIGENCE<br>CREATED BY ELHAM STUDIOS</p>
 
-<!-- SCREEN B: CONVERSATION CHOICE -->
-<div class="choice-screen hidden" id="choiceScreen">
-  <div class="screen-card">
-    <p class="screen-kicker">YOUR EXPERIENCE</p>
-    <h2>How would you like to talk?</h2>
-    <p>Choose the way you want to interact with El-Ai. You can change this later.</p>
-    <button class="choice-button" id="chooseAudio" type="button">
-      <span class="choice-icon">🎙️</span>
-      <span><strong>Audio conversation</strong><small>Speak to El-Ai and hear spoken replies. Orb included.</small></span>
-    </button>
-    <button class="choice-button" id="chooseText" type="button">
-      <span class="choice-icon">💬</span>
-      <span><strong>Text chat</strong><small>Type your messages in a clean chat interface.</small></span>
-    </button>
-    <p id="choiceHint" role="status"></p>
+  <div id="registerFields" class="hidden">
+   <label for="authName">Your name</label>
+   <input id="authName" autocomplete="name" maxlength="80" placeholder="Your name">
+   <label for="authTitle">What should El-Ai call you?</label>
+   <input id="authTitle" maxlength="50" placeholder="e.g. Captain, Alex">
   </div>
+
+  <label for="authEmail">Email address</label>
+  <input id="authEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+  <label for="authPassword">Password</label>
+  <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="At least 8 characters">
+  <button class="primary" id="authSubmit" type="submit">Sign in</button>
+  <button class="switch" id="authSwitch" type="button">New to El-Ai? Create account</button>
+  <p class="error" id="authError" role="alert"></p>
+  <p style="font-size:10px">Use a unique password for your El-Ai account.</p>
+ </form>
 </div>
 
-<!-- SCREEN C: CONVERSATION -->
-<div class="app" id="app">
-<header>
-  <div class="logo" aria-label="El-Ai logo">
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="robotGlow" x1="10" y1="70" x2="90" y2="20"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
-      <path d="M50 23V12" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="9" r="6" fill="url(#robotGlow)"/>
-      <rect x="17" y="25" width="66" height="53" rx="25" stroke="url(#robotGlow)" stroke-width="5"/>
-      <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/><rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
-      <circle cx="37" cy="49" r="5.5" fill="#a05bff"/><circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
-      <path d="M35 70Q50 79 65 70" stroke="url(#robotGlow)" stroke-width="4" stroke-linecap="round"/>
-      <path d="M30 79Q17 82 12 94M70 79Q83 82 88 94" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/>
-    </svg>
+<!-- WELCOME -->
+<div class="overlay-screen hidden" id="welcomeScreen">
+ <div class="card" style="border:0;background:transparent;box-shadow:none">
+  <div class="screen-flame">
+   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
+    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
+    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
+   </svg>
+  </div>
+  <p class="screen-kicker">ELHAM STUDIOS PRESENTS</p>
+  <h2 id="welcomeTitle">Welcome to El-Ai</h2>
+  <p id="welcomeMessage">Your personal intelligence is ready.</p>
+  <p style="font-size:9px;letter-spacing:2px">PREPARING YOUR EXPERIENCE</p>
+ </div>
+</div>
+
+<!-- CHOOSE EXPERIENCE -->
+<div class="overlay-screen hidden" id="choiceScreen">
+ <div class="card">
+  <p class="screen-kicker">YOUR EXPERIENCE · 01</p>
+  <h2>How do you want to connect?</h2>
+  <p>Choose your interface. You can switch whenever you want.</p>
+  <button class="choice" id="chooseAudio" type="button">
+   <span class="choice-icon">◉</span>
+   <span><strong>Live Voice</strong><small>Speak naturally. Hear El-Ai's replies. No typing in this mode.</small></span>
+  </button>
+  <button class="choice" id="chooseText" type="button">
+   <span class="choice-icon">✧</span>
+   <span><strong>Text Studio</strong><small>A focused chat workspace with selectable AI modes.</small></span>
+  </button>
+  <p id="choiceHint" role="status"></p>
+ </div>
+</div>
+
+<!-- MAIN APPLICATION -->
+<div id="app">
+ <header>
+  <div class="logo" aria-label="El-Ai digital flame logo">
+   <svg viewBox="0 0 100 120" fill="none" aria-hidden="true">
+    <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
+    <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
+   </svg>
   </div>
   <div class="brand">
-    <h1>El-Ai</h1><p class="brand-subtitle">EL PERSONAL ASSISTANT</p><p class="brand-studio">ELHAM STUDIOS</p>
+   <h1>El-Ai</h1>
+   <small>PERSONAL INTELLIGENCE</small>
+   <small class="studio">ELHAM STUDIOS</small>
   </div>
-  <div class="account-tools">
-    <button id="titleButton" type="button">My title</button>
-    <button id="memoryButton" type="button">Memory</button>
-    <button id="changeModeButton" type="button">Mode</button>
-    <button id="logoutButton" type="button">Sign out</button>
+  <div class="tools">
+   <button id="titleButton" type="button">Title</button>
+   <button id="memoryButton" type="button">Memory</button>
+   <button id="changeModeButton" type="button">Mode</button>
+   <button id="logoutButton" type="button">Exit</button>
   </div>
-  <div class="status"><span class="status-dot"></span><span id="connectionStatus">CONNECTING</span></div>
-</header>
+  <div class="status"><span class="dot"></span><span id="connectionStatus">CONNECTING</span></div>
+ </header>
 
-<main>
-  <!-- AUDIO MODE: orb is only displayed here -->
-  <div id="audioInterface" class="audio-view" style="display:flex;flex-direction:column;flex:1;min-height:0">
-    <section class="hero">
-      <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
-      <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap the orb to speak to El-Ai">
-        <div class="energy-wave wave-one"></div><div class="energy-wave wave-two"></div><div class="energy-wave wave-three"></div>
-        <div class="orb-glow"></div><div class="orb"></div>
-        <div class="sound-field"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      </div>
-      <h2 id="audioHeading">I'm listening, <span>when you're ready.</span></h2>
-      <p class="subtitle" id="greeting">Your vision. Your ideas. Let's make them happen.</p>
-    </section>
-    <section class="chat" id="chat" aria-live="polite"></section>
-    <div class="composer-wrap">
-      <form class="composer" id="audioForm">
-        <textarea id="audioInput" rows="1" maxlength="8000" placeholder="Speak or type a message..." aria-label="Message El-Ai" required></textarea>
-        <button id="voiceButton" type="button" aria-label="Start voice input" title="Speak to El-Ai">🎙</button>
-        <button id="audioSendButton" type="submit" aria-label="Send message">↑</button>
-      </form>
-      <div class="voice-hint" id="voiceHint" aria-live="polite">Tap the orb or microphone to speak</div>
-      <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
+ <main>
+  <!-- VOICE-ONLY SCREEN -->
+  <section class="view" id="audioInterface">
+   <div class="hero">
+    <p class="kicker">LIVE VOICE · 02</p>
+    <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap to start or stop speaking">
+     <div class="flame-glow"></div>
+     <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+     <div class="pulse"></div><div class="pulse p2"></div>
+     <svg class="flame-svg" viewBox="0 0 100 120" fill="none" aria-hidden="true">
+      <path d="M51 5C58 26 81 33 78 61C77 87 65 106 47 108C23 110 10 89 17 65C21 49 33 40 34 22C43 33 45 43 44 51C58 39 59 23 51 5Z" fill="url(#flameGradient)"/>
+      <path d="M49 55C52 67 65 72 61 86C58 97 47 101 39 94C30 87 36 75 43 69C46 65 48 60 49 55Z" fill="url(#innerGradient)"/>
+     </svg>
     </div>
-  </div>
+    <h2 id="audioHeading">Your voice. <span>Your ideas.</span></h2>
+    <p class="sub" id="greeting">Your personal intelligence is ready.</p>
+   </div>
+   <div class="chat" id="chat" aria-live="polite"></div>
+   <div class="voice-controls">
+    <button class="mic-main" id="voiceButton" type="button" aria-label="Start listening">🎙</button>
+    <div class="voice-state" id="voiceState">Tap the microphone to begin</div>
+    <div class="voice-hint" id="voiceHint">Speak naturally. El-Ai will answer aloud.</div>
+    <div class="footer">EL-AI · VOICE EXPERIENCE</div>
+   </div>
+  </section>
 
-  <!-- TEXT MODE: no orb, just chat -->
-  <div id="textInterface" class="text-view" style="display:flex;flex-direction:column;flex:1;min-height:0">
-    <section class="hero" style="padding:16px 12px 8px">
-      <p class="eyebrow">ELHAM STUDIOS · TEXT MODE</p>
-      <h2>What are we working on?</h2>
-      <p class="subtitle" id="textGreeting">Welcome to El-Ai.</p>
-    </section>
-    <section class="mode-section">
-      <p class="section-label">CHOOSE YOUR MODE</p>
-      <div class="modes" id="modes">
-        <button class="mode active" type="button" data-mode="Default">✦ Default</button>
-        <button class="mode" type="button" data-mode="Historian">◷ Historian</button>
-        <button class="mode" type="button" data-mode="Storyteller">✎ Storyteller</button>
-        <button class="mode" type="button" data-mode="Data Scientist">⌘ Data Scientist</button>
-      </div>
-    </section>
-    <section class="chat" id="textChat" aria-live="polite"></section>
-    <div class="quick" id="quickPrompts">
-      <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El-Ai</button>
-      <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
-      <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
+  <!-- TEXT-ONLY SCREEN -->
+  <section class="view hidden" id="textInterface">
+   <div class="hero" style="padding:17px 12px 9px">
+    <p class="kicker">TEXT STUDIO · 03</p>
+    <h2>Let's build something <span>great.</span></h2>
+    <p class="sub" id="textGreeting">Welcome to El-Ai.</p>
+   </div>
+   <div class="mode-bar">
+    <p class="section-label">CHOOSE AN APPROACH</p>
+    <div class="modes" id="modes">
+     <button class="mode active" data-mode="Default" type="button">✦ Default</button>
+     <button class="mode" data-mode="Historian" type="button">◷ Historian</button>
+     <button class="mode" data-mode="Storyteller" type="button">✎ Storyteller</button>
+     <button class="mode" data-mode="Data Scientist" type="button">⌘ Data Scientist</button>
     </div>
-    <div class="composer-wrap">
-      <form class="composer" id="textForm">
-        <textarea id="textInput" rows="1" maxlength="8000" placeholder="Type your message..." aria-label="Message El-Ai" required></textarea>
-        <button id="textSendButton" type="submit" aria-label="Send message">↑</button>
-      </form>
-      <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
-    </div>
-  </div>
-</main>
+   </div>
+   <div class="chat" id="textChat" aria-live="polite"></div>
+   <div class="quick" id="quickPrompts">
+    <button data-prompt="Introduce yourself and explain what you can help me with." type="button">✦ Explore El-Ai</button>
+    <button data-prompt="Help me plan my most important tasks for today." type="button">◷ Plan my day</button>
+    <button data-prompt="Teach me something fascinating and useful." type="button">✧ Teach me</button>
+   </div>
+   <div class="composer-wrap">
+    <form class="composer" id="textForm">
+     <textarea id="textInput" rows="1" maxlength="8000" placeholder="Message El-Ai..." aria-label="Type a message" required></textarea>
+     <button class="send" id="textSendButton" type="submit" aria-label="Send message">↑</button>
+    </form>
+    <div class="footer">EL-AI · TEXT EXPERIENCE</div>
+   </div>
+  </section>
+ </main>
 </div>
 
-<!-- TITLE SETTINGS -->
-<div class="memory-panel" id="titlePanel">
-  <div class="memory-card">
-    <div class="memory-head"><h3>Personalize El-Ai</h3><button id="closeTitle" type="button">Close</button></div>
-    <p style="font-size:11px;color:#9d93b7">Choose what El-Ai calls you. This preference is saved to your account when the backend supports profile storage.</p>
-    <label for="preferredTitle" style="display:block;font-size:11px;margin:12px 0 6px">Your preferred title or name</label>
-    <input class="settings-input" id="preferredTitle" maxlength="50" placeholder="e.g. Sir, Captain, Alex">
-    <button class="primary-button" id="saveTitle" type="button">Save preference</button>
-    <p id="titleMessage" role="status" style="font-size:11px"></p>
-  </div>
+<!-- PERSONAL TITLE -->
+<div class="panel" id="titlePanel">
+ <div class="panel-card">
+  <div class="panel-head"><h3>Personalize El-Ai</h3><button id="closeTitle" type="button">Close</button></div>
+  <p style="font-size:11px;color:var(--muted)">Choose how El-Ai addresses you.</p>
+  <label for="preferredTitle" style="display:block;font-size:11px;margin:12px 0 6px">Preferred title or name</label>
+  <input class="settings-input" id="preferredTitle" maxlength="50" placeholder="e.g. Captain, Alex">
+  <button class="primary" id="saveTitle" type="button">Save preference</button>
+  <p id="titleMessage" role="status"></p>
+ </div>
 </div>
 
-<!-- SAVED MEMORIES -->
-<div class="memory-panel" id="memoryPanel">
-  <div class="memory-card">
-    <div class="memory-head"><h3>Your saved memories</h3><button id="closeMemory" type="button">Close</button></div>
-    <p style="font-size:11px;color:#9d93b7">Only your signed-in account can access these memories. Saved memories may be included in future AI replies.</p>
-    <form class="memory-form" id="memoryForm"><input id="memoryInput" maxlength="3000" required placeholder="Something El-Ai should remember"><button type="submit">Save</button></form>
-    <div id="memoryList"></div>
-  </div>
+<!-- MEMORY -->
+<div class="panel" id="memoryPanel">
+ <div class="panel-card">
+  <div class="panel-head"><h3>Your memories</h3><button id="closeMemory" type="button">Close</button></div>
+  <p style="font-size:11px;color:var(--muted)">Review, add, or delete saved memories. Automatic storage requires the updated backend.</p>
+  <form class="memory-form" id="memoryForm">
+   <input id="memoryInput" maxlength="3000" required placeholder="What should El-Ai remember?">
+   <button type="submit">Save</button>
+  </form>
+  <div id="memoryList"></div>
+ </div>
 </div>
 
 <script>
-(() => {
+(()=>{
 "use strict";
 
 const API_BASE="https://elai-backend.onrender.com";
 const $=id=>document.getElementById(id);
-const statusText=$("connectionStatus"),authScreen=$("authScreen");
-const welcomeScreen=$("welcomeScreen"),choiceScreen=$("choiceScreen"),app=$("app");
-const audioChat=$("chat"),textChat=$("textChat");
-const audioInput=$("audioInput"),textInput=$("textInput");
-const voiceButton=$("voiceButton"),voiceHint=$("voiceHint"),orbStage=$("orbStage");
 
-let token="",currentUser=null,busy=false,selectedMode="Default";
-let recognition=null,isListening=false,manualStop=false,finalTranscript="";
-let voiceRequest=false,registerMode=false,conversationMode="";
-let preferredTitle="",profileData={},welcomeTimer=null;
+const authScreen=$("authScreen"),welcomeScreen=$("welcomeScreen");
+const choiceScreen=$("choiceScreen"),app=$("app");
+const audioInterface=$("audioInterface"),textInterface=$("textInterface");
+const audioChat=$("chat"),textChat=$("textChat");
+const voiceButton=$("voiceButton"),voiceHint=$("voiceHint");
+const voiceState=$("voiceState"),orbStage=$("orbStage");
+
+let token="",currentUser=null,profileData={},preferredTitle="";
+let registerMode=false,busy=false,selectedMode="Default",conversationMode="";
+let recognition=null,isListening=false,manualStop=false;
+let finalTranscript="",welcomeTimer=null,requestNumber=0;
 
 const modeInstructions={
  "Default":"",
- "Historian":"Respond as a careful history expert. Distinguish established facts from disputed interpretations.",
- "Storyteller":"Use vivid, engaging storytelling when appropriate, while remaining accurate for factual questions.",
- "Data Scientist":"Approach the request analytically. Explain evidence, assumptions, numbers, and limitations where relevant."
+ "Historian":"Respond as a careful history expert. Separate established facts from disputed interpretations.",
+ "Storyteller":"Use engaging storytelling where appropriate, while remaining accurate.",
+ "Data Scientist":"Analyze evidence, assumptions, numbers, and limitations clearly."
 };
 
-function setStatus(text,color="#c5a9ff"){statusText.textContent=text;statusText.style.color=color}
-function setHint(text){voiceHint.textContent=text}
-function cleanForSpeech(text){
- return String(text||"")
-  .replace(/```[\s\S]*?```/g,"I've omitted a code block.")
-  .replace(/https?:\/\/\S+/g,"a web link")
-  .replace(/[*_#>`~|\\^]/g,"")
-  .replace(/[^\p{L}\p{N}\s.,!?;:'"()\-]/gu," ")
-  .replace(/[ \t]{2,}/g," ")
-  .replace(/\n{3,}/g,"\n\n").trim();
+function setStatus(text,color="#d4b5ff"){
+ $("connectionStatus").textContent=text;
+ $("connectionStatus").style.color=color;
 }
+function setVoiceState(text){voiceState.textContent=text}
+function setVoiceHint(text){voiceHint.textContent=text}
+
 async function api(path,options={}){
  const headers={...(options.headers||{})};
  if(token)headers.Authorization="Bearer "+token;
+
  const response=await fetch(API_BASE+path,{...options,headers});
  let data={};
  try{data=await response.json()}catch(_){}
+
  if(!response.ok){
   if(response.status===401&&token){
    signOut(false);
@@ -341,11 +475,13 @@ async function api(path,options={}){
  }
  return data;
 }
+
 function showAuth(message=""){
  authScreen.classList.remove("hidden");
  $("authError").textContent=message;
 }
 function hideAuth(){authScreen.classList.add("hidden")}
+
 function setRegisterMode(value){
  registerMode=value;
  $("registerFields").classList.toggle("hidden",!value);
@@ -353,49 +489,58 @@ function setRegisterMode(value){
  $("authTitle").required=value;
  $("authPassword").autocomplete=value?"new-password":"current-password";
  $("authSubmit").textContent=value?"Create account":"Sign in";
- $("authSwitch").textContent=value?"Already have an account? Sign in":"New to El-Ai? Create account";
+ $("authSwitch").textContent=value?"Already registered? Sign in":"New to El-Ai? Create account";
  $("authError").textContent="";
 }
 $("authSwitch").addEventListener("click",()=>setRegisterMode(!registerMode));
 
 function addMessageTo(target,text,role){
- const row=document.createElement("div");row.className="message "+role;
- const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
- row.appendChild(bubble);target.appendChild(row);target.scrollTop=target.scrollHeight;
+ const row=document.createElement("div");
+ row.className="message "+role;
+ const bubble=document.createElement("div");
+ bubble.className="bubble";
+ bubble.textContent=text;
+ row.appendChild(bubble);
+ target.appendChild(row);
+ target.scrollTop=target.scrollHeight;
  return row;
 }
-function addMessage(text,role){
- return addMessageTo(conversationMode==="text"?textChat:audioChat,text,role);
+function activeChat(){
+ return conversationMode==="text"?textChat:audioChat;
 }
+function addMessage(text,role){return addMessageTo(activeChat(),text,role)}
 function addressUser(){return preferredTitle||currentUser?.name||"there"}
 function greetingText(){return "Welcome, "+addressUser()+". What are we working on today?"}
+
 function welcome(){
- audioChat.replaceChildren();textChat.replaceChildren();
- const message="Welcome to El-Ai, "+addressUser()+".\n\nI'm your personal assistant, created by ELHAM STUDIOS. What can I help you with today?";
- addMessageTo(audioChat,message,"assistant");
- addMessageTo(textChat,message,"assistant");
+ audioChat.replaceChildren();
+ textChat.replaceChildren();
+ const intro="Welcome to El-Ai, "+addressUser()+".\n\nI'm your personal assistant, created by ELHAM STUDIOS. What can I help you with today?";
+ addMessageTo(audioChat,intro,"assistant");
+ addMessageTo(textChat,intro,"assistant");
  $("greeting").textContent=greetingText();
  $("textGreeting").textContent=greetingText();
 }
+
 function showChoice(){
+ clearTimeout(welcomeTimer);
  app.classList.remove("ready");
- choiceScreen.classList.remove("hidden");
  welcomeScreen.classList.add("hidden");
+ choiceScreen.classList.remove("hidden");
 }
 function showConversation(mode){
  conversationMode=mode;
  choiceScreen.classList.add("hidden");
  welcomeScreen.classList.add("hidden");
  app.classList.add("ready");
- app.classList.toggle("audio-view",mode==="audio");
- app.classList.toggle("text-view",mode==="text");
+ audioInterface.classList.toggle("hidden",mode!=="audio");
+ textInterface.classList.toggle("hidden",mode!=="text");
+
  if(mode==="audio"){
-  $("audioInterface").style.display="flex";
-  $("textInterface").style.display="none";
-  setHint("Tap the orb or microphone to speak");
+  setVoiceState("Tap the microphone to begin");
+  setVoiceHint("Speak naturally. El-Ai will answer aloud.");
  }else{
-  $("audioInterface").style.display="none";
-  $("textInterface").style.display="flex";
+  $("textInput").focus({preventScroll:true});
  }
  try{sessionStorage.setItem("elai_mode",mode)}catch(_){}
 }
@@ -406,32 +551,35 @@ function showWelcome(isNew){
  welcomeScreen.classList.remove("hidden");
  $("welcomeTitle").textContent=isNew?"Welcome to El-Ai":"Welcome back, "+addressUser();
  $("welcomeMessage").textContent=isNew
-  ?"Your El-Ai account is ready. Let's get started."
-  :"You're back, "+addressUser()+"! What are we working on today?";
- welcomeTimer=setTimeout(showChoice,5000);
+  ?"Your account is ready. Your next idea starts here."
+  :"Good to have you back, "+addressUser()+".";
+ welcomeTimer=setTimeout(showChoice,3500);
 }
-async function establishSession(data,isNew){
- if(!data.token||!data.user||!data.user.name)throw new Error("The server did not return a valid account session.");
- token=data.token;currentUser=data.user;
- try{sessionStorage.setItem("elai_session",token)}catch(_){}
- await loadProfile();
- welcome();
- hideAuth();
- showWelcome(isNew);
- setStatus("AI ONLINE");
-}
+
 async function loadProfile(){
  profileData={};
  try{
   const data=await api("/profile");
-  if(data&&data.profile&&typeof data.profile==="object")profileData=data.profile;
- }catch(error){
-  // Keep working if an older backend does not expose profile storage.
-  profileData={};
- }
+  if(data.profile&&typeof data.profile==="object")profileData=data.profile;
+ }catch(_){}
  preferredTitle=String(profileData.preferred_title||"").trim().slice(0,50);
  $("preferredTitle").value=preferredTitle;
 }
+
+async function establishSession(data,isNew){
+ if(!data.token||!data.user||!data.user.name){
+  throw new Error("The server did not return a valid account session.");
+ }
+ token=data.token;
+ currentUser=data.user;
+ try{sessionStorage.setItem("elai_session",token)}catch(_){}
+ await loadProfile();
+ welcome();
+ hideAuth();
+ setStatus("AI ONLINE");
+ showWelcome(isNew);
+}
+
 async function restoreSession(){
  try{token=sessionStorage.getItem("elai_session")||""}catch(_){token=""}
  if(!token){showAuth();return}
@@ -439,18 +587,25 @@ async function restoreSession(){
   const data=await api("/auth/me");
   currentUser=data.user;
   await loadProfile();
-  hideAuth();welcome();showWelcome(false);setStatus("AI ONLINE");
+  welcome();
+  hideAuth();
+  setStatus("AI ONLINE");
+  showWelcome(false);
  }catch(_){
   token="";currentUser=null;
   try{sessionStorage.removeItem("elai_session")}catch(__){}
   showAuth();
  }
 }
+
 $("authForm").addEventListener("submit",async event=>{
  event.preventDefault();
- const button=$("authSubmit");button.disabled=true;$("authError").textContent="";
+ const button=$("authSubmit");
+ button.disabled=true;
+ $("authError").textContent="";
  const email=$("authEmail").value.trim().toLowerCase();
  const password=$("authPassword").value;
+
  try{
   let data;
   if(registerMode){
@@ -458,32 +613,49 @@ $("authForm").addEventListener("submit",async event=>{
    const title=$("authTitle").value.trim();
    if(!name)throw new Error("Enter your name.");
    if(!title)throw new Error("Choose what El-Ai should call you.");
-   data=await api("/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,name,password})});
-   // Set the chosen title in the profile immediately after account creation.
-   token=data.token;currentUser=data.user;
+
+   data=await api("/auth/register",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email,name,password})
+   });
+
+   token=data.token;
+   currentUser=data.user;
    try{sessionStorage.setItem("elai_session",token)}catch(_){}
-   preferredTitle=title;
    await saveProfileTitle(title);
    await establishSession(data,true);
   }else{
-   data=await api("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+   data=await api("/auth/login",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email,password})
+   });
    await establishSession(data,false);
   }
- }catch(error){$("authError").textContent=error.message||"Could not sign in. Try again."}
- finally{button.disabled=false}
+ }catch(error){
+  $("authError").textContent=error.message||"Could not sign in. Try again.";
+ }finally{
+  button.disabled=false;
+ }
 });
 
 function signOut(showMessage=true){
  clearTimeout(welcomeTimer);
- token="";currentUser=null;preferredTitle="";profileData={};
- try{sessionStorage.removeItem("elai_session");sessionStorage.removeItem("elai_mode")}catch(_){}
- if("speechSynthesis" in window)window.speechSynthesis.cancel();
  stopListening(true);
+ if("speechSynthesis" in window)window.speechSynthesis.cancel();
+
+ token="";currentUser=null;profileData={};preferredTitle="";
+ requestNumber++;
+ try{
+  sessionStorage.removeItem("elai_session");
+  sessionStorage.removeItem("elai_mode");
+ }catch(_){}
  $("memoryPanel").classList.remove("open");
  $("titlePanel").classList.remove("open");
  app.classList.remove("ready");
- welcomeScreen.classList.add("hidden");choiceScreen.classList.add("hidden");
- audioChat.replaceChildren();textChat.replaceChildren();
+ welcomeScreen.classList.add("hidden");
+ choiceScreen.classList.add("hidden");
+ audioChat.replaceChildren();
+ textChat.replaceChildren();
  showAuth(showMessage?"You have signed out.":"");
 }
 $("logoutButton").addEventListener("click",()=>signOut(true));
@@ -491,7 +663,10 @@ $("logoutButton").addEventListener("click",()=>signOut(true));
 async function saveProfileTitle(value){
  const clean=String(value||"").trim().slice(0,50);
  const updated={...profileData,preferred_title:clean};
- const data=await api("/profile",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({profile:updated})});
+ const data=await api("/profile",{
+  method:"PUT",headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({profile:updated})
+ });
  profileData=data.profile&&typeof data.profile==="object"?data.profile:updated;
  preferredTitle=clean;
  $("preferredTitle").value=clean;
@@ -499,24 +674,27 @@ async function saveProfileTitle(value){
  $("textGreeting").textContent=greetingText();
  return true;
 }
+
 $("titleButton").addEventListener("click",()=>{
  $("preferredTitle").value=preferredTitle;
  $("titleMessage").textContent="";
  $("titlePanel").classList.add("open");
 });
 $("closeTitle").addEventListener("click",()=>$("titlePanel").classList.remove("open"));
-$("titlePanel").addEventListener("click",event=>{if(event.target===$("titlePanel"))$("titlePanel").classList.remove("open")});
+$("titlePanel").addEventListener("click",e=>{
+ if(e.target===$("titlePanel"))$("titlePanel").classList.remove("open");
+});
 $("saveTitle").addEventListener("click",async()=>{
- const button=$("saveTitle"),value=$("preferredTitle").value.trim();
- button.disabled=true;$("titleMessage").textContent="Saving...";
+ const button=$("saveTitle");
+ button.disabled=true;
+ $("titleMessage").textContent="Saving...";
  try{
-  await saveProfileTitle(value);
+  await saveProfileTitle($("preferredTitle").value);
   $("titleMessage").textContent="Preference saved.";
   welcome();
  }catch(error){
   $("titleMessage").textContent="Could not save: "+error.message;
- }
- finally{button.disabled=false}
+ }finally{button.disabled=false}
 });
 
 $("chooseAudio").addEventListener("click",()=>showConversation("audio"));
@@ -527,127 +705,199 @@ $("changeModeButton").addEventListener("click",()=>{
  showChoice();
 });
 
-function getPreferredVoice(){
- if(!("speechSynthesis" in window))return null;
- const voices=window.speechSynthesis.getVoices();
- const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));
- return english.find(v=>/en-ZA/i.test(v.lang))||english.find(v=>/en-GB/i.test(v.lang))||english[0]||null;
-}
-function speakText(text){
- if(!("speechSynthesis" in window)||!voiceRequest){voiceRequest=false;return}
- window.speechSynthesis.cancel();
- const clean=cleanForSpeech(text);if(!clean){voiceRequest=false;return}
- const utterance=new SpeechSynthesisUtterance(clean);
- utterance.lang="en-ZA";utterance.rate=.94;utterance.pitch=.95;utterance.volume=1;
- const voice=getPreferredVoice();if(voice)utterance.voice=voice;
- orbStage.classList.add("speaking");
- utterance.onend=utterance.onerror=()=>{
-  orbStage.classList.remove("speaking");
-  setHint("Tap the orb or microphone to speak");
- };
- window.speechSynthesis.speak(utterance);
- setHint("El-Ai is speaking...");
- voiceRequest=false;
-}
 function updateListeningUI(value){
  isListening=value;
  voiceButton.classList.toggle("listening",value);
  orbStage.classList.toggle("listening",value);
  voiceButton.textContent=value?"■":"🎙";
- voiceButton.setAttribute("aria-label",value?"Stop voice input":"Start voice input");
+ voiceButton.setAttribute("aria-label",value?"Stop listening":"Start listening");
 }
+
 function stopListening(manual=true){
  manualStop=manual;
- if(recognition&&isListening){try{recognition.stop()}catch(_){}}
+ if(recognition&&isListening){
+  try{recognition.stop()}catch(_){}
+ }
  updateListeningUI(false);
- if(!busy)setHint("Tap the orb or microphone to speak");
+ if(!busy){
+  setVoiceState("Tap the microphone to begin");
+  setVoiceHint("Speak naturally. El-Ai will answer aloud.");
+ }
 }
+
 function setupRecognition(){
  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SpeechRecognition){
-  setHint("Speech recognition isn't supported in this browser. Try a supported browser or type instead.");
+  setVoiceState("Voice recognition unavailable");
+  setVoiceHint("This browser does not support speech recognition. Try a supported browser.");
   return false;
  }
+
  recognition=new SpeechRecognition();
  recognition.lang="en-ZA";
  recognition.continuous=false;
  recognition.interimResults=true;
  recognition.maxAlternatives=1;
- recognition.onstart=()=>{updateListeningUI(true);setHint("Listening... speak now")};
+
+ recognition.onstart=()=>{
+  updateListeningUI(true);
+  setVoiceState("Listening...");
+  setVoiceHint("Go ahead. El-Ai is listening.");
+ };
+
  recognition.onresult=event=>{
-  let interim="";finalTranscript="";
+  let interim="",finalText="";
   for(let i=event.resultIndex;i<event.results.length;i++){
    const phrase=event.results[i][0].transcript;
-   if(event.results[i].isFinal)finalTranscript+=phrase;else interim+=phrase;
+   if(event.results[i].isFinal)finalText+=phrase;
+   else interim+=phrase;
   }
-  audioInput.value=(finalTranscript||interim).trim();
-  audioInput.style.height="auto";
-  audioInput.style.height=Math.min(audioInput.scrollHeight,105)+"px";
+  if(finalText.trim())finalTranscript=(finalTranscript+" "+finalText).trim();
+  setVoiceHint((finalTranscript||interim).trim()||"Listening...");
  };
+
  recognition.onerror=event=>{
   updateListeningUI(false);
   if(event.error==="not-allowed"||event.error==="service-not-allowed"){
-   setHint("Microphone blocked. Allow microphone access in your browser or site settings.");
+   setVoiceState("Microphone permission needed");
+   setVoiceHint("Allow microphone access in your browser settings.");
   }else if(event.error==="no-speech"){
-   setHint("No speech detected. Tap to try again.");
+   setVoiceState("No speech detected");
+   setVoiceHint("Tap the microphone and try again.");
   }else if(event.error==="network"){
-   setHint("Speech recognition needs a network connection in this browser.");
+   setVoiceState("Connection issue");
+   setVoiceHint("Speech recognition may require internet access.");
   }else if(event.error!=="aborted"){
-   setHint("Voice input failed. You can still type your message.");
+   setVoiceState("Voice input unavailable");
+   setVoiceHint("Please try again.");
   }
  };
+
  recognition.onend=()=>{
   updateListeningUI(false);
-  if(manualStop){manualStop=false;return}
-  const spoken=(finalTranscript||audioInput.value).trim();
-  if(spoken){audioInput.value=spoken;voiceRequest=true;sendMessage(spoken)}
-  else setHint("Tap the orb or microphone to speak");
+  if(manualStop){
+   manualStop=false;
+   return;
+  }
+  const spoken=finalTranscript.trim();
+  finalTranscript="";
+  if(spoken){
+   setVoiceState("Preparing your reply...");
+   sendMessage(spoken,true);
+  }else if(!busy){
+   setVoiceState("Tap the microphone to begin");
+   setVoiceHint("No speech captured. Try again.");
+  }
  };
  return true;
 }
+
 function startListening(){
  if(busy||!token||conversationMode!=="audio")return;
  if(!recognition&&!setupRecognition())return;
  if("speechSynthesis" in window)window.speechSynthesis.cancel();
  orbStage.classList.remove("speaking");
- finalTranscript="";manualStop=false;audioInput.value="";
- try{recognition.start()}catch(_){setHint("Wait a moment, then try again.")}
+ finalTranscript="";
+ manualStop=false;
+ try{recognition.start()}
+ catch(_){setVoiceHint("Wait a moment, then tap the microphone again.")}
 }
+
 function toggleVoice(){
  if(busy||!token||conversationMode!=="audio")return;
- if(isListening)stopListening(true);else startListening();
+ if(isListening)stopListening(true);
+ else startListening();
 }
 voiceButton.addEventListener("click",toggleVoice);
 orbStage.addEventListener("click",toggleVoice);
 orbStage.addEventListener("keydown",event=>{
- if(event.key==="Enter"||event.key===" "){event.preventDefault();toggleVoice()}
+ if(event.key==="Enter"||event.key===" "){
+  event.preventDefault();
+  toggleVoice();
+ }
 });
 
-document.querySelectorAll(".mode").forEach(button=>button.addEventListener("click",()=>{
- document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"));
- button.classList.add("active");selectedMode=button.dataset.mode;
- textInput.placeholder=selectedMode==="Default"?"Type your message...":"Ask "+selectedMode+"...";
- audioInput.placeholder=selectedMode==="Default"?"Speak or type a message...":"Ask "+selectedMode+"...";
-}));
+function cleanForSpeech(text){
+ return String(text||"")
+  .replace(/```[\s\S]*?```/g,"I've left out a code block.")
+  .replace(/https?:\/\/\S+/g,"a web link")
+  .replace(/[*_#>`~|\\^]/g,"")
+  .replace(/[ \t]{2,}/g," ")
+  .replace(/\n{3,}/g,"\n\n").trim();
+}
 
-async function sendMessage(rawText,sourceInput){
- const text=rawText.trim();
+function speakText(text){
+ if(!("speechSynthesis" in window)){
+  setVoiceState("Reply received");
+  setVoiceHint("Speech playback is not supported by this browser.");
+  return;
+ }
+ const clean=cleanForSpeech(text);
+ if(!clean)return;
+
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(clean);
+ utterance.lang="en-ZA";
+ utterance.rate=.94;
+ utterance.pitch=.95;
+ utterance.volume=1;
+
+ const voices=window.speechSynthesis.getVoices();
+ const english=voices.filter(v=>/^en(-|_)/i.test(v.lang));
+ const selected=english.find(v=>/en-ZA/i.test(v.lang))
+  ||english.find(v=>/en-GB/i.test(v.lang))
+  ||english[0];
+ if(selected)utterance.voice=selected;
+
+ orbStage.classList.add("speaking");
+ setVoiceState("El-Ai is speaking...");
+ setVoiceHint("Listen to the reply. Tap the microphone when you're ready.");
+
+ utterance.onend=()=>{
+  orbStage.classList.remove("speaking");
+  setVoiceState("Your turn");
+  setVoiceHint("Tap the microphone to continue.");
+ };
+ utterance.onerror=()=>{
+  orbStage.classList.remove("speaking");
+  setVoiceState("Reply received");
+  setVoiceHint("Tap the microphone to continue.");
+ };
+ window.speechSynthesis.speak(utterance);
+}
+
+document.querySelectorAll(".mode").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"));
+  button.classList.add("active");
+  selectedMode=button.dataset.mode;
+  $("textInput").placeholder=selectedMode==="Default"?"Message El-Ai...":"Ask "+selectedMode+"...";
+ });
+});
+
+async function sendMessage(rawText,fromVoice=false){
+ const text=String(rawText||"").trim();
  if(!text||busy||!token)return;
+
  if(isListening)stopListening(true);
  busy=true;
- $("audioSendButton").disabled=true;
+ const myRequest=++requestNumber;
+
  $("textSendButton").disabled=true;
- voiceButton.disabled=true;
- audioInput.disabled=true;textInput.disabled=true;
+ $("voiceButton").disabled=true;
+ $("textInput").disabled=true;
+
  addMessage(text,"user");
- audioInput.value="";textInput.value="";
- audioInput.style.height="auto";textInput.style.height="auto";
- const pending=addMessage("El-Ai is thinking...","assistant");
- const bubble=pending.querySelector(".bubble");bubble.classList.add("typing");
+ const target=activeChat();
+ const pending=addMessageTo(target,"El-Ai is thinking...","assistant");
+ const bubble=pending.querySelector(".bubble");
+ bubble.classList.add("typing");
+
  const instructions=modeInstructions[selectedMode]||"";
  const message=instructions
   ?"For this response, follow this approach: "+instructions+"\n\nUser's message: "+text
   :text;
+
  try{
   setStatus("THINKING");
   const data=await api("/ask",{
@@ -655,95 +905,142 @@ async function sendMessage(rawText,sourceInput){
    headers:{"Content-Type":"application/json","Accept":"application/json"},
    body:JSON.stringify({message})
   });
-  if(typeof data.reply!=="string"||!data.reply.trim())throw new Error("The server returned no reply.");
+  if(myRequest!==requestNumber)return;
+  if(typeof data.reply!=="string"||!data.reply.trim()){
+   throw new Error("The server returned no reply.");
+  }
   bubble.textContent=data.reply;
   setStatus("AI ONLINE");
-  if(voiceRequest&&conversationMode==="audio")speakText(data.reply);
+
+  if(fromVoice&&conversationMode==="audio"){
+   speakText(data.reply);
+  }
  }catch(error){
+  if(myRequest!==requestNumber)return;
   bubble.textContent="Sorry, "+addressUser()+". "+(error.message||"I couldn't get a reply.");
   setStatus("REQUEST FAILED","#ff9baa");
-  voiceRequest=false;
+  if(fromVoice){
+   setVoiceState("I couldn't get a reply");
+   setVoiceHint("Check your connection and try again.");
+  }
  }finally{
-  bubble.classList.remove("typing");busy=false;
-  $("audioSendButton").disabled=false;
-  $("textSendButton").disabled=false;
-  voiceButton.disabled=false;
-  audioInput.disabled=false;textInput.disabled=false;
-  audioChat.scrollTop=audioChat.scrollHeight;
-  textChat.scrollTop=textChat.scrollHeight;
+  if(myRequest===requestNumber){
+   bubble.classList.remove("typing");
+   busy=false;
+   $("textSendButton").disabled=false;
+   $("voiceButton").disabled=false;
+   $("textInput").disabled=false;
+   audioChat.scrollTop=audioChat.scrollHeight;
+   textChat.scrollTop=textChat.scrollHeight;
+  }
  }
 }
-$("audioForm").addEventListener("submit",event=>{
- event.preventDefault();
- if(isListening)stopListening(true);
- voiceRequest=false;sendMessage(audioInput.value,audioInput);
-});
+
 $("textForm").addEventListener("submit",event=>{
  event.preventDefault();
- voiceRequest=false;sendMessage(textInput.value,textInput);
+ const text=$("textInput").value;
+ $("textInput").value="";
+ $("textInput").style.height="auto";
+ sendMessage(text,false);
 });
-function resizeInput(input){
- input.addEventListener("input",()=>{
-  input.style.height="auto";
-  input.style.height=Math.min(input.scrollHeight,105)+"px";
- });
- input.addEventListener("keydown",event=>{
-  if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
-   event.preventDefault();input.form.requestSubmit();
-  }
- });
-}
-resizeInput(audioInput);resizeInput(textInput);
-document.querySelectorAll("[data-prompt]").forEach(button=>button.addEventListener("click",()=>{
- voiceRequest=false;sendMessage(button.dataset.prompt,textInput);
-}));
+
+$("textInput").addEventListener("input",()=>{
+ const input=$("textInput");
+ input.style.height="auto";
+ input.style.height=Math.min(input.scrollHeight,120)+"px";
+});
+$("textInput").addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
+  event.preventDefault();
+  $("textForm").requestSubmit();
+ }
+});
+
+document.querySelectorAll("[data-prompt]").forEach(button=>{
+ button.addEventListener("click",()=>sendMessage(button.dataset.prompt,false));
+});
 
 async function openMemories(){
  if(!token)return;
  $("memoryPanel").classList.add("open");
  $("memoryList").textContent="Loading memories...";
- try{await loadMemories()}catch(error){$("memoryList").textContent=error.message}
+ try{await loadMemories()}
+ catch(error){$("memoryList").textContent="Could not load memories: "+error.message}
 }
+
 async function loadMemories(){
  const data=await api("/memory");
- const list=$("memoryList");list.replaceChildren();
- if(!data.memories||!data.memories.length){list.textContent="No saved memories yet.";return}
+ const list=$("memoryList");
+ list.replaceChildren();
+
+ if(!Array.isArray(data.memories)||!data.memories.length){
+  list.textContent="No saved memories yet.";
+  return;
+ }
+
  data.memories.forEach(memory=>{
-  const item=document.createElement("div");item.className="memory-item";
-  const content=document.createElement("span");content.textContent=memory.content;
-  const remove=document.createElement("button");remove.type="button";remove.textContent="Delete";
+  const item=document.createElement("div");
+  item.className="memory-item";
+  const content=document.createElement("span");
+  content.textContent=memory.content;
+  const remove=document.createElement("button");
+  remove.type="button";
+  remove.textContent="Delete";
+
   remove.addEventListener("click",async()=>{
    remove.disabled=true;
-   try{await api("/memory/"+encodeURIComponent(memory.id),{method:"DELETE"});await loadMemories()}
-   catch(error){remove.disabled=false;alert(error.message)}
+   try{
+    await api("/memory/"+encodeURIComponent(memory.id),{method:"DELETE"});
+    await loadMemories();
+   }catch(error){
+    remove.disabled=false;
+    alert("Could not delete memory: "+error.message);
+   }
   });
-  item.append(content,remove);list.appendChild(item);
+
+  item.append(content,remove);
+  list.appendChild(item);
  });
 }
+
 $("memoryButton").addEventListener("click",openMemories);
 $("closeMemory").addEventListener("click",()=>$("memoryPanel").classList.remove("open"));
 $("memoryPanel").addEventListener("click",event=>{
  if(event.target===$("memoryPanel"))$("memoryPanel").classList.remove("open");
 });
+
 $("memoryForm").addEventListener("submit",async event=>{
  event.preventDefault();
- const field=$("memoryInput"),content=field.value.trim();if(!content)return;
- const button=$("memoryForm").querySelector("button");button.disabled=true;
+ const field=$("memoryInput");
+ const content=field.value.trim();
+ if(!content)return;
+
+ const button=$("memoryForm").querySelector("button");
+ button.disabled=true;
  try{
-  await api("/memory",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content})});
-  field.value="";await loadMemories();
- }catch(error){alert(error.message)}
- finally{button.disabled=false}
+  await api("/memory",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({content})
+  });
+  field.value="";
+  await loadMemories();
+ }catch(error){
+  alert("Could not save memory: "+error.message);
+ }finally{button.disabled=false}
 });
 
 async function checkConnection(){
  try{
   const response=await fetch(API_BASE+"/health");
-  if(!response.ok)throw new Error();
+  if(!response.ok)throw new Error("Offline");
   const data=await response.json();
-  setStatus(data.ai_configured?"AI ONLINE":"KEY MISSING",data.ai_configured?"#c5a9ff":"#ffd08a");
- }catch(_){setStatus("OFFLINE","#ff9baa")}
+  setStatus(data.ai_configured?"AI ONLINE":"KEY MISSING",data.ai_configured?"#d4b5ff":"#ffd08a");
+ }catch(_){
+  setStatus("OFFLINE","#ff879d");
+ }
 }
+
 checkConnection();
 restoreSession();
 })();
