@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,19 +74,20 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
 #sendButton{border:0;font-size:20px;background:linear-gradient(135deg,#d48cff,#9a5bff 52%,#676bff)}
 .voice-hint{min-height:13px;text-align:center;color:#a8c97e;font-size:9px;padding-top:5px}
 .footer{text-align:center;color:#77688f;font-size:9px;letter-spacing:1.5px;padding-top:7px}
-.auth-screen{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 15%,#28124d,#090615 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.auth-card{width:100%;max-width:390px;padding:25px 21px;border:1px solid #a56bff55;border-radius:24px;background:#100b20ed;box-shadow:0 0 45px #8b4cff18}
-.auth-card h2{margin:0 0 7px;font-size:26px;text-align:center}
-.auth-card p{font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+.auth-screen,.welcome-screen,.choice-screen{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 15%,#28124d,#090615 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.welcome-screen,.choice-screen{z-index:30;text-align:center}
+.auth-card,.screen-card{width:100%;max-width:390px;padding:25px 21px;border:1px solid #a56bff55;border-radius:24px;background:#100b20ed;box-shadow:0 0 45px #8b4cff18}
+.auth-card h2,.screen-card h2{margin:0 0 7px;font-size:26px;text-align:center}
+.auth-card p,.screen-card p{font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
 .auth-card label{display:block;font-size:11px;color:#d7c5f4;margin:14px 0 6px}
-.auth-card input{width:100%;padding:13px;border-radius:12px;border:1px solid #6c4a91;background:#090615;color:white;outline:none}
-.auth-card input:focus{border-color:#c091ff}
-.auth-submit{width:100%;padding:13px;margin-top:17px;border:0;border-radius:12px;background:linear-gradient(135deg,#d48cff,#7951ff);color:white;font-weight:700}
-.auth-switch{width:100%;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:transparent;color:#d9bdff}
+.auth-card input,.settings-input{width:100%;padding:13px;border-radius:12px;border:1px solid #6c4a91;background:#090615;color:white;outline:none}
+.auth-card input:focus,.settings-input:focus{border-color:#c091ff}
+.auth-submit,.primary-button{width:100%;padding:13px;margin-top:17px;border:0;border-radius:12px;background:linear-gradient(135deg,#d48cff,#7951ff);color:white;font-weight:700}
+.auth-switch,.secondary-button{width:100%;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:transparent;color:#d9bdff}
 .auth-error{color:#ff9baa!important;min-height:18px}
 .account-tools{display:flex;gap:6px;align-items:center}
 .account-tools button{padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:#160f27;color:#d8c8f4;font-size:10px}
-.memory-panel{position:fixed;inset:0;z-index:15;background:#05030bdc;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.memory-panel{position:fixed;inset:0;z-index:40;background:#05030bdc;display:none;align-items:flex-end;justify-content:center;padding:12px}
 .memory-panel.open{display:flex}
 .memory-card{width:100%;max-width:650px;max-height:75dvh;overflow:auto;border:1px solid #a56bff66;border-radius:20px;background:#100b20;padding:18px}
 .memory-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -96,20 +98,42 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
 .memory-form button{border:0;border-radius:10px;padding:10px;background:#8050ce;color:white}
 .memory-item{padding:11px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
 .memory-item button{float:right;margin-left:8px;background:transparent;border:1px solid #9b5570;color:#ffb6c4;border-radius:8px;padding:4px 7px}
+.screen-logo{width:104px;height:104px;margin:0 auto 22px;display:grid;place-items:center;border-radius:30px;border:1px solid #b58aff77;background:#120823;box-shadow:0 0 45px #9b5aff35}
+.screen-logo svg{width:90px;height:90px;filter:drop-shadow(0 0 8px #9b5aff)}
+.screen-kicker{font-size:10px!important;letter-spacing:3px;color:#d4b2ff!important}
+.screen-card .choice-button{width:100%;padding:17px 14px;margin-top:12px;border:1px solid #9e70d866;border-radius:15px;background:linear-gradient(135deg,#24123c,#17102a);color:#fff;text-align:left;display:flex;align-items:center;gap:13px}
+.choice-icon{font-size:26px;width:36px;text-align:center}
+.choice-button strong{display:block;font-size:14px}
+.choice-button small{display:block;color:#b6a6d0;font-size:11px;margin-top:4px}
+.screen-card .back-button{width:100%;padding:10px;border:0;background:transparent;color:#bca9d7;margin-top:12px}
+.welcome-screen .screen-card{border:0;background:transparent;box-shadow:none}
+.welcome-screen .screen-logo{animation:core 4s ease-in-out infinite}
+#app{visibility:hidden}
+#app.ready{visibility:visible}
+.audio-view #textInterface{display:none!important}
+.text-view #audioInterface{display:none!important}
+.text-view .mode-section{display:block}
+.audio-view .mode-section{display:none}
+.audio-view #quickPrompts{display:none}
+.text-view #quickPrompts{display:flex}
 .hidden{display:none!important}
 @media(max-height:730px){.eyebrow{margin-top:4px}.orb-stage{height:125px;width:230px}.orb{width:72px;height:72px}.hero h2{font-size:19px}.mode-section{padding-top:7px}}
+@media(max-width:420px){header{gap:7px;padding:10px}.account-tools button{padding:7px;font-size:9px}.brand h1{font-size:17px}.status{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 
+<!-- SIGN-IN / SIGN-UP -->
 <div class="auth-screen" id="authScreen">
   <form class="auth-card" id="authForm">
     <h2>El-Ai <span style="color:#c9a0ff">✦</span></h2>
     <p>YOUR PERSONAL INTELLIGENCE<br>Created by ELHAM STUDIOS</p>
     <div id="registerFields" class="hidden">
-      <label for="authName">Your preferred name</label>
-      <input id="authName" autocomplete="name" maxlength="80" placeholder="What should El-Ai call you?">
+      <label for="authName">Your name</label>
+      <input id="authName" autocomplete="name" maxlength="80" placeholder="Your name">
+      <label for="authTitle">What should El-Ai call you?</label>
+      <input id="authTitle" maxlength="50" placeholder="e.g. Sir, Captain, Alex">
     </div>
     <label for="authEmail">Email address</label>
     <input id="authEmail" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
@@ -122,9 +146,49 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
   </form>
 </div>
 
+<!-- SCREEN A: FIVE-SECOND WELCOME -->
+<div class="welcome-screen hidden" id="welcomeScreen">
+  <div class="screen-card">
+    <div class="screen-logo">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="welcomeGlow" x1="10" y1="70" x2="90" y2="20"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
+        <path d="M50 23V12" stroke="url(#welcomeGlow)" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="9" r="6" fill="url(#welcomeGlow)"/>
+        <rect x="17" y="25" width="66" height="53" rx="25" stroke="url(#welcomeGlow)" stroke-width="5"/>
+        <rect x="9" y="43" width="8" height="20" rx="4" fill="#cf55ff"/><rect x="83" y="43" width="8" height="20" rx="4" fill="#35dfff"/>
+        <circle cx="37" cy="49" r="5.5" fill="#a05bff"/><circle cx="63" cy="49" r="5.5" fill="#42dfff"/>
+        <path d="M35 70Q50 79 65 70" stroke="url(#welcomeGlow)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M30 79Q17 82 12 94M70 79Q83 82 88 94" stroke="url(#welcomeGlow)" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="screen-kicker">ELHAM STUDIOS PRESENTS</p>
+    <h2 id="welcomeTitle">Welcome to El-Ai</h2>
+    <p id="welcomeMessage">Your El-Ai account is ready. Let's get started.</p>
+    <p style="font-size:10px;letter-spacing:2px">INITIALIZING YOUR EXPERIENCE</p>
+  </div>
+</div>
+
+<!-- SCREEN B: CONVERSATION CHOICE -->
+<div class="choice-screen hidden" id="choiceScreen">
+  <div class="screen-card">
+    <p class="screen-kicker">YOUR EXPERIENCE</p>
+    <h2>How would you like to talk?</h2>
+    <p>Choose the way you want to interact with El-Ai. You can change this later.</p>
+    <button class="choice-button" id="chooseAudio" type="button">
+      <span class="choice-icon">🎙️</span>
+      <span><strong>Audio conversation</strong><small>Speak to El-Ai and hear spoken replies. Orb included.</small></span>
+    </button>
+    <button class="choice-button" id="chooseText" type="button">
+      <span class="choice-icon">💬</span>
+      <span><strong>Text chat</strong><small>Type your messages in a clean chat interface.</small></span>
+    </button>
+    <p id="choiceHint" role="status"></p>
+  </div>
+</div>
+
+<!-- SCREEN C: CONVERSATION -->
 <div class="app" id="app">
 <header>
-  <div class="logo" aria-label="EL Personal Assistant logo">
+  <div class="logo" aria-label="El-Ai logo">
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="robotGlow" x1="10" y1="70" x2="90" y2="20"><stop stop-color="#fa45e9"/><stop offset=".5" stop-color="#8d52ff"/><stop offset="1" stop-color="#39e5ff"/></linearGradient></defs>
       <path d="M50 23V12" stroke="url(#robotGlow)" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="9" r="6" fill="url(#robotGlow)"/>
@@ -139,54 +203,85 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
     <h1>El-Ai</h1><p class="brand-subtitle">EL PERSONAL ASSISTANT</p><p class="brand-studio">ELHAM STUDIOS</p>
   </div>
   <div class="account-tools">
+    <button id="titleButton" type="button">My title</button>
     <button id="memoryButton" type="button">Memory</button>
+    <button id="changeModeButton" type="button">Mode</button>
     <button id="logoutButton" type="button">Sign out</button>
   </div>
   <div class="status"><span class="status-dot"></span><span id="connectionStatus">CONNECTING</span></div>
 </header>
 
 <main>
-<section class="hero">
-  <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
-  <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap the orb to speak to El-Ai">
-    <div class="energy-wave wave-one"></div><div class="energy-wave wave-two"></div><div class="energy-wave wave-three"></div>
-    <div class="orb-glow"></div><div class="orb"></div>
-    <div class="sound-field"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <!-- AUDIO MODE: orb is only displayed here -->
+  <div id="audioInterface" class="audio-view" style="display:flex;flex-direction:column;flex:1;min-height:0">
+    <section class="hero">
+      <p class="eyebrow">YOUR PERSONAL INTELLIGENCE</p>
+      <div class="orb-stage" id="orbStage" role="button" tabindex="0" aria-label="Tap the orb to speak to El-Ai">
+        <div class="energy-wave wave-one"></div><div class="energy-wave wave-two"></div><div class="energy-wave wave-three"></div>
+        <div class="orb-glow"></div><div class="orb"></div>
+        <div class="sound-field"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <h2 id="audioHeading">I'm listening, <span>when you're ready.</span></h2>
+      <p class="subtitle" id="greeting">Your vision. Your ideas. Let's make them happen.</p>
+    </section>
+    <section class="chat" id="chat" aria-live="polite"></section>
+    <div class="composer-wrap">
+      <form class="composer" id="audioForm">
+        <textarea id="audioInput" rows="1" maxlength="8000" placeholder="Speak or type a message..." aria-label="Message El-Ai" required></textarea>
+        <button id="voiceButton" type="button" aria-label="Start voice input" title="Speak to El-Ai">🎙</button>
+        <button id="audioSendButton" type="submit" aria-label="Send message">↑</button>
+      </form>
+      <div class="voice-hint" id="voiceHint" aria-live="polite">Tap the orb or microphone to speak</div>
+      <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
+    </div>
   </div>
-  <h2>How can I help you <span>today?</span></h2>
-  <p class="subtitle" id="greeting">Your vision. Your ideas. Let's make them happen.</p>
-</section>
 
-<section class="mode-section">
-  <p class="section-label">CHOOSE YOUR MODE</p>
-  <div class="modes" id="modes">
-    <button class="mode active" type="button" data-mode="Default">✦ Default</button>
-    <button class="mode" type="button" data-mode="Historian">◷ Historian</button>
-    <button class="mode" type="button" data-mode="Storyteller">✎ Storyteller</button>
-    <button class="mode" type="button" data-mode="Data Scientist">⌘ Data Scientist</button>
+  <!-- TEXT MODE: no orb, just chat -->
+  <div id="textInterface" class="text-view" style="display:flex;flex-direction:column;flex:1;min-height:0">
+    <section class="hero" style="padding:16px 12px 8px">
+      <p class="eyebrow">ELHAM STUDIOS · TEXT MODE</p>
+      <h2>What are we working on?</h2>
+      <p class="subtitle" id="textGreeting">Welcome to El-Ai.</p>
+    </section>
+    <section class="mode-section">
+      <p class="section-label">CHOOSE YOUR MODE</p>
+      <div class="modes" id="modes">
+        <button class="mode active" type="button" data-mode="Default">✦ Default</button>
+        <button class="mode" type="button" data-mode="Historian">◷ Historian</button>
+        <button class="mode" type="button" data-mode="Storyteller">✎ Storyteller</button>
+        <button class="mode" type="button" data-mode="Data Scientist">⌘ Data Scientist</button>
+      </div>
+    </section>
+    <section class="chat" id="textChat" aria-live="polite"></section>
+    <div class="quick" id="quickPrompts">
+      <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El-Ai</button>
+      <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
+      <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
+    </div>
+    <div class="composer-wrap">
+      <form class="composer" id="textForm">
+        <textarea id="textInput" rows="1" maxlength="8000" placeholder="Type your message..." aria-label="Message El-Ai" required></textarea>
+        <button id="textSendButton" type="submit" aria-label="Send message">↑</button>
+      </form>
+      <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
+    </div>
   </div>
-</section>
-
-<section class="chat" id="chat" aria-live="polite"></section>
-
-<div class="quick">
-  <button type="button" data-prompt="Introduce yourself and explain what you can help me with.">✦ Explore El-Ai</button>
-  <button type="button" data-prompt="Help me plan my most important tasks for today.">◷ Plan my day</button>
-  <button type="button" data-prompt="Teach me something fascinating and useful.">✧ Teach me</button>
-</div>
-
-<div class="composer-wrap">
-  <form class="composer" id="chatForm">
-    <textarea id="messageInput" rows="1" maxlength="8000" placeholder="Ask me anything, Boss..." aria-label="Message El-Ai" required></textarea>
-    <button id="voiceButton" type="button" aria-label="Start voice input" title="Speak to El-Ai">🎙</button>
-    <button id="sendButton" type="submit" aria-label="Send message">↑</button>
-  </form>
-  <div class="voice-hint" id="voiceHint" aria-live="polite">Tap the microphone to speak</div>
-  <div class="footer">EL-AI · AN ELHAM STUDIOS CREATION</div>
-</div>
 </main>
 </div>
 
+<!-- TITLE SETTINGS -->
+<div class="memory-panel" id="titlePanel">
+  <div class="memory-card">
+    <div class="memory-head"><h3>Personalize El-Ai</h3><button id="closeTitle" type="button">Close</button></div>
+    <p style="font-size:11px;color:#9d93b7">Choose what El-Ai calls you. This preference is saved to your account when the backend supports profile storage.</p>
+    <label for="preferredTitle" style="display:block;font-size:11px;margin:12px 0 6px">Your preferred title or name</label>
+    <input class="settings-input" id="preferredTitle" maxlength="50" placeholder="e.g. Sir, Captain, Alex">
+    <button class="primary-button" id="saveTitle" type="button">Save preference</button>
+    <p id="titleMessage" role="status" style="font-size:11px"></p>
+  </div>
+</div>
+
+<!-- SAVED MEMORIES -->
 <div class="memory-panel" id="memoryPanel">
   <div class="memory-card">
     <div class="memory-head"><h3>Your saved memories</h3><button id="closeMemory" type="button">Close</button></div>
@@ -202,13 +297,16 @@ main{flex:1;min-height:0;display:flex;flex-direction:column}
 
 const API_BASE="https://elai-backend.onrender.com";
 const $=id=>document.getElementById(id);
-const chat=$("chat"),form=$("chatForm"),input=$("messageInput");
-const sendButton=$("sendButton"),voiceButton=$("voiceButton");
-const voiceHint=$("voiceHint"),statusText=$("connectionStatus");
-const orbStage=$("orbStage"),authScreen=$("authScreen");
+const statusText=$("connectionStatus"),authScreen=$("authScreen");
+const welcomeScreen=$("welcomeScreen"),choiceScreen=$("choiceScreen"),app=$("app");
+const audioChat=$("chat"),textChat=$("textChat");
+const audioInput=$("audioInput"),textInput=$("textInput");
+const voiceButton=$("voiceButton"),voiceHint=$("voiceHint"),orbStage=$("orbStage");
+
 let token="",currentUser=null,busy=false,selectedMode="Default";
 let recognition=null,isListening=false,manualStop=false,finalTranscript="";
-let voiceRequest=false,registerMode=false,audioContext=null;
+let voiceRequest=false,registerMode=false,conversationMode="";
+let preferredTitle="",profileData={},welcomeTimer=null;
 
 const modeInstructions={
  "Default":"",
@@ -228,9 +326,6 @@ function cleanForSpeech(text){
   .replace(/[ \t]{2,}/g," ")
   .replace(/\n{3,}/g,"\n\n").trim();
 }
-function authHeaders(extra={}){
- return {...extra,Authorization:"Bearer "+token};
-}
 async function api(path,options={}){
  const headers={...(options.headers||{})};
  if(token)headers.Authorization="Bearer "+token;
@@ -238,7 +333,10 @@ async function api(path,options={}){
  let data={};
  try{data=await response.json()}catch(_){}
  if(!response.ok){
-  if(response.status===401&&token){signOut(false);showAuth("Your session expired. Please sign in again.")}
+  if(response.status===401&&token){
+   signOut(false);
+   showAuth("Your session expired. Please sign in again.");
+  }
   throw new Error(typeof data.detail==="string"?data.detail:"Request failed ("+response.status+").");
  }
  return data;
@@ -252,6 +350,7 @@ function setRegisterMode(value){
  registerMode=value;
  $("registerFields").classList.toggle("hidden",!value);
  $("authName").required=value;
+ $("authTitle").required=value;
  $("authPassword").autocomplete=value?"new-password":"current-password";
  $("authSubmit").textContent=value?"Create account":"Sign in";
  $("authSwitch").textContent=value?"Already have an account? Sign in":"New to El-Ai? Create account";
@@ -259,29 +358,93 @@ function setRegisterMode(value){
 }
 $("authSwitch").addEventListener("click",()=>setRegisterMode(!registerMode));
 
-function addMessage(text,role){
+function addMessageTo(target,text,role){
  const row=document.createElement("div");row.className="message "+role;
  const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
- row.appendChild(bubble);chat.appendChild(row);chat.scrollTop=chat.scrollHeight;return row;
+ row.appendChild(bubble);target.appendChild(row);target.scrollTop=target.scrollHeight;
+ return row;
 }
+function addMessage(text,role){
+ return addMessageTo(conversationMode==="text"?textChat:audioChat,text,role);
+}
+function addressUser(){return preferredTitle||currentUser?.name||"there"}
+function greetingText(){return "Welcome, "+addressUser()+". What are we working on today?"}
 function welcome(){
- chat.replaceChildren();
- addMessage("Welcome, Boss "+currentUser.name+".\n\nI'm El-Ai, your personal assistant created by ELHAM STUDIOS.\n\nYour account is connected. Ask me anything, or tap the orb to speak.","assistant");
- $("greeting").textContent="Ready when you are, Boss "+currentUser.name+".";
+ audioChat.replaceChildren();textChat.replaceChildren();
+ const message="Welcome to El-Ai, "+addressUser()+".\n\nI'm your personal assistant, created by ELHAM STUDIOS. What can I help you with today?";
+ addMessageTo(audioChat,message,"assistant");
+ addMessageTo(textChat,message,"assistant");
+ $("greeting").textContent=greetingText();
+ $("textGreeting").textContent=greetingText();
 }
-async function establishSession(data){
+function showChoice(){
+ app.classList.remove("ready");
+ choiceScreen.classList.remove("hidden");
+ welcomeScreen.classList.add("hidden");
+}
+function showConversation(mode){
+ conversationMode=mode;
+ choiceScreen.classList.add("hidden");
+ welcomeScreen.classList.add("hidden");
+ app.classList.add("ready");
+ app.classList.toggle("audio-view",mode==="audio");
+ app.classList.toggle("text-view",mode==="text");
+ if(mode==="audio"){
+  $("audioInterface").style.display="flex";
+  $("textInterface").style.display="none";
+  setHint("Tap the orb or microphone to speak");
+ }else{
+  $("audioInterface").style.display="none";
+  $("textInterface").style.display="flex";
+ }
+ try{sessionStorage.setItem("elai_mode",mode)}catch(_){}
+}
+function showWelcome(isNew){
+ clearTimeout(welcomeTimer);
+ app.classList.remove("ready");
+ choiceScreen.classList.add("hidden");
+ welcomeScreen.classList.remove("hidden");
+ $("welcomeTitle").textContent=isNew?"Welcome to El-Ai":"Welcome back, "+addressUser();
+ $("welcomeMessage").textContent=isNew
+  ?"Your El-Ai account is ready. Let's get started."
+  :"You're back, "+addressUser()+"! What are we working on today?";
+ welcomeTimer=setTimeout(showChoice,5000);
+}
+async function establishSession(data,isNew){
  if(!data.token||!data.user||!data.user.name)throw new Error("The server did not return a valid account session.");
  token=data.token;currentUser=data.user;
  try{sessionStorage.setItem("elai_session",token)}catch(_){}
- hideAuth();welcome();setStatus("AI ONLINE");
+ await loadProfile();
+ welcome();
+ hideAuth();
+ showWelcome(isNew);
+ setStatus("AI ONLINE");
+}
+async function loadProfile(){
+ profileData={};
+ try{
+  const data=await api("/profile");
+  if(data&&data.profile&&typeof data.profile==="object")profileData=data.profile;
+ }catch(error){
+  // Keep working if an older backend does not expose profile storage.
+  profileData={};
+ }
+ preferredTitle=String(profileData.preferred_title||"").trim().slice(0,50);
+ $("preferredTitle").value=preferredTitle;
 }
 async function restoreSession(){
  try{token=sessionStorage.getItem("elai_session")||""}catch(_){token=""}
  if(!token){showAuth();return}
  try{
   const data=await api("/auth/me");
-  currentUser=data.user;hideAuth();welcome();setStatus("AI ONLINE");
- }catch(_){token="";currentUser=null;try{sessionStorage.removeItem("elai_session")}catch(__){}showAuth()}
+  currentUser=data.user;
+  await loadProfile();
+  hideAuth();welcome();showWelcome(false);setStatus("AI ONLINE");
+ }catch(_){
+  token="";currentUser=null;
+  try{sessionStorage.removeItem("elai_session")}catch(__){}
+  showAuth();
+ }
 }
 $("authForm").addEventListener("submit",async event=>{
  event.preventDefault();
@@ -292,24 +455,77 @@ $("authForm").addEventListener("submit",async event=>{
   let data;
   if(registerMode){
    const name=$("authName").value.trim();
-   if(!name)throw new Error("Enter your preferred name.");
+   const title=$("authTitle").value.trim();
+   if(!name)throw new Error("Enter your name.");
+   if(!title)throw new Error("Choose what El-Ai should call you.");
    data=await api("/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,name,password})});
+   // Set the chosen title in the profile immediately after account creation.
+   token=data.token;currentUser=data.user;
+   try{sessionStorage.setItem("elai_session",token)}catch(_){}
+   preferredTitle=title;
+   await saveProfileTitle(title);
+   await establishSession(data,true);
   }else{
    data=await api("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+   await establishSession(data,false);
   }
-  await establishSession(data);
  }catch(error){$("authError").textContent=error.message||"Could not sign in. Try again."}
  finally{button.disabled=false}
 });
 
 function signOut(showMessage=true){
- token="";currentUser=null;
- try{sessionStorage.removeItem("elai_session")}catch(_){}
+ clearTimeout(welcomeTimer);
+ token="";currentUser=null;preferredTitle="";profileData={};
+ try{sessionStorage.removeItem("elai_session");sessionStorage.removeItem("elai_mode")}catch(_){}
  if("speechSynthesis" in window)window.speechSynthesis.cancel();
- $("memoryPanel").classList.remove("open");chat.replaceChildren();
+ stopListening(true);
+ $("memoryPanel").classList.remove("open");
+ $("titlePanel").classList.remove("open");
+ app.classList.remove("ready");
+ welcomeScreen.classList.add("hidden");choiceScreen.classList.add("hidden");
+ audioChat.replaceChildren();textChat.replaceChildren();
  showAuth(showMessage?"You have signed out.":"");
 }
 $("logoutButton").addEventListener("click",()=>signOut(true));
+
+async function saveProfileTitle(value){
+ const clean=String(value||"").trim().slice(0,50);
+ const updated={...profileData,preferred_title:clean};
+ const data=await api("/profile",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({profile:updated})});
+ profileData=data.profile&&typeof data.profile==="object"?data.profile:updated;
+ preferredTitle=clean;
+ $("preferredTitle").value=clean;
+ $("greeting").textContent=greetingText();
+ $("textGreeting").textContent=greetingText();
+ return true;
+}
+$("titleButton").addEventListener("click",()=>{
+ $("preferredTitle").value=preferredTitle;
+ $("titleMessage").textContent="";
+ $("titlePanel").classList.add("open");
+});
+$("closeTitle").addEventListener("click",()=>$("titlePanel").classList.remove("open"));
+$("titlePanel").addEventListener("click",event=>{if(event.target===$("titlePanel"))$("titlePanel").classList.remove("open")});
+$("saveTitle").addEventListener("click",async()=>{
+ const button=$("saveTitle"),value=$("preferredTitle").value.trim();
+ button.disabled=true;$("titleMessage").textContent="Saving...";
+ try{
+  await saveProfileTitle(value);
+  $("titleMessage").textContent="Preference saved.";
+  welcome();
+ }catch(error){
+  $("titleMessage").textContent="Could not save: "+error.message;
+ }
+ finally{button.disabled=false}
+});
+
+$("chooseAudio").addEventListener("click",()=>showConversation("audio"));
+$("chooseText").addEventListener("click",()=>showConversation("text"));
+$("changeModeButton").addEventListener("click",()=>{
+ stopListening(true);
+ if("speechSynthesis" in window)window.speechSynthesis.cancel();
+ showChoice();
+});
 
 function getPreferredVoice(){
  if(!("speechSynthesis" in window))return null;
@@ -325,23 +541,38 @@ function speakText(text){
  utterance.lang="en-ZA";utterance.rate=.94;utterance.pitch=.95;utterance.volume=1;
  const voice=getPreferredVoice();if(voice)utterance.voice=voice;
  orbStage.classList.add("speaking");
- utterance.onend=utterance.onerror=()=>{orbStage.classList.remove("speaking");setHint("Tap the microphone to speak")};
- window.speechSynthesis.speak(utterance);setHint("El-Ai is speaking...");
+ utterance.onend=utterance.onerror=()=>{
+  orbStage.classList.remove("speaking");
+  setHint("Tap the orb or microphone to speak");
+ };
+ window.speechSynthesis.speak(utterance);
+ setHint("El-Ai is speaking...");
  voiceRequest=false;
 }
 function updateListeningUI(value){
- isListening=value;voiceButton.classList.toggle("listening",value);orbStage.classList.toggle("listening",value);
+ isListening=value;
+ voiceButton.classList.toggle("listening",value);
+ orbStage.classList.toggle("listening",value);
  voiceButton.textContent=value?"■":"🎙";
  voiceButton.setAttribute("aria-label",value?"Stop voice input":"Start voice input");
 }
 function stopListening(manual=true){
- manualStop=manual;if(recognition&&isListening){try{recognition.stop()}catch(_){}}
- updateListeningUI(false);if(!busy)setHint("Tap the microphone to speak");
+ manualStop=manual;
+ if(recognition&&isListening){try{recognition.stop()}catch(_){}}
+ updateListeningUI(false);
+ if(!busy)setHint("Tap the orb or microphone to speak");
 }
 function setupRecognition(){
  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){setHint("Voice input isn't supported in this browser.");voiceButton.disabled=true;return false}
- recognition=new SpeechRecognition();recognition.lang="en-ZA";recognition.continuous=false;recognition.interimResults=true;recognition.maxAlternatives=1;
+ if(!SpeechRecognition){
+  setHint("Speech recognition isn't supported in this browser. Try a supported browser or type instead.");
+  return false;
+ }
+ recognition=new SpeechRecognition();
+ recognition.lang="en-ZA";
+ recognition.continuous=false;
+ recognition.interimResults=true;
+ recognition.maxAlternatives=1;
  recognition.onstart=()=>{updateListeningUI(true);setHint("Listening... speak now")};
  recognition.onresult=event=>{
   let interim="";finalTranscript="";
@@ -349,71 +580,128 @@ function setupRecognition(){
    const phrase=event.results[i][0].transcript;
    if(event.results[i].isFinal)finalTranscript+=phrase;else interim+=phrase;
   }
-  input.value=(finalTranscript||interim).trim();
-  input.style.height="auto";input.style.height=Math.min(input.scrollHeight,105)+"px";
+  audioInput.value=(finalTranscript||interim).trim();
+  audioInput.style.height="auto";
+  audioInput.style.height=Math.min(audioInput.scrollHeight,105)+"px";
  };
  recognition.onerror=event=>{
   updateListeningUI(false);
-  if(event.error==="not-allowed"||event.error==="service-not-allowed")setHint("Allow microphone access in browser settings.");
-  else if(event.error==="no-speech")setHint("No speech detected. Try again.");
-  else if(event.error!=="aborted")setHint("Voice input failed. Check your connection.");
+  if(event.error==="not-allowed"||event.error==="service-not-allowed"){
+   setHint("Microphone blocked. Allow microphone access in your browser or site settings.");
+  }else if(event.error==="no-speech"){
+   setHint("No speech detected. Tap to try again.");
+  }else if(event.error==="network"){
+   setHint("Speech recognition needs a network connection in this browser.");
+  }else if(event.error!=="aborted"){
+   setHint("Voice input failed. You can still type your message.");
+  }
  };
  recognition.onend=()=>{
   updateListeningUI(false);
   if(manualStop){manualStop=false;return}
-  const spoken=(finalTranscript||input.value).trim();
-  if(spoken){input.value=spoken;voiceRequest=true;sendMessage(spoken)}else setHint("Tap the microphone to speak");
+  const spoken=(finalTranscript||audioInput.value).trim();
+  if(spoken){audioInput.value=spoken;voiceRequest=true;sendMessage(spoken)}
+  else setHint("Tap the orb or microphone to speak");
  };
  return true;
 }
 function startListening(){
- if(busy||!token)return;
+ if(busy||!token||conversationMode!=="audio")return;
  if(!recognition&&!setupRecognition())return;
  if("speechSynthesis" in window)window.speechSynthesis.cancel();
- orbStage.classList.remove("speaking");finalTranscript="";manualStop=false;input.value="";
+ orbStage.classList.remove("speaking");
+ finalTranscript="";manualStop=false;audioInput.value="";
  try{recognition.start()}catch(_){setHint("Wait a moment, then try again.")}
 }
-function toggleVoice(){if(busy||!token)return;if(isListening)stopListening(true);else startListening()}
+function toggleVoice(){
+ if(busy||!token||conversationMode!=="audio")return;
+ if(isListening)stopListening(true);else startListening();
+}
 voiceButton.addEventListener("click",toggleVoice);
 orbStage.addEventListener("click",toggleVoice);
-orbStage.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();toggleVoice()}});
+orbStage.addEventListener("keydown",event=>{
+ if(event.key==="Enter"||event.key===" "){event.preventDefault();toggleVoice()}
+});
 
 document.querySelectorAll(".mode").forEach(button=>button.addEventListener("click",()=>{
  document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"));
  button.classList.add("active");selectedMode=button.dataset.mode;
- input.placeholder=selectedMode==="Default"?"Ask me anything, Boss...":"Ask "+selectedMode+", Boss...";
+ textInput.placeholder=selectedMode==="Default"?"Type your message...":"Ask "+selectedMode+"...";
+ audioInput.placeholder=selectedMode==="Default"?"Speak or type a message...":"Ask "+selectedMode+"...";
 }));
 
-async function sendMessage(rawText){
- const text=rawText.trim();if(!text||busy||!token)return;
+async function sendMessage(rawText,sourceInput){
+ const text=rawText.trim();
+ if(!text||busy||!token)return;
  if(isListening)stopListening(true);
- busy=true;sendButton.disabled=true;voiceButton.disabled=true;input.disabled=true;
- addMessage(text,"user");input.value="";input.style.height="auto";
- const pending=addMessage("El-Ai is thinking, Boss...","assistant");
+ busy=true;
+ $("audioSendButton").disabled=true;
+ $("textSendButton").disabled=true;
+ voiceButton.disabled=true;
+ audioInput.disabled=true;textInput.disabled=true;
+ addMessage(text,"user");
+ audioInput.value="";textInput.value="";
+ audioInput.style.height="auto";textInput.style.height="auto";
+ const pending=addMessage("El-Ai is thinking...","assistant");
  const bubble=pending.querySelector(".bubble");bubble.classList.add("typing");
  const instructions=modeInstructions[selectedMode]||"";
- const message=instructions?"For this response, follow this approach: "+instructions+"\n\nUser's message: "+text:text;
+ const message=instructions
+  ?"For this response, follow this approach: "+instructions+"\n\nUser's message: "+text
+  :text;
  try{
   setStatus("THINKING");
-  const data=await api("/ask",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({message})});
+  const data=await api("/ask",{
+   method:"POST",
+   headers:{"Content-Type":"application/json","Accept":"application/json"},
+   body:JSON.stringify({message})
+  });
   if(typeof data.reply!=="string"||!data.reply.trim())throw new Error("The server returned no reply.");
-  bubble.textContent=data.reply;setStatus("AI ONLINE");
-  if(voiceRequest)speakText(data.reply);
+  bubble.textContent=data.reply;
+  setStatus("AI ONLINE");
+  if(voiceRequest&&conversationMode==="audio")speakText(data.reply);
  }catch(error){
-  bubble.textContent="Sorry, Boss "+(currentUser?.name||"")+". "+(error.message||"I couldn't get a reply.");
-  setStatus("REQUEST FAILED","#ff9baa");voiceRequest=false;
+  bubble.textContent="Sorry, "+addressUser()+". "+(error.message||"I couldn't get a reply.");
+  setStatus("REQUEST FAILED","#ff9baa");
+  voiceRequest=false;
  }finally{
-  bubble.classList.remove("typing");busy=false;sendButton.disabled=false;voiceButton.disabled=false;input.disabled=false;chat.scrollTop=chat.scrollHeight;
+  bubble.classList.remove("typing");busy=false;
+  $("audioSendButton").disabled=false;
+  $("textSendButton").disabled=false;
+  voiceButton.disabled=false;
+  audioInput.disabled=false;textInput.disabled=false;
+  audioChat.scrollTop=audioChat.scrollHeight;
+  textChat.scrollTop=textChat.scrollHeight;
  }
 }
-form.addEventListener("submit",event=>{event.preventDefault();if(isListening)stopListening(true);voiceRequest=false;sendMessage(input.value)});
-input.addEventListener("input",()=>{input.style.height="auto";input.style.height=Math.min(input.scrollHeight,105)+"px"});
-input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){event.preventDefault();form.requestSubmit()}});
-document.querySelectorAll("[data-prompt]").forEach(button=>button.addEventListener("click",()=>{voiceRequest=false;sendMessage(button.dataset.prompt)}));
+$("audioForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ if(isListening)stopListening(true);
+ voiceRequest=false;sendMessage(audioInput.value,audioInput);
+});
+$("textForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ voiceRequest=false;sendMessage(textInput.value,textInput);
+});
+function resizeInput(input){
+ input.addEventListener("input",()=>{
+  input.style.height="auto";
+  input.style.height=Math.min(input.scrollHeight,105)+"px";
+ });
+ input.addEventListener("keydown",event=>{
+  if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){
+   event.preventDefault();input.form.requestSubmit();
+  }
+ });
+}
+resizeInput(audioInput);resizeInput(textInput);
+document.querySelectorAll("[data-prompt]").forEach(button=>button.addEventListener("click",()=>{
+ voiceRequest=false;sendMessage(button.dataset.prompt,textInput);
+}));
 
 async function openMemories(){
  if(!token)return;
- $("memoryPanel").classList.add("open");$("memoryList").textContent="Loading memories...";
+ $("memoryPanel").classList.add("open");
+ $("memoryList").textContent="Loading memories...";
  try{await loadMemories()}catch(error){$("memoryList").textContent=error.message}
 }
 async function loadMemories(){
@@ -434,12 +722,17 @@ async function loadMemories(){
 }
 $("memoryButton").addEventListener("click",openMemories);
 $("closeMemory").addEventListener("click",()=>$("memoryPanel").classList.remove("open"));
-$("memoryPanel").addEventListener("click",event=>{if(event.target===$("memoryPanel"))$("memoryPanel").classList.remove("open")});
+$("memoryPanel").addEventListener("click",event=>{
+ if(event.target===$("memoryPanel"))$("memoryPanel").classList.remove("open");
+});
 $("memoryForm").addEventListener("submit",async event=>{
- event.preventDefault();const field=$("memoryInput"),content=field.value.trim();if(!content)return;
+ event.preventDefault();
+ const field=$("memoryInput"),content=field.value.trim();if(!content)return;
  const button=$("memoryForm").querySelector("button");button.disabled=true;
- try{await api("/memory",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content})});field.value="";await loadMemories()}
- catch(error){alert(error.message)}
+ try{
+  await api("/memory",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content})});
+  field.value="";await loadMemories();
+ }catch(error){alert(error.message)}
  finally{button.disabled=false}
 });
 
