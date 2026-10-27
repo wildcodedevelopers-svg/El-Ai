@@ -1,53 +1,60 @@
 name: Build EL-AI Android APK
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'app/**'
-      - 'build.gradle.kts'
-      - 'settings.gradle.kts'
-      - '.github/workflows/build-apk.yml'
+workflow_dispatch:
+push:
+paths:
+- 'app/**'
+- 'build.gradle.kts'
+- 'settings.gradle.kts'
+- '.github/workflows/build-apk.yml'
 
 permissions:
-  contents: read
+contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout repository
+uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  - name: Set up Java 17
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+  - name: Set up Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.7'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
+  - name: Diagnose Android manifest
+    run: |
+      echo "=== MANIFEST ==="
+      head -n 5 app/src/main/AndroidManifest.xml | cat -A
+      grep -n '<?xml' app/src/main/AndroidManifest.xml || true
+      python3 -c "import xml.etree.ElementTree as ET; ET.parse('app/src/main/AndroidManifest.xml'); print('XML syntax is valid')"
 
-          
-      - name: Diagnose Android manifest
-        run: |
-          echo "First 5 lines with hidden characters:"
-          head -n 5 app/src/main/AndroidManifest.xml | cat -A
-          echo "XML declaration locations:"
-          grep -n '<?xml' app/src/main/AndroidManifest.xml || true
-          python3 -c "import xml.etree.ElementTree as ET; ET.parse('app/src/main/AndroidManifest.xml'); print('XML syntax is valid')"
+  - name: List Android resources
+    if: always()
+    run: |
+      echo "=== RESOURCE FILES ==="
+      find app/src/main/res -type f -print
+      echo "=== DRAWABLE ICON ==="
+      if [ -f app/src/main/res/drawable/ic_launcher.xml ]; then
+        cat app/src/main/res/drawable/ic_launcher.xml
+      else
+        echo "ERROR: ic_launcher.xml is missing"
+      fi
 
+  - name: Build debug APK
+    run: gradle assembleDebug --stacktrace --info
 
-
-      - name: Build debug APK
-        run: gradle assembleDebug --stacktrace --info
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: EL-AI-debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: EL-AI-debug-APK
+      path: app/build/outputs/apk/debug/app-debug.apk
+      if-no-files-found: error
