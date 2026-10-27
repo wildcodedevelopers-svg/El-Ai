@@ -1,4 +1,3 @@
-
 import os
 import re
 import hmac
@@ -11,10 +10,12 @@ from contextlib import asynccontextmanager
 
 import psycopg
 from psycopg.rows import dict_row
-from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi import FastAPI, HTTPException, Depends, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, EmailStr
 from groq import Groq
+
+from login_alerts import notify_login
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -369,7 +370,7 @@ def health():
 
 
 @app.post("/auth/register")
-def register(data: RegisterRequest):
+def register(data: RegisterRequest, request: Request):
     email = str(data.email).lower().strip()
     name = data.name.strip()
 
@@ -394,6 +395,14 @@ def register(data: RegisterRequest):
                 DO UPDATE SET value = EXCLUDED.value
             """, (user["id"], name))
 
+        # Notify the administrator after successful registration.
+        notify_login(
+            user["email"],
+            user["name"],
+            request,
+            kind="New account",
+        )
+
         return {
             "token": create_token(user["id"]),
             "user": user,
@@ -404,7 +413,7 @@ def register(data: RegisterRequest):
 
 
 @app.post("/auth/login")
-def login(data: LoginRequest):
+def login(data: LoginRequest, request: Request):
     email = str(data.email).lower().strip()
 
     with get_db() as conn:
@@ -417,6 +426,13 @@ def login(data: LoginRequest):
         data.password, user["password_salt"], user["password_hash"]
     ):
         raise HTTPException(401, "Incorrect email or password.")
+
+    # Notify the administrator after successful authentication.
+    notify_login(
+        user["email"],
+        user["name"],
+        request,
+    )
 
     return {
         "token": create_token(user["id"]),
@@ -578,4 +594,4 @@ SAVED MEMORIES:
         raise HTTPException(
             status_code=500,
             detail="El-Ai could not process your request. Check backend logs.",
-        )
+    )
