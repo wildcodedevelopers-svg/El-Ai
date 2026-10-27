@@ -390,6 +390,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
       <aside class="sidebar">
         <button class="side-btn active" data-view="homeView" type="button">⌂ &nbsp; Home</button>
         <button class="side-btn" data-view="chatView" type="button">✧ &nbsp; Chat with El-AI</button>
+        <button class="side-btn" data-view="historyView" type="button">☰ &nbsp; Chat history</button>
         <button class="side-btn" data-view="memoryView" type="button">◈ &nbsp; Memory</button>
         <button class="side-btn" data-view="profileView" type="button">⚙ &nbsp; Profile &amp; settings</button>
         <div class="side-title">CONNECTION</div>
@@ -427,7 +428,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
                 <option value="coding">Coding</option>
                 <option value="study">Study</option>
               </select>
-              <button class="secondary" id="clearChatBtn" type="button">Clear</button>
+              <button class="secondary" id="clearChatBtn" type="button">New chat</button>
             </div>
           </div>
 
@@ -481,6 +482,15 @@ input[type=range]{accent-color:#a855f7;width:100%}
               <button class="secondary" id="refreshMemoryBtn" type="button">Refresh</button>
             </div>
             <div id="memoryList"><div class="empty">Loading memories…</div></div>
+          </div>
+        </div>
+
+        <div id="historyView" class="view hidden">
+          <h2>Chat history</h2>
+          <p class="muted">Your conversations are saved on this device. Open one to carry on where you left off.</p>
+          <div class="panel">
+            <div class="row"><h3>Saved chats</h3><button class="danger-btn" id="historyClearBtn" type="button">Delete all</button></div>
+            <div id="historyList"></div>
           </div>
         </div>
 
@@ -542,6 +552,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
     <nav class="mobile-nav">
       <button data-view="homeView" type="button" class="active">⌂<br>Home</button>
       <button data-view="chatView" type="button">✧<br>Chat</button>
+      <button data-view="historyView" type="button">☰<br>History</button>
       <button data-view="memoryView" type="button">◈<br>Memory</button>
       <button data-view="profileView" type="button">⚙<br>Profile</button>
     </nav>
@@ -805,7 +816,7 @@ function restoreOrb() {
 
   /* ---------- Navigation ---------- */
   function switchView(viewId) {
-    ["homeView", "chatView", "memoryView", "profileView"].forEach(id =>
+    ["homeView", "chatView", "historyView", "memoryView", "profileView"].forEach(id =>
       $(id).classList.toggle("hidden", id !== viewId)
     );
     document.querySelectorAll("[data-view]").forEach(button =>
@@ -813,6 +824,7 @@ function restoreOrb() {
     );
     if (viewId === "memoryView") loadMemories();
     if (viewId === "profileView") loadProfile();
+    if (viewId === "historyView") renderHistory();
     if (viewId === "chatView") setTimeout(() => $("chatInput").focus(), 100);
     window.scrollTo({ top: 0 });
   }
@@ -855,6 +867,7 @@ function restoreOrb() {
   }
 
   function newChat() {
+    saveCurrent(); currentConvoId = null;
     chatHistory = [];
     $("messages").innerHTML = '<div class="empty" id="emptyChat">Start a conversation. What are you thinking about?</div>';
     $("chatInput").value = "";
@@ -925,6 +938,7 @@ function restoreOrb() {
     } finally {
       busy = false;
       $("sendBtn").disabled = false;
+      saveCurrent();
       restoreOrb();
       input.focus();
     }
@@ -1180,6 +1194,7 @@ function restoreOrb() {
   function logout() {
     token = "";
     currentUser = null;
+    currentConvoId = null;
     chatHistory = [];
     memories = [];
     closeLive();
@@ -1292,14 +1307,14 @@ async function converse(text) {
   try {
     const local = handleCommand(text);
     if (local) {
-      addMessage("assistant", local); liveBusy = false;
+      addMessage("assistant", local); saveCurrent(); liveBusy = false;
       if (live) { $("liveText").textContent = local; speakLive(local, () => setTimeout(listen, 250)); }
       return;
     }
     const d = await api("/ask", { method:"POST", body: JSON.stringify({
       message:text, prompt:text, mode:$("modeSelect").value, style:"concise", system:buildSystem()+" Reply briefly in natural spoken language, no markdown.", persona:"jarvis", temperature:TEMP[$("modeSelect").value], history:chatHistory, live:true }) });
     const reply = d.reply || d.response || d.answer || d.message || d.output || "I didn't catch that.";
-    addMessage("assistant", reply);
+    addMessage("assistant", reply); saveCurrent();
     chatHistory.push({ role:"user", content:text }, { role:"assistant", content:reply });
     chatHistory = chatHistory.slice(-24);
     autoMemory(text);
@@ -1610,6 +1625,80 @@ function handleCommand(raw) {
   if (/^(?:help|commands|what can you do)$/.test(t)) return 'At your service, ' + T + '. Try: "open WhatsApp", "call 0821234567", "call Mom", "text John saying running late", "navigate to Sandton", "play Amapiano on YouTube", "google best laptops", "set a timer for 10 minutes", "whatsapp to 27821234567 saying hello". I can open any installed app when the native app layer is installed.';
   return null;
 }
+
+/* ---------- Saved conversations (stored on this device, per account) ---------- */
+let currentConvoId = null;
+const convoKey = () => "elai_convos_" + ((currentUser && (currentUser.email || currentUser.id)) || "guest");
+function loadConvos() { try { return JSON.parse(store.get(convoKey()) || "[]"); } catch { return []; } }
+function writeConvos(list) {
+  list = list.slice(0, 100);
+  for (;;) {
+    try { localStorage.setItem(convoKey(), JSON.stringify(list)); return true; }
+    catch { if (list.length <= 1) return false; list.pop(); }   // storage full: drop the oldest chat
+  }
+}
+function readMessages() {
+  return Array.from($("messages").querySelectorAll(".message")).map(el => ({
+    role: el.classList.contains("user") ? "user" : "assistant",
+    content: (el.querySelector(".bubble > div:last-child") || {}).textContent || ""
+  })).filter(m => m.content && m.content !== "Thinking…" && !m.content.startsWith("I couldn't get a response from the server"));
+}
+function saveCurrent() {
+  const msgs = readMessages().slice(-200);
+  if (!msgs.some(m => m.role === "user")) return;
+  const list = loadConvos();
+  if (!currentConvoId) currentConvoId = "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const first = msgs.find(m => m.role === "user").content.replace(/\s+/g, " ").trim();
+  const entry = { id: currentConvoId, title: first.slice(0, 48) + (first.length > 48 ? "…" : ""), updated: Date.now(), messages: msgs };
+  const i = list.findIndex(c => c.id === currentConvoId);
+  if (i >= 0) { entry.title = list[i].title; list.splice(i, 1); }
+  list.unshift(entry);
+  if (!writeConvos(list)) toast("Couldn't save this chat on the device (storage is full).");
+}
+function blankChatUI() {
+  currentConvoId = null; chatHistory = [];
+  $("messages").innerHTML = '<div class="empty" id="emptyChat">Start a conversation. What are you thinking about?</div>';
+}
+function openConvo(id) {
+  const c = loadConvos().find(x => x.id === id);
+  if (!c) return;
+  saveCurrent();
+  currentConvoId = c.id;
+  $("messages").innerHTML = "";
+  c.messages.forEach(m => addMessage(m.role, m.content));
+  chatHistory = c.messages.slice(-24).map(m => ({ role:m.role, content:m.content }));
+  switchView("chatView");
+}
+const mkBtn = (label, cls, fn) => {
+  const b = document.createElement("button"); b.type = "button"; b.className = cls; b.textContent = label;
+  b.addEventListener("click", fn); return b;
+};
+function renderHistory() {
+  const box = $("historyList"), list = loadConvos();
+  box.innerHTML = "";
+  if (!list.length) { box.innerHTML = '<div class="empty">No saved chats yet. Talk to El and they will appear here.</div>'; return; }
+  list.forEach(c => {
+    const item = document.createElement("div"); item.className = "item";
+    const title = document.createElement("div"); title.textContent = c.title; title.style.fontWeight = "650";
+    const meta = document.createElement("div"); meta.className = "small muted";
+    meta.textContent = new Date(c.updated).toLocaleString([], { dateStyle:"medium", timeStyle:"short" }) + " · " + c.messages.length + " messages";
+    const acts = document.createElement("div"); acts.className = "item-actions";
+    acts.append(
+      mkBtn("Open", "secondary", () => openConvo(c.id)),
+      mkBtn("Delete", "danger-btn", () => {
+        if (!confirm("Delete this chat?")) return;
+        writeConvos(loadConvos().filter(x => x.id !== c.id));
+        if (currentConvoId === c.id) blankChatUI();
+        renderHistory();
+      })
+    );
+    item.append(title, meta, acts); box.appendChild(item);
+  });
+}
+$("historyClearBtn").addEventListener("click", () => {
+  if (!confirm("Delete ALL saved chats on this device?")) return;
+  writeConvos([]); blankChatUI(); renderHistory();
+});
 
 /* ---------- Intro ---------- */
   const intro = $("elIntro");
