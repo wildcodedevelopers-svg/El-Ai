@@ -1,6 +1,7 @@
 package com.elham.elai
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,7 +9,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.annotation.SuppressLint
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -31,8 +31,9 @@ import java.util.Locale
 class MainActivity : Activity() {
 
     private val appHost = "wildcodedevelopers-svg.github.io"
-    private val appUrl =
-        "https://wildcodedevelopers-svg.github.io/YOUR-REPOSITORY-NAME/"
+
+    // GitHub Pages project site: https://<user>.github.io/<repo>/
+    private val appUrl = "https://wildcodedevelopers-svg.github.io/El-Ai/"
 
     private lateinit var web: WebView
     private var tts: TextToSpeech? = null
@@ -97,6 +98,13 @@ class MainActivity : Activity() {
 
         askPermission(Manifest.permission.RECORD_AUDIO, 1)
         web.loadUrl(appUrl)
+    }
+
+    // Back button goes back inside El-AI instead of closing the app
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (::web.isInitialized && web.canGoBack()) web.goBack()
+        else super.onBackPressed()
     }
 
     private fun js(code: String) {
