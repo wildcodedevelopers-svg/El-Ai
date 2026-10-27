@@ -1,11 +1,10 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Internet access for EL-AI -->
+    <!-- Internet access for EL-AI and its AI backend -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Voice input and audio -->
+    <!-- Voice input and audio control -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
@@ -14,15 +13,18 @@
 
     <!-- Android package visibility -->
     <queries>
+        <!-- Discover launcher apps -->
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
 
+        <!-- Discover speech recognition services -->
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
 
+        <!-- Discover text-to-speech services -->
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
