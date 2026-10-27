@@ -22,6 +22,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import org.json.JSONArray
@@ -208,19 +209,18 @@ class MainActivity : Activity() {
             if (q.isEmpty()) return """{"matches":[]}"""
             val tm = this@MainActivity.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             val country = (tm?.networkCountryIso?.takeIf { it.isNotBlank() } ?: Locale.getDefault().country).uppercase()
-            val P = ContactsContract.CommonDataKinds.Phone
             val found = LinkedHashMap<String, Pair<String, Boolean>>() // name -> (number, isMobile)
             contentResolver.query(
-                P.CONTENT_URI,
-                arrayOf(P.DISPLAY_NAME, P.NUMBER, P.TYPE),
-                "${P.DISPLAY_NAME} LIKE ?",
+                Phone.CONTENT_URI,
+                arrayOf(Phone.DISPLAY_NAME, Phone.NUMBER, Phone.TYPE),
+                "${Phone.DISPLAY_NAME} LIKE ?",
                 arrayOf("%$q%"),
                 null
             )?.use { c ->
                 while (c.moveToNext()) {
                     val name = c.getString(0) ?: continue
                     val num = c.getString(1) ?: continue
-                    val mobile = c.getInt(2) == P.TYPE_MOBILE
+                    val mobile = c.getInt(2) == Phone.TYPE_MOBILE
                     val prev = found[name]
                     if (prev == null || (!prev.second && mobile)) found[name] = num to mobile
                 }
