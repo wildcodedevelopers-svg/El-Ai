@@ -232,6 +232,8 @@ header{
 .chip{border:1px solid var(--border);background:#1a1028;color:#e9d5ff;border-radius:999px;padding:8px 13px;font-size:12px}
 .chip.on{background:linear-gradient(110deg,#7c3aed,#c026d3);color:#fff;border-color:transparent}
 .live-actions{display:flex;gap:10px}
+.live-form{display:flex;gap:8px;width:min(92vw,420px)}
+.live-form input{flex:1;min-width:0;border:1px solid var(--border);border-radius:12px;background:#0d0816;color:var(--text);padding:12px;outline:none}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 76px);z-index:9500;max-width:92vw;background:#1c1230;border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;box-shadow:0 8px 30px #000a}
 .net-banner{position:fixed;top:0;left:0;right:0;z-index:9400;background:#7f1d1d;color:#fecdd3;text-align:center;font-size:12px;padding:6px 10px;padding-top:max(6px,env(safe-area-inset-top))}
 input[type=range]{accent-color:#a855f7;width:100%}
@@ -273,6 +275,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
   <div id="liveCaption" class="orb-caption">EL-AI READY</div>
   <div id="liveText" class="live-text"></div>
   <div id="voiceChips" class="voice-chips"></div>
+  <form id="liveForm" class="live-form"><input id="liveInput" placeholder="Or type to El…" autocomplete="off" maxlength="500"><button class="send-btn" type="submit" aria-label="Send">➤</button></form>
   <div class="live-actions">
     <button id="liveMute" class="secondary" type="button">🎙 Mic on</button>
     <button id="liveEnd" class="danger-btn" type="button">End</button>
@@ -883,6 +886,12 @@ function restoreOrb() {
     const profileStyle = $("profileStyle").value || "balanced";
 
     try {
+      const local = handleCommand(message);
+      if (local) {
+        replyElement.textContent = local;
+        if (store.get("elai_voice_output") === "true") speak(local);
+        return;
+      }
       const data = await api("/ask", {
         method: "POST",
         body: JSON.stringify({
@@ -942,13 +951,10 @@ function restoreOrb() {
     $("voiceToggleBtn").textContent = on ? "On" : "Off";
   }
   $("voiceToggleBtn").addEventListener("click", () => {
-    if (!("speechSynthesis" in window)) {
-      alert("Voice output is not supported by this browser.");
-      return;
-    }
+    if (!canSpeak()) { toast("Voice output isn't available in this app view."); return; }
     const on = store.get("elai_voice_output") === "true";
     store.set("elai_voice_output", on ? "false" : "true");
-    if (on) { window.speechSynthesis.cancel(); speaking = false; restoreOrb(); }
+    if (on) { stopSpeech(); speaking = false; restoreOrb(); }
     refreshVoiceButton();
   });
 
@@ -959,7 +965,7 @@ function restoreOrb() {
 
     if (!SpeechRecognition) {
       $("micBtn").addEventListener("click", () => {
-        alert("Voice input is not supported in this browser. Try Chrome on your phone.");
+        nativeStt() ? nativeDictate() : toast("Voice input isn't available in this app view. You can still type.");
       });
       return;
     }
@@ -1225,6 +1231,13 @@ function pickVoice(v) {
 }
 
 function speakLive(text, done) {
+  if (nativeTts()) {
+    const nv = VOICES.find(x => x.id === voiceId) || VOICES[0], nid = ++speakId;
+    speaking = true; restoreOrb();
+    ElCallbacks.onSpeakDone = () => { if (nid !== speakId) return; speaking = false; restoreOrb(); done && done(); };
+    ElNative.speak(text.replace(/[*#`_>~]/g, ""), nv.pitch, nv.rate, settings.volume / 100, settings.voiceSrc);
+    return;
+  }
   if (!("speechSynthesis" in window)) { done && done(); return; }
   const v = VOICES.find(x => x.id === voiceId) || VOICES[0], id = ++speakId;
   const chunks = text.replace(/[*#`_>~]/g,"").match(/[^.!?\n]+[.!?]*/g) || [text];
@@ -1247,8 +1260,12 @@ function speakLive(text, done) {
 
 function listen() {
   if (!live || liveMuted || liveBusy || speaking || (liveRec && liveRec.active)) return;
+  if (nativeStt()) { listenNative(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { $("liveText").textContent = "Voice input isn't supported in this browser. Try Chrome."; return; }
+  if (!SR) {
+    if (!window.__noMic) { window.__noMic = 1; toast("Voice input isn't available in this app view. Type below to talk to El."); }
+    return;
+  }
   const r = liveRec = new SR(); let heard = "";
   r.lang = navigator.language || "en-ZA"; r.interimResults = true; r.continuous = false; r.active = true;
   r.onstart = () => { isRecording = true; restoreOrb(); $("liveText").textContent = "Listening…"; };
@@ -1273,6 +1290,12 @@ function listen() {
 async function converse(text) {
   liveBusy = true; restoreOrb(); $("liveText").textContent = "You: " + text; addMessage("user", text);
   try {
+    const local = handleCommand(text);
+    if (local) {
+      addMessage("assistant", local); liveBusy = false;
+      if (live) { $("liveText").textContent = local; speakLive(local, () => setTimeout(listen, 250)); }
+      return;
+    }
     const d = await api("/ask", { method:"POST", body: JSON.stringify({
       message:text, prompt:text, mode:$("modeSelect").value, style:"concise", system:buildSystem()+" Reply briefly in natural spoken language, no markdown.", persona:"jarvis", temperature:TEMP[$("modeSelect").value], history:chatHistory, live:true }) });
     const reply = d.reply || d.response || d.answer || d.message || d.output || "I didn't catch that.";
@@ -1307,7 +1330,7 @@ function renderChips() {
 function syncMute() { $("liveMute").textContent = liveMuted ? "🔇 Mic off" : "🎙 Mic on"; }
 
 function openLive(greet) {
-  if (!("speechSynthesis" in window)) { alert("Voice output isn't supported in this browser."); return; }
+  if (!canSpeak()) toast("Voice output isn't available in this app view, so replies will show as text.", [], 6000);
   live = true; liveMuted = false; syncMute();
   if (recognition && isRecording) { try { recognition.stop(); } catch {} }
   try { speechSynthesis.speak(new SpeechSynthesisUtterance("")); } catch {}
@@ -1317,7 +1340,7 @@ function openLive(greet) {
 }
 function closeLive() {
   live = false; liveBusy = false; speakId++;
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  stopSpeech();
   speaking = false;
   try { liveRec && liveRec.abort(); } catch {}
   isRecording = false;
@@ -1331,7 +1354,7 @@ $("liveMute").addEventListener("click", () => {
   if (liveMuted) { try { liveRec && liveRec.abort(); } catch {} } else listen();
 });
 $("bigOrb").addEventListener("click", () => {
-  if (speaking) { speakId++; speechSynthesis.cancel(); speaking = false; restoreOrb(); listen(); }
+  if (speaking) { speakId++; stopSpeech(); speaking = false; restoreOrb(); listen(); }
 });
 
 /* ---------- Assistant, memory, wake phrase, settings ---------- */
@@ -1472,6 +1495,121 @@ function bindSettings() {
   syncSettingsUI();
 }
 bindSettings();
+
+/* ---------- Native bridge (Android app wrapper) + phone commands ---------- */
+const ElCallbacks = window.ElCallbacks = { onLevel(v) { bigOrb.pulse(Math.max(0, v) / 12); }, onSpeakPulse() { bigOrb.pulse(.6); } };
+const nativeTts = () => { try { return !!(window.ElNative && ElNative.hasTts && ElNative.hasTts()); } catch { return false; } };
+const nativeStt = () => { try { return !!(window.ElNative && ElNative.hasStt && ElNative.hasStt()); } catch { return false; } };
+const canSpeak = () => nativeTts() || "speechSynthesis" in window;
+function stopSpeech() {
+  try { if (nativeTts()) ElNative.stopSpeaking(); } catch {}
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+}
+function listenNative() {
+  if (liveRec && liveRec.active) return;
+  let heard = "";
+  liveRec = { active:true, abort() { this.active = false; isRecording = false; try { ElNative.stopListening(); } catch {} } };
+  ElCallbacks.onResult = t => { heard = t; bigOrb.pulse(.5); $("liveText").textContent = t; };
+  ElCallbacks.onError = c => {
+    if (c === 9) { liveMuted = true; syncMute(); $("liveText").textContent = "Microphone permission is off. Enable it in Android settings."; }
+  };
+  ElCallbacks.onListenEnd = () => {
+    if (!liveRec || !liveRec.active) return;
+    liveRec.active = false; isRecording = false; restoreOrb();
+    if (!live) return;
+    if (heard.trim()) converse(heard.trim()); else setTimeout(listen, 300);
+  };
+  isRecording = true; restoreOrb(); $("liveText").textContent = "Listening…";
+  ElNative.startListening(navigator.language || "en-ZA", !!settings.recogLocal);
+}
+function nativeDictate() {
+  if (isRecording) {
+    try { ElNative.stopListening(); } catch {}
+    isRecording = false; $("micBtn").classList.remove("recording"); restoreOrb(); return;
+  }
+  ElCallbacks.onResult = t => { $("chatInput").value = t; $("chatInput").dispatchEvent(new Event("input")); };
+  ElCallbacks.onError = () => {};
+  ElCallbacks.onListenEnd = () => {
+    isRecording = false; $("micBtn").classList.remove("recording");
+    $("chatInput").placeholder = "Message El-AI…"; restoreOrb();
+  };
+  isRecording = true; $("micBtn").classList.add("recording"); $("chatInput").placeholder = "Listening…"; restoreOrb();
+  ElNative.startListening(navigator.language || "en-ZA", !!settings.recogLocal);
+}
+$("liveForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const t = $("liveInput").value.trim();
+  if (!t || liveBusy) return;
+  $("liveInput").value = ""; speakId++; stopSpeech(); speaking = false;
+  try { liveRec && liveRec.abort(); } catch {}
+  converse(t);
+});
+
+const APPS = { whatsapp:"com.whatsapp", youtube:"com.google.android.youtube", spotify:"com.spotify.music",
+  instagram:"com.instagram.android", facebook:"com.facebook.katana", telegram:"org.telegram.messenger",
+  tiktok:"com.zhiliaoapp.musically", gmail:"com.google.android.gm", chrome:"com.android.chrome",
+  maps:"com.google.android.apps.maps", "google maps":"com.google.android.apps.maps", photos:"com.google.android.apps.photos",
+  clock:"com.google.android.deskclock", calculator:"com.google.android.calculator", netflix:"com.netflix.mediaclient",
+  snapchat:"com.snapchat.android", linkedin:"com.linkedin.android", twitter:"com.twitter.android", x:"com.twitter.android",
+  "play store":"com.android.vending", drive:"com.google.android.apps.docs", calendar:"com.google.android.calendar",
+  contacts:"com.google.android.contacts", messages:"com.google.android.apps.messaging", phone:"com.google.android.dialer" };
+const ACTIONS = { settings:"android.settings.SETTINGS", camera:"android.media.action.STILL_IMAGE_CAMERA",
+  wifi:"android.settings.WIFI_SETTINGS", bluetooth:"android.settings.BLUETOOTH_SETTINGS" };
+
+function launch(url) {
+  setTimeout(() => {
+    if (window.ElNative && ElNative.openUrl) { ElNative.openUrl(url); return; }
+    if (/^https?:/.test(url)) window.open(url, "_blank", "noopener"); else location.href = url;
+  }, 700);
+}
+function openApp(name) {
+  const T = getTitle(), key = name.toLowerCase().trim().replace(/^the\s+/, "").replace(/\s+app$/, "");
+  if (window.ElNative && ElNative.openAppByName)
+    return ElNative.openAppByName(key) ? "Opening " + name + ", " + T + "." : "I couldn't find an app called " + name + ", " + T + ".";
+  if (ACTIONS[key]) { launch("intent:#Intent;action=" + ACTIONS[key] + ";end"); return "Opening " + name + ", " + T + "."; }
+  if (APPS[key]) { launch("intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=" + APPS[key] + ";end"); return "Opening " + name + ", " + T + "."; }
+  return "I don't know \"" + name + "\" in this view, " + T + ". Say \"help\" to see what I can do.";
+}
+function lookupContact(name) {
+  if (!(window.ElNative && ElNative.findContacts)) return { error:"native" };
+  try { return JSON.parse(ElNative.findContacts(name)); } catch { return { error:"fail" }; }
+}
+function withContact(name, T, go) {
+  const r = lookupContact(name.trim());
+  if (r.error === "native") return "Contacts need the updated native app layer, " + T + ".";
+  if (r.error === "permission") return "I need contacts permission, " + T + ". Allow it on the prompt, then ask me again.";
+  if (r.error) return "I couldn't read your contacts, " + T + ".";
+  const list = r.matches || [];
+  if (!list.length) return "I couldn't find \"" + name + "\" in your contacts, " + T + ".";
+  if (list.length > 1 && !list[0].exact) return "I found " + list.length + " matches: " + list.slice(0, 3).map(x => x.name).join(", ") + ". Which one, " + T + "?";
+  return go(list[0]);
+}
+/* Returns a reply string if the text was a phone command, otherwise null (goes to the AI). */
+function handleCommand(raw) {
+  const T = getTitle(); let m;
+  const t = raw.toLowerCase().replace(/^(?:hey |ok )?el[,\s]+/, "").replace(/[.!?]+$/, "").trim();
+  if ((m = t.match(/^(?:please )?(?:open|launch|start)\s+(.+)$/))) return openApp(m[1]);
+  if ((m = t.match(/^(?:call|dial|phone)\s+(\+?[\d\s()-]{5,})$/))) { const n = m[1].replace(/[^\d+]/g, ""); launch("tel:" + n); return "Dialling " + n + ", " + T + "."; }
+  if ((m = t.match(/^(?:call|dial|phone|ring)\s+([a-z].*)$/))) return withContact(m[1].replace(/^my\s+/, ""), T, c => { launch("tel:" + c.e164); return "Calling " + c.name + ", " + T + "."; });
+  if ((m = t.match(/^(?:text|sms|message)\s+(.+?)\s+(?:saying|that says)\s+(.+)$/))) return withContact(m[1], T, c => { launch("sms:" + c.e164 + "?body=" + encodeURIComponent(m[2])); return "Opening a text to " + c.name + ", " + T + "."; });
+  if ((m = t.match(/^(?:send )?(?:a )?whatsapp(?: message)? to\s+([a-z].*?)\s+(?:saying|that says)\s+(.+)$/))) return withContact(m[1], T, c => { launch("https://wa.me/" + c.e164.replace(/\D/g, "") + "?text=" + encodeURIComponent(m[2])); return "Opening WhatsApp to " + c.name + ", " + T + "."; });
+  if ((m = t.match(/^(?:navigate|directions?|take me|drive) to\s+(.+)$/))) { launch("https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(m[1])); return "Setting a route to " + m[1] + ", " + T + "."; }
+  if ((m = t.match(/^(?:play\s+(.+?)\s+on youtube|search youtube for\s+(.+))$/))) { const q = m[1] || m[2]; launch("https://www.youtube.com/results?search_query=" + encodeURIComponent(q)); return "Searching YouTube for " + q + "."; }
+  if ((m = t.match(/^play\s+(.+?)\s+on spotify$/))) { launch("https://open.spotify.com/search/" + encodeURIComponent(m[1])); return "Searching Spotify for " + m[1] + "."; }
+  if ((m = t.match(/^(?:google|search google for)\s+(.+)$/))) { launch("https://www.google.com/search?q=" + encodeURIComponent(m[1])); return "Searching for " + m[1] + "."; }
+  if ((m = t.match(/^(?:send )?(?:a )?whatsapp(?: message)? to\s+(\+?[\d\s()-]{7,}?)\s+(?:saying|that says)\s+(.+)$/))) {
+    launch("https://wa.me/" + m[1].replace(/\D/g, "") + "?text=" + encodeURIComponent(m[2])); return "Opening WhatsApp with your message, " + T + ".";
+  }
+  if ((m = t.match(/^(?:set|start)\s+(?:a\s+)?timer\s+(?:for\s+)?(\d+)\s*(second|minute|hour)s?/))) {
+    const secs = +m[1] * (m[2][0] === "h" ? 3600 : m[2][0] === "m" ? 60 : 1);
+    launch("intent:#Intent;action=android.intent.action.SET_TIMER;i.android.intent.extra.alarm.LENGTH=" + secs + ";B.android.intent.extra.alarm.SKIP_UI=true;end");
+    return "Timer set for " + m[1] + " " + m[2] + (+m[1] === 1 ? "" : "s") + ", " + T + ".";
+  }
+  if (/^(?:what(?:'s| is) the time|what time is it|current time)$/.test(t)) return "It is " + new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }) + ", " + T + ".";
+  if (/^(?:what(?:'s| is) (?:the |today's )?date|what day is it)$/.test(t)) return "Today is " + new Date().toLocaleDateString([], { weekday:"long", day:"numeric", month:"long", year:"numeric" }) + ", " + T + ".";
+  if (/^(?:help|commands|what can you do)$/.test(t)) return 'At your service, ' + T + '. Try: "open WhatsApp", "call 0821234567", "call Mom", "text John saying running late", "navigate to Sandton", "play Amapiano on YouTube", "google best laptops", "set a timer for 10 minutes", "whatsapp to 27821234567 saying hello". I can open any installed app when the native app layer is installed.';
+  return null;
+}
 
 /* ---------- Intro ---------- */
   const intro = $("elIntro");
