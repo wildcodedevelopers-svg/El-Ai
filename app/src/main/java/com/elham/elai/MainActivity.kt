@@ -1,58 +1,56 @@
-package com.elham.elai // TODO: change to your app's package name
+package com.elham.elai
 
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.os.Build
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.annotation.SuppressLint
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
+import android.telephony.PhoneNumberUtils
+import android.telephony.TelephonyManager
 import android.webkit.JavascriptInterface
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Phone
-import android.telephony.PhoneNumberUtils
-import android.telephony.TelephonyManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
 
-/**
- * Hosts El-AI in a WebView and gives the page real phone abilities:
- * voice output (TextToSpeech), voice input (SpeechRecognizer), opening any installed app,
- * and sending links/intents to the right app instead of loading them inside the WebView.
- */
 class MainActivity : Activity() {
 
     private val appHost = "wildcodedevelopers-svg.github.io"
-    private val appUrl = "https://$appHost/" // TODO: add your repo path if the app lives in a sub-folder
+    private val appUrl =
+        "https://wildcodedevelopers-svg.github.io/YOUR-REPOSITORY-NAME/"
 
     private lateinit var web: WebView
     private var tts: TextToSpeech? = null
     private var ttsReady = false
     private var recognizer: SpeechRecognizer? = null
 
-    private fun askPermission(p: String, code: Int) {
-        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(p), code)
+    private fun askPermission(permission: String, code: Int) {
+        if (Build.VERSION.SDK_INT >= 23 &&
+            checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(permission), code)
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         web = WebView(this)
         setContentView(web)
 
@@ -61,190 +59,394 @@ class MainActivity : Activity() {
             domStorageEnabled = true
             mediaPlaybackRequiresUserGesture = false
         }
+
         web.addJavascriptInterface(Bridge(), "ElNative")
 
         web.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(v: WebView, req: WebResourceRequest): Boolean {
-                // Stay in the app for El-AI itself; send everything else to the phone.
-                if (req.url.host == appHost) return false
-                return openExternal(req.url.toString())
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                val url = request.url
+                if (url.host == appHost && url.scheme == "https") {
+                    return false
+                }
+                return openExternal(url.toString())
             }
         }
+
         web.webChromeClient = object : WebChromeClient() {
-            override fun onPermissionRequest(r: PermissionRequest) { r.grant(r.resources) }
+            override fun onPermissionRequest(request: PermissionRequest) {
+                runOnUiThread {
+                    val allowed = request.resources.filter {
+                        it == PermissionRequest.RESOURCE_AUDIO_CAPTURE
+                    }.toTypedArray()
+
+                    if (allowed.isNotEmpty()) {
+                        request.grant(allowed)
+                    } else {
+                        request.deny()
+                    }
+                }
+            }
         }
 
-        tts = TextToSpeech(this) { ttsReady = it == TextToSpeech.SUCCESS }
+        tts = TextToSpeech(this) { status ->
+            ttsReady = status == TextToSpeech.SUCCESS
+        }
 
         askPermission(Manifest.permission.RECORD_AUDIO, 1)
         web.loadUrl(appUrl)
     }
 
-    private fun js(code: String) = runOnUiThread { web.evaluateJavascript(code, null) }
+    private fun js(code: String) {
+        runOnUiThread {
+            if (::web.isInitialized) web.evaluateJavascript(code, null)
+        }
+    }
 
     private fun openExternal(url: String): Boolean {
-        try {
-            val i = if (url.startsWith("intent:")) {
+        return try {
+            val intent = if (url.startsWith("intent:")) {
                 Intent.parseUri(url, Intent.URI_INTENT_SCHEME).apply {
-                    addCategory(Intent.CATEGORY_BROWSABLE) // safety: no explicit components
+                    addCategory(Intent.CATEGORY_BROWSABLE)
                     component = null
                     selector = null
                 }
-            } else Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(i)
-        } catch (_: Exception) { /* no app can handle it */ }
-        return true
+            } else {
+                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            }
+
+            startActivity(intent)
+            true
+        } catch (_: Exception) {
+            true
+        }
     }
 
-    private fun pickVoice(t: TextToSpeech, source: String): Voice? {
-        val lang = Locale.getDefault().language
-        val list = t.voices?.filter {
-            it.locale.language == lang && it.features?.contains("notInstalled") != true
+    private fun pickVoice(
+        engine: TextToSpeech,
+        source: String
+    ): Voice? {
+        val language = Locale.getDefault().language
+        val voices = engine.voices?.filter {
+            it.locale.language == language &&
+                it.features?.contains("notInstalled") != true
         } ?: return null
-        val pick = when (source) {
-            "offline" -> list.filter { !it.isNetworkConnectionRequired }
-            "online" -> list.filter { it.isNetworkConnectionRequired }
-            else -> list
+
+        return when (source) {
+            "offline" -> voices.firstOrNull {
+                !it.isNetworkConnectionRequired
+            } ?: voices.firstOrNull()
+
+            "online" -> voices.firstOrNull {
+                it.isNetworkConnectionRequired
+            } ?: voices.firstOrNull()
+
+            else -> voices.firstOrNull()
         }
-        return pick.firstOrNull() ?: list.firstOrNull()
     }
 
     inner class Bridge {
-        @JavascriptInterface fun hasTts(): Boolean = ttsReady
-        @JavascriptInterface fun hasStt(): Boolean = SpeechRecognizer.isRecognitionAvailable(this@MainActivity)
 
         @JavascriptInterface
-        fun speak(text: String, pitch: Float, rate: Float, volume: Float, source: String) {
+        fun hasTts(): Boolean = ttsReady
+
+        @JavascriptInterface
+        fun hasStt(): Boolean =
+            SpeechRecognizer.isRecognitionAvailable(this@MainActivity)
+
+        @JavascriptInterface
+        fun speak(
+            text: String,
+            pitch: Float,
+            rate: Float,
+            volume: Float,
+            source: String
+        ) {
             runOnUiThread {
-                val t = tts ?: return@runOnUiThread
-                t.stop()
-                pickVoice(t, source)?.let { t.voice = it }
-                t.setPitch(pitch)
-                t.setSpeechRate(rate)
-                t.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                    override fun onStart(id: String?) {}
-                    override fun onDone(id: String?) { js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()") }
-                    override fun onError(id: String?) { js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()") }
-                    override fun onRangeStart(id: String?, start: Int, end: Int, frame: Int) {
-                        js("ElCallbacks.onSpeakPulse&&ElCallbacks.onSpeakPulse()")
-                    }
-                })
-                val params = Bundle().apply {
-                    putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, volume.coerceIn(0f, 1f))
+                val engine = tts ?: return@runOnUiThread
+                engine.stop()
+
+                pickVoice(engine, source)?.let {
+                    engine.voice = it
                 }
-                t.speak(text.take(3900), TextToSpeech.QUEUE_FLUSH, params, "el")
+
+                engine.setPitch(pitch.coerceIn(0.5f, 2f))
+                engine.setSpeechRate(rate.coerceIn(0.5f, 2f))
+
+                engine.setOnUtteranceProgressListener(
+                    object : UtteranceProgressListener() {
+                        override fun onStart(utteranceId: String?) {}
+
+                        override fun onDone(utteranceId: String?) {
+                            js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()")
+                        }
+
+                        override fun onError(utteranceId: String?) {
+                            js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()")
+                        }
+
+                        override fun onRangeStart(
+                            utteranceId: String?,
+                            start: Int,
+                            end: Int,
+                            frame: Int
+                        ) {
+                            js("ElCallbacks.onSpeakPulse&&ElCallbacks.onSpeakPulse()")
+                        }
+                    }
+                )
+
+                val params = Bundle().apply {
+                    putFloat(
+                        TextToSpeech.Engine.KEY_PARAM_VOLUME,
+                        volume.coerceIn(0f, 1f)
+                    )
+                }
+
+                engine.speak(
+                    text.take(3900),
+                    TextToSpeech.QUEUE_FLUSH,
+                    params,
+                    "el"
+                )
             }
         }
 
-        @JavascriptInterface fun stopSpeaking() { runOnUiThread { tts?.stop() } }
+        @JavascriptInterface
+        fun stopSpeaking() {
+            runOnUiThread { tts?.stop() }
+        }
 
         @JavascriptInterface
         fun startListening(lang: String, offline: Boolean) {
             runOnUiThread {
+                if (!SpeechRecognizer.isRecognitionAvailable(this@MainActivity)) {
+                    js("ElCallbacks.onError&&ElCallbacks.onError(9)")
+                    js("ElCallbacks.onListenEnd&&ElCallbacks.onListenEnd()")
+                    return@runOnUiThread
+                }
+
                 recognizer?.destroy()
-                val r = SpeechRecognizer.createSpeechRecognizer(this@MainActivity)
-                recognizer = r
-                val end = "ElCallbacks.onListenEnd&&ElCallbacks.onListenEnd()"
-                r.setRecognitionListener(object : RecognitionListener {
-                    private fun text(b: Bundle?) =
-                        b?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()
-                    override fun onPartialResults(b: Bundle?) {
-                        text(b)?.let { js("ElCallbacks.onResult&&ElCallbacks.onResult(${JSONObject.quote(it)},false)") }
+
+                val speech = SpeechRecognizer.createSpeechRecognizer(
+                    this@MainActivity
+                )
+                recognizer = speech
+
+                val endCallback =
+                    "ElCallbacks.onListenEnd&&ElCallbacks.onListenEnd()"
+
+                speech.setRecognitionListener(object : RecognitionListener {
+
+                    private fun recognizedText(bundle: Bundle?): String? =
+                        bundle?.getStringArrayList(
+                            SpeechRecognizer.RESULTS_RECOGNITION
+                        )?.firstOrNull()
+
+                    override fun onPartialResults(bundle: Bundle?) {
+                        recognizedText(bundle)?.let {
+                            js(
+                                "ElCallbacks.onResult&&ElCallbacks.onResult(" +
+                                    "${JSONObject.quote(it)},false)"
+                            )
+                        }
                     }
-                    override fun onResults(b: Bundle?) {
-                        text(b)?.let { js("ElCallbacks.onResult&&ElCallbacks.onResult(${JSONObject.quote(it)},true)") }
-                        js(end)
+
+                    override fun onResults(bundle: Bundle?) {
+                        recognizedText(bundle)?.let {
+                            js(
+                                "ElCallbacks.onResult&&ElCallbacks.onResult(" +
+                                    "${JSONObject.quote(it)},true)"
+                            )
+                        }
+                        js(endCallback)
                     }
+
                     override fun onError(error: Int) {
                         js("ElCallbacks.onError&&ElCallbacks.onError($error)")
-                        js(end)
+                        js(endCallback)
                     }
-                    override fun onRmsChanged(rms: Float) { js("ElCallbacks.onLevel&&ElCallbacks.onLevel($rms)") }
-                    override fun onReadyForSpeech(p: Bundle?) {}
+
+                    override fun onRmsChanged(rmsdB: Float) {
+                        js("ElCallbacks.onLevel&&ElCallbacks.onLevel($rmsdB)")
+                    }
+
+                    override fun onReadyForSpeech(params: Bundle?) {}
                     override fun onBeginningOfSpeech() {}
-                    override fun onBufferReceived(b: ByteArray?) {}
+                    override fun onBufferReceived(buffer: ByteArray?) {}
                     override fun onEndOfSpeech() {}
-                    override fun onEvent(type: Int, p: Bundle?) {}
+                    override fun onEvent(eventType: Int, params: Bundle?) {}
                 })
-                val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+
+                val intent = Intent(
+                    RecognizerIntent.ACTION_RECOGNIZE_SPEECH
+                ).apply {
+                    putExtra(
+                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                    )
                     putExtra(RecognizerIntent.EXTRA_LANGUAGE, lang)
                     putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                     putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, offline)
                 }
-                r.startListening(i)
+
+                try {
+                    speech.startListening(intent)
+                } catch (_: Exception) {
+                    js("ElCallbacks.onError&&ElCallbacks.onError(9)")
+                    js(endCallback)
+                }
             }
         }
 
-        @JavascriptInterface fun stopListening() { runOnUiThread { recognizer?.cancel() } }
+        @JavascriptInterface
+        fun stopListening() {
+            runOnUiThread {
+                recognizer?.cancel()
+            }
+        }
 
-        @JavascriptInterface fun openUrl(url: String) { runOnUiThread { openExternal(url) } }
+        @JavascriptInterface
+        fun openUrl(url: String) {
+            runOnUiThread {
+                openExternal(url)
+            }
+        }
 
-        /** Opens any installed launcher app whose name matches, e.g. "whatsapp", "camera". */
         @JavascriptInterface
         fun openAppByName(name: String): Boolean {
-            val q = name.lowercase().trim()
-            if (q.length < 2) return false
+            val query = name.lowercase().trim()
+            if (query.length < 2) return false
+
             val pm = packageManager
-            val apps = pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)
-            val hit = apps.firstOrNull { it.loadLabel(pm).toString().lowercase() == q }
-                ?: if (q.length >= 3) apps.firstOrNull { it.loadLabel(pm).toString().lowercase().contains(q) } else null
-            val launch = hit?.let { pm.getLaunchIntentForPackage(it.activityInfo.packageName) } ?: return false
-            runOnUiThread { startActivity(launch) }
+            val intent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+            }
+
+            val apps = pm.queryIntentActivities(intent, 0)
+
+            val match = apps.firstOrNull {
+                it.loadLabel(pm).toString().lowercase() == query
+            } ?: if (query.length >= 3) {
+                apps.firstOrNull {
+                    it.loadLabel(pm).toString()
+                        .lowercase().contains(query)
+                }
+            } else {
+                null
+            }
+
+            val launchIntent = match?.let {
+                pm.getLaunchIntentForPackage(it.activityInfo.packageName)
+            } ?: return false
+
+            runOnUiThread {
+                startActivity(launchIntent)
+            }
+
             return true
         }
 
-        /**
-         * Looks up contacts by name. Returns JSON: {"matches":[{name,number,e164,exact}]} or {"error":"permission"}.
-         * The first call asks Android for contacts permission; the user then repeats the command.
-         */
         @JavascriptInterface
         fun findContacts(query: String): String {
-            if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                runOnUiThread { askPermission(Manifest.permission.READ_CONTACTS, 2) }
+            if (Build.VERSION.SDK_INT >= 23 &&
+                checkSelfPermission(Manifest.permission.READ_CONTACTS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                runOnUiThread {
+                    askPermission(Manifest.permission.READ_CONTACTS, 2)
+                }
                 return """{"error":"permission"}"""
             }
-            val q = query.trim().lowercase()
-            if (q.isEmpty()) return """{"matches":[]}"""
-            val tm = this@MainActivity.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            val country = (tm?.networkCountryIso?.takeIf { it.isNotBlank() } ?: Locale.getDefault().country).uppercase()
-            val found = LinkedHashMap<String, Pair<String, Boolean>>() // name -> (number, isMobile)
+
+            val search = query.trim().lowercase()
+            if (search.isEmpty()) return """{"matches":[]}"""
+
+            val telephony = getSystemService(
+                Context.TELEPHONY_SERVICE
+            ) as? TelephonyManager
+
+            val country = (
+                telephony?.networkCountryIso
+                    ?.takeIf { it.isNotBlank() }
+                    ?: Locale.getDefault().country
+                ).uppercase()
+
+            val contacts = LinkedHashMap<String, Pair<String, Boolean>>()
+
             contentResolver.query(
                 Phone.CONTENT_URI,
-                arrayOf(Phone.DISPLAY_NAME, Phone.NUMBER, Phone.TYPE),
+                arrayOf(
+                    Phone.DISPLAY_NAME,
+                    Phone.NUMBER,
+                    Phone.TYPE
+                ),
                 "${Phone.DISPLAY_NAME} LIKE ?",
-                arrayOf("%$q%"),
+                arrayOf("%$search%"),
                 null
-            )?.use { c ->
-                while (c.moveToNext()) {
-                    val name = c.getString(0) ?: continue
-                    val num = c.getString(1) ?: continue
-                    val mobile = c.getInt(2) == Phone.TYPE_MOBILE
-                    val prev = found[name]
-                    if (prev == null || (!prev.second && mobile)) found[name] = num to mobile
+            )?.use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(0) ?: continue
+                    val number = cursor.getString(1) ?: continue
+                    val mobile = cursor.getInt(2) == Phone.TYPE_MOBILE
+
+                    val previous = contacts[name]
+                    if (previous == null || (!previous.second && mobile)) {
+                        contacts[name] = number to mobile
+                    }
                 }
             }
-            val names = found.keys.sortedWith(
-                compareBy<String>({ it.lowercase() != q }, { !it.lowercase().startsWith(q) }, { it })
+
+            val names = contacts.keys.sortedWith(
+                compareBy<String>(
+                    { it.lowercase() != search },
+                    { !it.lowercase().startsWith(search) },
+                    { it }
+                )
             )
-            val exactCount = names.count { it.lowercase() == q }
-            val arr = JSONArray()
-            names.take(5).forEachIndexed { idx, n ->
-                val raw = found[n]!!.first
-                val e164 = PhoneNumberUtils.formatNumberToE164(raw, country) ?: raw.filter { it.isDigit() || it == '+' }
-                arr.put(
-                    JSONObject().put("name", n).put("number", raw).put("e164", e164)
-                        .put("exact", idx == 0 && exactCount == 1)
+
+            val exactCount = names.count {
+                it.lowercase() == search
+            }
+
+            val results = JSONArray()
+
+            names.take(5).forEachIndexed { index, name ->
+                val number = contacts[name]!!.first
+                val e164 = PhoneNumberUtils.formatNumberToE164(
+                    number,
+                    country
+                ) ?: number.filter {
+                    it.isDigit() || it == '+'
+                }
+
+                results.put(
+                    JSONObject()
+                        .put("name", name)
+                        .put("number", number)
+                        .put("e164", e164)
+                        .put(
+                            "exact",
+                            index == 0 && exactCount == 1
+                        )
                 )
             }
-            return JSONObject().put("matches", arr).toString()
+
+            return JSONObject()
+                .put("matches", results)
+                .toString()
         }
     }
 
     override fun onDestroy() {
+        web.stopLoading()
+        web.removeJavascriptInterface("ElNative")
+        tts?.stop()
         tts?.shutdown()
         recognizer?.destroy()
+        recognizer = null
         super.onDestroy()
     }
 }
