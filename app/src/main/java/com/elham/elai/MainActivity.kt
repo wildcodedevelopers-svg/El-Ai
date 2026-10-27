@@ -1,6 +1,9 @@
 package com.elham.elai // TODO: change to your app's package name
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.os.Build
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,8 +21,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
@@ -32,7 +33,7 @@ import java.util.Locale
  * voice output (TextToSpeech), voice input (SpeechRecognizer), opening any installed app,
  * and sending links/intents to the right app instead of loading them inside the WebView.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     private val appHost = "wildcodedevelopers-svg.github.io"
     private val appUrl = "https://$appHost/" // TODO: add your repo path if the app lives in a sub-folder
@@ -42,11 +43,11 @@ class MainActivity : AppCompatActivity() {
     private var ttsReady = false
     private var recognizer: SpeechRecognizer? = null
 
-    private val micPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
-
-    private val contactsPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    private fun askPermission(p: String, code: Int) {
+        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(p), code)
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,9 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         tts = TextToSpeech(this) { ttsReady = it == TextToSpeech.SUCCESS }
 
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            micPermission.launch(Manifest.permission.RECORD_AUDIO)
-        }
+        askPermission(Manifest.permission.RECORD_AUDIO, 1)
         web.loadUrl(appUrl)
     }
 
@@ -125,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 t.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(id: String?) {}
                     override fun onDone(id: String?) { js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()") }
-                    @Deprecated("Deprecated in Java")
                     override fun onError(id: String?) { js("ElCallbacks.onSpeakDone&&ElCallbacks.onSpeakDone()") }
                     override fun onRangeStart(id: String?, start: Int, end: Int, frame: Int) {
                         js("ElCallbacks.onSpeakPulse&&ElCallbacks.onSpeakPulse()")
@@ -202,13 +200,13 @@ class MainActivity : AppCompatActivity() {
          */
         @JavascriptInterface
         fun findContacts(query: String): String {
-            if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                runOnUiThread { contactsPermission.launch(Manifest.permission.READ_CONTACTS) }
+            if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                runOnUiThread { askPermission(Manifest.permission.READ_CONTACTS, 2) }
                 return """{"error":"permission"}"""
             }
             val q = query.trim().lowercase()
             if (q.isEmpty()) return """{"matches":[]}"""
-            val tm = this@MainActivity.getSystemService(TELEPHONY_SERVICE) as? TelephonyManager
+            val tm = this@MainActivity.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             val country = (tm?.networkCountryIso?.takeIf { it.isNotBlank() } ?: Locale.getDefault().country).uppercase()
             val P = ContactsContract.CommonDataKinds.Phone
             val found = LinkedHashMap<String, Pair<String, Boolean>>() // name -> (number, isMobile)
@@ -228,7 +226,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             val names = found.keys.sortedWith(
-                compareBy({ it.lowercase() != q }, { !it.lowercase().startsWith(q) }, { it })
+                compareBy<String>({ it.lowercase() != q }, { !it.lowercase().startsWith(q) }, { it })
             )
             val exactCount = names.count { it.lowercase() == q }
             val arr = JSONArray()
