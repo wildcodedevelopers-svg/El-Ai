@@ -1,4 +1,3 @@
-
 name: Build EL-AI Android APK
 
 on:
@@ -35,9 +34,12 @@ jobs:
           
       - name: Diagnose Android manifest
         run: |
-          echo "Checking manifest contents..."
-          nl -ba app/src/main/AndroidManifest.xml
+          echo "First 5 lines with hidden characters:"
+          head -n 5 app/src/main/AndroidManifest.xml | cat -A
+          echo "XML declaration locations:"
+          grep -n '<?xml' app/src/main/AndroidManifest.xml || true
           python3 -c "import xml.etree.ElementTree as ET; ET.parse('app/src/main/AndroidManifest.xml'); print('XML syntax is valid')"
+
 
 
       - name: Build debug APK
