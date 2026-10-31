@@ -573,6 +573,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
             <h3>Account</h3>
             <p id="accountEmail" class="muted small">Email: —</p>
             <p id="connectionLabel2" class="muted small">Checking connection…</p>
+            <p id="appVersion" class="muted small"></p>
             <button class="danger-btn" id="profileLogoutBtn" type="button">Sign out</button>
           </div>
         </div>
@@ -1238,6 +1239,7 @@ function restoreOrb() {
     loadProfile();
     checkHealth();
     startWake();
+    setTimeout(checkAppUpdate, 3000);
   }
 
   function logout() {
@@ -1889,6 +1891,24 @@ $("resetForm").addEventListener("submit", async e => {
     showAuthPanel("loginPanel"); setMessage("authMessage", d.message || "Password updated. Sign in now.", "success");
   } catch (err) { setMessage("authMessage", err.message, "error"); }
 });
+
+/* ---------- App update check (Android app only) ---------- */
+async function checkAppUpdate() {
+  try {
+    if (!(window.ElNative && ElNative.appVersion)) return;
+    const mine = ElNative.appVersion();
+    $("appVersion").textContent = "App version: build " + mine;
+    const r = await fetch("https://api.github.com/repos/wildcodedevelopers-svg/El-Ai/releases/latest",
+      { headers: { Accept: "application/vnd.github+json" } });
+    if (!r.ok) return;
+    const rel = await r.json();
+    const m = String(rel.tag_name || "").match(/(\d+)$/);
+    const apk = (rel.assets || []).find(a => /\.apk$/i.test(a.name));
+    if (!m || !apk || +m[1] <= mine) return;
+    toast("A new version of EL-AI is ready (build " + m[1] + ").",
+      [["Update", () => launch(apk.browser_download_url)], ["Later", () => {}]]);
+  } catch {}
+}
 
 /* ---------- Intro ---------- */
   const intro = $("elIntro");
