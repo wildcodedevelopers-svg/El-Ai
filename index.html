@@ -237,6 +237,7 @@ header{
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 76px);z-index:9500;max-width:92vw;background:#1c1230;border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;box-shadow:0 8px 30px #000a}
 .net-banner{position:fixed;top:0;left:0;right:0;z-index:9400;background:#7f1d1d;color:#fecdd3;text-align:center;font-size:12px;padding:6px 10px;padding-top:max(6px,env(safe-area-inset-top))}
 input[type=range]{accent-color:#a855f7;width:100%}
+.wake-dot{font-size:10px;font-weight:400;color:#86efac;letter-spacing:1px;animation:statusBlink 1.4s infinite}
 @media (prefers-reduced-motion:reduce){
   #elIntro *,#liveOrb,#liveOrb::before,#liveOrb::after,.logo{
     animation-duration:.01ms!important;animation-iteration-count:1!important;
@@ -313,6 +314,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
           </div>
           <button class="primary" type="submit">Sign in</button>
         </form>
+        <p class="muted small" style="margin-top:12px">For security, EL-AI records sign-ins (email, time and device) and reports them to the administrator. Your password is never shared.</p>
         <div class="auth-links">
           <button class="link-btn" id="showRegister" type="button">Create account</button>
           <button class="link-btn" id="showRecovery" type="button">Forgot password?</button>
@@ -347,6 +349,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
           </div>
           <button class="primary" type="submit">Create account</button>
         </form>
+        <p class="muted small" style="margin-top:12px">For security, EL-AI records sign-ins (email, time and device) and reports them to the administrator. Your password is never shared.</p>
         <div class="auth-links">
           <button class="link-btn" id="backToLogin" type="button">Already have an account? Sign in</button>
         </div>
@@ -366,6 +369,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
         <button class="link-btn" id="recoveryBack" type="button">Back to sign in</button>
       </div>
 
+      <button class="link-btn hidden" id="authCancelBtn" type="button">← Back to my account</button>
       <div id="authMessage" class="status-line" role="status"></div>
       <div id="backendStatus" class="status-line">Connecting to El-AI…</div>
     </div>
@@ -379,6 +383,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
           <g transform="translate(0,6)" fill="none" stroke="url(#logoGrad)" stroke-linecap="round" stroke-linejoin="round"><path d="M50 8 90 31V77L50 100 10 77V31Z" stroke-width="3.5"/><path d="M50 22 78 38V70L50 86 22 70V38Z" stroke-width="1.2" opacity=".55"/><path d="M38 40H64M38 53H58M38 66H64M38 40V66" stroke-width="5.5"/><ellipse cx="50" cy="54" rx="47" ry="15" transform="rotate(-28 50 54)" stroke-width="1.4" opacity=".7" stroke-dasharray="4 6"/><circle cx="50" cy="8" r="3.5" fill="#67e8f9" stroke="none"/><circle cx="90" cy="77" r="3.5" fill="#f0abfc" stroke="none"/><circle cx="10" cy="77" r="3.5" fill="#a78bfa" stroke="none"/></g>
         </svg>
         <span>EL-AI</span>
+        <span id="wakeDot" class="wake-dot hidden" title="Listening for the wake phrase">● listening</span>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="newChatBtn" type="button" title="New chat" aria-label="New chat">＋</button>
@@ -508,6 +513,9 @@ input[type=range]{accent-color:#a855f7;width:100%}
                 <label for="profileTitle">Preferred title (optional)</label>
                 <input id="profileTitle" maxlength="60" placeholder="e.g. Boss">
               </div>
+              <div class="field"><label for="profilePhone">Phone (optional)</label><input id="profilePhone" type="tel" maxlength="30" placeholder="+27 …"></div>
+              <div class="field"><label for="profileCompany">Company (optional)</label><input id="profileCompany" maxlength="80"></div>
+              <div class="field"><label for="profileAbout">About me (El uses this to know you)</label><textarea id="profileAbout" rows="3" maxlength="600" placeholder="Work, goals, preferences…"></textarea></div>
               <div class="field">
                 <label for="profileStyle">Response style</label>
                 <select id="profileStyle">
@@ -525,8 +533,6 @@ input[type=range]{accent-color:#a855f7;width:100%}
             <h3>Voice &amp; assistant</h3>
             <div class="row"><span class="muted small">Read replies aloud</span><button class="secondary" id="voiceToggleBtn" type="button">Off</button></div>
             <div class="field"><label for="voicePick">Assistant voice (male: Atlas, Sage)</label><select id="voicePick"></select></div>
-            <div class="field"><label for="voiceSrc">Voice engine</label><select id="voiceSrc"><option value="any">Any available</option><option value="online">Online voices</option><option value="offline">Offline (on-device) voices</option></select></div>
-            <div class="field"><label for="recogMode">Speech recognition</label><select id="recogMode"><option value="online">Online</option><option value="local">On-device when supported</option></select></div>
             <div class="field"><label for="volRange">Volume</label><input id="volRange" type="range" min="0" max="100"></div>
             <div class="row"><span class="muted small">Wake phrase: “EL, IT’S BOSS”</span><button class="secondary" id="wakeBtn" type="button">Off</button></div>
             <p class="muted small">The wake phrase only listens while this page is open and needs microphone access.</p>
@@ -538,6 +544,25 @@ input[type=range]{accent-color:#a855f7;width:100%}
             <div class="row" style="margin-top:10px"><span class="muted small">Speak welcome aloud</span><button class="secondary" id="welcomeSpeakBtn" type="button">Off</button></div>
             <div class="field"><label for="welcomeMsg">Welcome message ({title} = your title)</label><input id="welcomeMsg" maxlength="120"></div>
             <div class="field"><label for="startView">Open on</label><select id="startView"><option value="homeView">Home</option><option value="chatView">Chat</option></select></div>
+          </div>
+          <div class="panel">
+            <h3>Plan &amp; usage</h3>
+            <p id="planInfo" class="muted small">Checking your plan…</p>
+            <button class="primary" id="upgradeBtn" type="button">Upgrade to Pro</button>
+          </div>
+          <div class="panel">
+            <h3>Accounts on this device</h3>
+            <div id="accountList"></div>
+            <button class="secondary" id="addAccountBtn" type="button" style="margin-top:10px">＋ Add another account</button>
+          </div>
+          <div class="panel">
+            <h3>Security</h3>
+            <form id="passwordForm">
+              <div class="field"><label for="curPass">Current password</label><input id="curPass" type="password" autocomplete="current-password" required></div>
+              <div class="field"><label for="newPass">New password (8+ characters)</label><input id="newPass" type="password" autocomplete="new-password" minlength="8" required></div>
+              <button class="primary" type="submit">Change password</button>
+            </form>
+            <div id="passMessage" class="small muted" style="margin-top:10px"></div>
           </div>
           <div class="panel">
             <h3>Account</h3>
@@ -586,6 +611,7 @@ input[type=range]{accent-color:#a855f7;width:100%}
   const settings = { volume:100, voiceSrc:"any", recogLocal:false, wake:false, autoMem:"ask", intro:true,
     speakWelcome:false, startView:"homeView", welcomeMsg:DEF_WELCOME, title:"Sir" };
   try { Object.assign(settings, JSON.parse(store.get("elai_settings") || "{}")); } catch {}
+  settings.voiceSrc = "online"; settings.recogLocal = false;   // offline voices removed
   const saveSettings = () => store.set("elai_settings", JSON.stringify(settings));
 
   const authScreen = $("authScreen");
@@ -681,7 +707,9 @@ function restoreOrb() {
       }
       const message = data.detail || data.message || data.error ||
         ("Request failed (" + response.status + ")");
-      throw new Error(typeof message === "string" ? message : JSON.stringify(message));
+      const err = new Error(typeof message === "string" ? message : JSON.stringify(message));
+      err.status = response.status;
+      throw err;
     }
     return data;
   }
@@ -823,7 +851,7 @@ function restoreOrb() {
       button.classList.toggle("active", button.dataset.view === viewId)
     );
     if (viewId === "memoryView") loadMemories();
-    if (viewId === "profileView") loadProfile();
+    if (viewId === "profileView") { loadProfile(); renderAccounts(); loadPlan(); }
     if (viewId === "historyView") renderHistory();
     if (viewId === "chatView") setTimeout(() => $("chatInput").focus(), 100);
     window.scrollTo({ top: 0 });
@@ -933,6 +961,7 @@ function restoreOrb() {
         speak(reply);
       }
     } catch (error) {
+      if (error.status === 402 || error.status === 429) showUpgrade(error.message);
       replyElement.textContent = "I couldn't get a response from the server.\n\n" +
         error.message + "\n\nCheck your connection and make sure the backend's /ask endpoint is running.";
     } finally {
@@ -1126,6 +1155,9 @@ function restoreOrb() {
       const data = await api("/profile");
       const profile = data.profile || data;
       $("profileName").value = profile.name || profile.display_name || currentUser?.name || "";
+      if (localName()) $("profileName").value = localName();
+      refreshWelcomeName();
+      fillDetails(profile);
       $("profileTitle").value = profile.title || profile.preferred_title || "";
       if (!$("profileTitle").value) $("profileTitle").value = settings.title || "Sir";
       settings.title = $("profileTitle").value; saveSettings(); $("welcomeLine").textContent = welcomeText();
@@ -1143,9 +1175,15 @@ function restoreOrb() {
     event.preventDefault();
     const payload = {
       name: $("profileName").value.trim(),
+      display_name: $("profileName").value.trim(),
+      phone: $("profilePhone").value.trim(),
+      company: $("profileCompany").value.trim(),
+      about: $("profileAbout").value.trim(),
       title: $("profileTitle").value.trim(),
       style: $("profileStyle").value
     };
+    if (!payload.name) { $("profileMessage").textContent = "Please enter a name."; return; }
+    saveDetails(payload);
     $("profileMessage").textContent = "Saving…";
 
     try {
@@ -1155,10 +1193,11 @@ function restoreOrb() {
       });
       currentUser = { ...(currentUser || {}), ...payload };
       settings.title = payload.title || "Sir"; saveSettings(); $("welcomeLine").textContent = welcomeText();
-      $("welcomeTitle").textContent = payload.name ? "Welcome, " + payload.name : "Welcome to El-AI";
+      store.set(nameKey(), payload.name); refreshWelcomeName();
       $("profileMessage").textContent = data.message || "Profile saved.";
     } catch (error) {
-      $("profileMessage").textContent = "Couldn't save profile: " + error.message;
+      store.set(nameKey(), payload.name); refreshWelcomeName();
+      $("profileMessage").textContent = "Name updated on this device, but the server did not save it: " + error.message;
     }
   });
 
@@ -1180,9 +1219,11 @@ function restoreOrb() {
 
     authScreen.classList.add("hidden");
     mainScreen.classList.remove("hidden");
+    $("authCancelBtn").classList.add("hidden");
+    rememberAccount();
 
     const name = currentUser.name || currentUser.display_name || "";
-    $("welcomeTitle").textContent = name ? "Welcome, " + name : "Welcome to El-AI";
+    refreshWelcomeName();
     $("accountEmail").textContent = "Email: " + (currentUser.email || "—");
     setupSpeechRecognition();
     applyStartup();
@@ -1214,12 +1255,13 @@ function restoreOrb() {
   }
 
   function forceSignOut(message) {
+    if (currentUser && currentUser.email) saveAccounts(accounts().filter(a => a.email !== currentUser.email));
     logout();
     setMessage("authMessage", message, "error");
   }
 
-  $("logoutBtn").addEventListener("click", logout);
-  $("profileLogoutBtn").addEventListener("click", logout);
+  $("logoutBtn").addEventListener("click", signOutCurrent);
+  $("profileLogoutBtn").addEventListener("click", signOutCurrent);
 
   /* ---------- Live conversation ---------- */
 const VOICES = [
@@ -1324,6 +1366,7 @@ async function converse(text) {
     speakLive(reply, () => setTimeout(listen, 250));
   } catch (e) {
     liveBusy = false; restoreOrb();
+    if (e.status === 402 || e.status === 429) showUpgrade(e.message);
     if (live) { $("liveText").textContent = "Error: " + e.message; setTimeout(listen, 2500); }
   }
 }
@@ -1390,7 +1433,8 @@ function buildSystem() {
   const m = $("modeSelect").value, st = $("profileStyle").value || "balanced";
   return 'You are EL-AI, a JARVIS-style personal assistant created by ELHAM STUDIOS. Address the user as "' + getTitle() +
     '". Tone: calm, composed, quietly witty, proactive and loyal, with no robotic filler. If unsure, say so plainly. ' +
-    (MODE_P[m] || "") + " " + (STYLE_P[st] || "");
+    (MODE_P[m] || "") + " " + (STYLE_P[st] || "") +
+    (getDetails().about ? " About the user, in their own words: " + getDetails().about : "");
 }
 
 let toastTimer;
@@ -1461,11 +1505,11 @@ function startWake() {
       settings.wake = false; saveSettings(); syncSettingsUI(); toast("The wake phrase needs microphone permission.");
     }
   };
-  r.onend = () => { wakeRec = null; if (settings.wake && token && !live) setTimeout(startWake, 800); };
-  try { r.start(); } catch { wakeRec = null; }
+  r.onend = () => { wakeRec = null; $("wakeDot").classList.add("hidden"); if (settings.wake && token && !live) setTimeout(startWake, 800); };
+  try { r.start(); $("wakeDot").classList.remove("hidden"); } catch { wakeRec = null; }
 }
 function stopWake() {
-  const r = wakeRec; wakeRec = null;
+  const r = wakeRec; wakeRec = null; $("wakeDot").classList.add("hidden");
   if (r) { r.onend = null; try { r.abort(); } catch {} }
 }
 
@@ -1477,8 +1521,7 @@ function applyStartup() {
   if (settings.speakWelcome && !welcomed) { welcomed = true; speakLive(welcomeText()); }
 }
 function syncSettingsUI() {
-  $("volRange").value = settings.volume; $("voiceSrc").value = settings.voiceSrc;
-  $("recogMode").value = settings.recogLocal ? "local" : "online";
+  $("volRange").value = settings.volume;
   $("wakeBtn").textContent = settings.wake ? "On" : "Off";
   $("introBtn").textContent = settings.intro ? "On" : "Off";
   $("welcomeSpeakBtn").textContent = settings.speakWelcome ? "On" : "Off";
@@ -1491,9 +1534,7 @@ function bindSettings() {
     $("voicePick").appendChild(o);
   });
   const bind = (id, fn) => $(id).addEventListener("change", () => { fn($(id).value); saveSettings(); });
-  bind("voiceSrc", v => settings.voiceSrc = v);
-  bind("recogMode", v => settings.recogLocal = v === "local");
-  bind("startView", v => settings.startView = v);
+    bind("startView", v => settings.startView = v);
   bind("autoMem", v => settings.autoMem = v);
   $("volRange").addEventListener("input", () => { settings.volume = +$("volRange").value; saveSettings(); });
   $("voicePick").addEventListener("change", () => { voiceId = $("voicePick").value; store.set("elai_live_voice", voiceId); });
@@ -1620,9 +1661,32 @@ function handleCommand(raw) {
     launch("intent:#Intent;action=android.intent.action.SET_TIMER;i.android.intent.extra.alarm.LENGTH=" + secs + ";B.android.intent.extra.alarm.SKIP_UI=true;end");
     return "Timer set for " + m[1] + " " + m[2] + (+m[1] === 1 ? "" : "s") + ", " + T + ".";
   }
+  if ((m = t.match(/^(?:set (?:an )?alarm|wake me)(?: up)?(?: for| at)?\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/)) ||
+      (m = t.match(/^remind me (?:at|by)\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s+(?:to\s+)?(.+)$/))) {
+    let h = +m[1]; const mi = +(m[2] || 0);
+    if (m[3] === "pm" && h < 12) h += 12;
+    if (m[3] === "am" && h === 12) h = 0;
+    if (h > 23 || mi > 59) return "That time doesn't look right, " + T + ".";
+    launch("intent:#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR=" + h + ";i.android.intent.extra.alarm.MINUTES=" + mi +
+      ";S.android.intent.extra.alarm.MESSAGE=" + encodeURIComponent(m[4] || "EL-AI alarm") + ";B.android.intent.extra.alarm.SKIP_UI=true;end");
+    return (m[4] ? "Reminder set for " : "Alarm set for ") + String(h).padStart(2, "0") + ":" + String(mi).padStart(2, "0") + ", " + T + ".";
+  }
+  const nm = raw.trim().match(/^(?:(?:hey |ok )?el[,\s]+)?(?:take a note|save a note|note)(?: that| to self)?[:,]?\s+(.+?)[.!?]*$/i);
+  if (nm) { setNotes([{ t: nm[1], at: Date.now() }].concat(getNotes()).slice(0, 200)); return "Noted, " + T + "."; }
+  if (/^(?:show|read|list)(?: me)?(?: my)? notes$/.test(t)) {
+    const n = getNotes();
+    return n.length ? "Your latest notes, " + T + ": " + n.slice(0, 5).map((x, i) => (i + 1) + ") " + x.t).join("  ") : "You have no notes yet, " + T + ".";
+  }
+  if (/^(?:clear|delete) (?:all )?(?:my )?notes$/.test(t)) { setNotes([]); return "All notes cleared, " + T + "."; }
+  if (/^(?:brief me|(?:give me )?(?:my )?(?:daily )?briefing)$/.test(t)) {
+    const d = new Date(), hr = d.getHours(), n = getNotes();
+    return "Good " + (hr < 12 ? "morning" : hr < 18 ? "afternoon" : "evening") + ", " + T + ". It is " +
+      d.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }) + " on " + d.toLocaleDateString([], { weekday:"long", day:"numeric", month:"long" }) + ". " +
+      (n.length ? "You have " + n.length + " saved note" + (n.length === 1 ? "" : "s") + ". Latest: " + n[0].t + "." : "You have no saved notes.");
+  }
   if (/^(?:what(?:'s| is) the time|what time is it|current time)$/.test(t)) return "It is " + new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }) + ", " + T + ".";
   if (/^(?:what(?:'s| is) (?:the |today's )?date|what day is it)$/.test(t)) return "Today is " + new Date().toLocaleDateString([], { weekday:"long", day:"numeric", month:"long", year:"numeric" }) + ", " + T + ".";
-  if (/^(?:help|commands|what can you do)$/.test(t)) return 'At your service, ' + T + '. Try: "open WhatsApp", "call 0821234567", "call Mom", "text John saying running late", "navigate to Sandton", "play Amapiano on YouTube", "google best laptops", "set a timer for 10 minutes", "whatsapp to 27821234567 saying hello". I can open any installed app when the native app layer is installed.';
+  if (/^(?:help|commands|what can you do)$/.test(t)) return 'At your service, ' + T + '. Try: "open WhatsApp", "call 0821234567", "call Mom", "text John saying running late", "navigate to Sandton", "play Amapiano on YouTube", "google best laptops", "set a timer for 10 minutes", "whatsapp to 27821234567 saying hello". I can also set alarms and reminders ("remind me at 5pm to call Sarah"), take notes ("note buy milk", "show my notes"), and give a briefing ("brief me"). I can open any installed app when the native app layer is installed.';
   return null;
 }
 
@@ -1699,6 +1763,111 @@ $("historyClearBtn").addEventListener("click", () => {
   if (!confirm("Delete ALL saved chats on this device?")) return;
   writeConvos([]); blankChatUI(); renderHistory();
 });
+
+/* ---------- Display name ---------- */
+const nameKey = () => "elai_name_" + ((currentUser && (currentUser.email || currentUser.id)) || "guest");
+const localName = () => store.get(nameKey()) || "";
+function refreshWelcomeName() {
+  const n = localName() || (currentUser && (currentUser.name || currentUser.display_name)) || "";
+  $("welcomeTitle").textContent = n ? "Welcome, " + n : "Welcome to El-AI";
+}
+
+/* ---------- Personal details, notes, accounts, plan ---------- */
+const acctId = () => (currentUser && (currentUser.email || currentUser.id)) || "guest";
+const detailsKey = () => "elai_details_" + acctId();
+function getDetails() { try { return JSON.parse(store.get(detailsKey()) || "{}"); } catch { return {}; } }
+function saveDetails(p) { store.set(detailsKey(), JSON.stringify({ phone:p.phone || "", company:p.company || "", about:p.about || "" })); }
+function fillDetails(profile) {
+  const d = getDetails();
+  $("profilePhone").value = profile.phone || d.phone || "";
+  $("profileCompany").value = profile.company || d.company || "";
+  $("profileAbout").value = profile.about || d.about || "";
+}
+const notesKey = () => "elai_notes_" + acctId();
+function getNotes() { try { return JSON.parse(store.get(notesKey()) || "[]"); } catch { return []; } }
+function setNotes(l) { store.set(notesKey(), JSON.stringify(l)); }
+
+$("passwordForm").addEventListener("submit", async e => {
+  e.preventDefault(); $("passMessage").textContent = "Changing…";
+  try {
+    const d = await api("/auth/change-password", { method:"POST",
+      body: JSON.stringify({ current_password:$("curPass").value, new_password:$("newPass").value }) });
+    $("passMessage").textContent = d.message || "Password changed.";
+    $("curPass").value = ""; $("newPass").value = "";
+  } catch (err) { $("passMessage").textContent = "Couldn't change password: " + err.message; }
+});
+
+/* Several accounts on one device */
+const accounts = () => { try { return JSON.parse(store.get("elai_accounts") || "[]"); } catch { return []; } };
+const saveAccounts = l => store.set("elai_accounts", JSON.stringify(l));
+let prevAccount = "";
+function rememberAccount() {
+  if (!currentUser || !currentUser.email || !token) return;
+  const l = accounts().filter(a => a.email !== currentUser.email);
+  l.unshift({ email:currentUser.email, name:localName() || currentUser.name || currentUser.display_name || "", token });
+  saveAccounts(l.slice(0, 5));
+}
+function switchAccount(email) {
+  const a = accounts().find(x => x.email === email);
+  if (!a) return;
+  saveCurrent(); stopSpeech();
+  token = a.token; store.set("elai_token", token);
+  currentUser = null; blankChatUI(); memories = [];
+  startApp();
+}
+function addAccount() {
+  rememberAccount(); prevAccount = currentUser ? currentUser.email : "";
+  logout();
+  if (prevAccount) $("authCancelBtn").classList.remove("hidden");
+}
+function signOutCurrent() {
+  const me = currentUser && currentUser.email;
+  saveAccounts(accounts().filter(a => a.email !== me));
+  const next = accounts()[0];
+  logout();
+  if (next) switchAccount(next.email);
+}
+$("addAccountBtn").addEventListener("click", addAccount);
+$("authCancelBtn").addEventListener("click", () => { if (prevAccount) switchAccount(prevAccount); });
+function renderAccounts() {
+  const box = $("accountList"), list = accounts(), me = currentUser && currentUser.email;
+  box.innerHTML = "";
+  if (!list.length) { box.innerHTML = '<div class="empty">Only this account is signed in.</div>'; return; }
+  list.forEach(a => {
+    const item = document.createElement("div"); item.className = "item";
+    const t = document.createElement("div");
+    t.textContent = (a.name ? a.name + " · " : "") + a.email + (a.email === me ? "  (active)" : "");
+    const acts = document.createElement("div"); acts.className = "item-actions";
+    if (a.email !== me) acts.appendChild(mkBtn("Switch", "secondary", () => switchAccount(a.email)));
+    acts.appendChild(mkBtn(a.email === me ? "Sign out" : "Remove", "danger-btn", () => {
+      if (a.email === me) { signOutCurrent(); return; }
+      saveAccounts(accounts().filter(x => x.email !== a.email)); renderAccounts();
+    }));
+    item.append(t, acts); box.appendChild(item);
+  });
+}
+
+/* Plan and usage (the server decides the limits; this only displays them) */
+async function startCheckout() {
+  try {
+    const d = await api("/billing/checkout", { method:"POST" });
+    if (d.url) launch(d.url); else toast("Checkout isn't available yet.");
+  } catch (e) { toast("Couldn't start checkout: " + e.message); }
+}
+function showUpgrade(msg) { toast(msg || "You've reached today's free limit.", [["Upgrade", startCheckout]]); }
+async function loadPlan() {
+  $("planInfo").textContent = "Checking your plan…";
+  try {
+    const d = await api("/billing/status");
+    $("planInfo").textContent = d.plan === "pro" ? "Pro plan: unlimited messages."
+      : "Free plan: " + (d.used ?? 0) + (d.limit ? " / " + d.limit : "") + " messages used today.";
+    $("upgradeBtn").classList.toggle("hidden", d.plan === "pro");
+  } catch {
+    $("planInfo").textContent = "Billing isn't switched on for this server yet.";
+    $("upgradeBtn").classList.add("hidden");
+  }
+}
+$("upgradeBtn").addEventListener("click", startCheckout);
 
 /* ---------- Intro ---------- */
   const intro = $("elIntro");
