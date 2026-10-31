@@ -155,7 +155,18 @@ class MainActivity : Activity() {
         }
     }
 
+    @Suppress("DEPRECATION")
+    private fun versionCode(): Int = try {
+        val info = packageManager.getPackageInfo(packageName, 0)
+        if (Build.VERSION.SDK_INT >= 28) info.longVersionCode.toInt() else info.versionCode
+    } catch (_: Exception) {
+        0
+    }
+
     inner class Bridge {
+
+        @JavascriptInterface
+        fun appVersion(): Int = versionCode()
 
         @JavascriptInterface
         fun hasTts(): Boolean = ttsReady
