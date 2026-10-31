@@ -365,7 +365,12 @@ input[type=range]{accent-color:#a855f7;width:100%}
           </div>
           <button class="primary" type="submit">Request recovery</button>
         </form>
-        <p class="muted small">Password recovery requires a recovery endpoint configured on the El-AI server.</p>
+        <form id="resetForm" class="hidden">
+          <div class="field"><label for="resetCode">6-digit code</label><input id="resetCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required></div>
+          <div class="field"><label for="resetPass">New password (8+ characters)</label><input id="resetPass" type="password" autocomplete="new-password" minlength="8" required></div>
+          <button class="primary" type="submit">Set new password</button>
+        </form>
+        <p class="muted small">We will email you a 6-digit code. It expires in 15 minutes.</p>
         <button class="link-btn" id="recoveryBack" type="button">Back to sign in</button>
       </div>
 
@@ -832,7 +837,8 @@ function restoreOrb() {
         method: "POST",
         body: JSON.stringify({ email })
       });
-      setMessage("authMessage", data.message || "If account recovery is enabled, follow the instructions sent to your email.", "success");
+      setMessage("authMessage", data.message || "If that email has an account, a code has been sent.", "success");
+      $("resetForm").classList.remove("hidden");
     } catch {
       setMessage(
         "authMessage",
@@ -940,6 +946,7 @@ function restoreOrb() {
           prompt: message,
           mode,
           style: profileStyle,
+          auto_memory: settings.autoMem,
           system: buildSystem(),
           persona: "jarvis",
           temperature: TEMP[mode],
@@ -950,6 +957,7 @@ function restoreOrb() {
       const reply = data.reply || data.response || data.answer ||
         data.message || data.output || "I received a response, but it was empty.";
       replyElement.textContent = reply;
+      if (data.memories_saved && data.memories_saved.length) toast("Saved to memory: " + data.memories_saved[0]);
       chatHistory.push(
         { role: "user", content: message },
         { role: "assistant", content: reply }
@@ -1354,9 +1362,10 @@ async function converse(text) {
       return;
     }
     const d = await api("/ask", { method:"POST", body: JSON.stringify({
-      message:text, prompt:text, mode:$("modeSelect").value, style:"concise", system:buildSystem()+" Reply briefly in natural spoken language, no markdown.", persona:"jarvis", temperature:TEMP[$("modeSelect").value], history:chatHistory, live:true }) });
+      message:text, prompt:text, mode:$("modeSelect").value, style:"concise", auto_memory:settings.autoMem, system:buildSystem()+" Reply briefly in natural spoken language, no markdown.", persona:"jarvis", temperature:TEMP[$("modeSelect").value], history:chatHistory, live:true }) });
     const reply = d.reply || d.response || d.answer || d.message || d.output || "I didn't catch that.";
     addMessage("assistant", reply); saveCurrent();
+    if (d.memories_saved && d.memories_saved.length) toast("Saved to memory: " + d.memories_saved[0]);
     chatHistory.push({ role:"user", content:text }, { role:"assistant", content:reply });
     chatHistory = chatHistory.slice(-24);
     autoMemory(text);
@@ -1474,7 +1483,7 @@ async function saveMemory(text) {
 }
 function autoMemory(msg) {
   const explicit = /\bremember\b/i.test(msg);
-  if (settings.autoMem === "off" && !explicit) return;
+  if ((settings.autoMem === "off" || settings.autoMem === "auto") && !explicit) return;
   const sent = msg.split(/[.!?]+\s+/).find(x => MEM_RX.some(r => r.test(x)));
   if (!sent) return;
   const text = sent.trim().slice(0, 300);
@@ -1868,6 +1877,18 @@ async function loadPlan() {
   }
 }
 $("upgradeBtn").addEventListener("click", startCheckout);
+
+/* ---------- Password reset (step 2) ---------- */
+$("resetForm").addEventListener("submit", async e => {
+  e.preventDefault(); setMessage("authMessage", "Updating password…");
+  try {
+    const d = await api("/auth/reset-password", { method:"POST", body: JSON.stringify({
+      email:$("recoveryEmail").value.trim(), code:$("resetCode").value.trim(), new_password:$("resetPass").value }) });
+    $("loginEmail").value = $("recoveryEmail").value.trim();
+    $("resetForm").classList.add("hidden"); $("resetCode").value = ""; $("resetPass").value = "";
+    showAuthPanel("loginPanel"); setMessage("authMessage", d.message || "Password updated. Sign in now.", "success");
+  } catch (err) { setMessage("authMessage", err.message, "error"); }
+});
 
 /* ---------- Intro ---------- */
   const intro = $("elIntro");
