@@ -20,6 +20,7 @@ import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.webkit.JavascriptInterface
 import android.webkit.PermissionRequest
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -39,6 +40,10 @@ class MainActivity : Activity() {
     private var tts: TextToSpeech? = null
     private var ttsReady = false
     private var recognizer: SpeechRecognizer? = null
+
+    // photo / video picker for <input type="file"> in the page
+    private var fileCallback: ValueCallback<Array<Uri>>? = null
+    private val fileRequestCode = 4711
 
     private fun askPermission(permission: String, code: Int) {
         if (Build.VERSION.SDK_INT >= 23 &&
@@ -77,6 +82,33 @@ class MainActivity : Activity() {
         }
 
         web.webChromeClient = object : WebChromeClient() {
+            override fun onShowFileChooser(
+                webView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: WebChromeClient.FileChooserParams?
+            ): Boolean {
+                fileCallback?.onReceiveValue(null)
+                fileCallback = filePathCallback
+
+                val pick = Intent(Intent.ACTION_GET_CONTENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                }
+                return try {
+                    startActivityForResult(
+                        Intent.createChooser(pick, "Choose photos or videos"),
+                        fileRequestCode
+                    )
+                    true
+                } catch (_: Exception) {
+                    fileCallback?.onReceiveValue(null)
+                    fileCallback = null
+                    false
+                }
+            }
+
             override fun onPermissionRequest(request: PermissionRequest) {
                 runOnUiThread {
                     val allowed = request.resources.filter {
@@ -98,6 +130,24 @@ class MainActivity : Activity() {
 
         askPermission(Manifest.permission.RECORD_AUDIO, 1)
         web.loadUrl(appUrl)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == fileRequestCode) {
+            val results: Array<Uri>? = if (resultCode == RESULT_OK && data != null) {
+                val clip = data.clipData
+                when {
+                    clip != null -> Array(clip.itemCount) { clip.getItemAt(it).uri }
+                    data.data != null -> arrayOf(data.data!!)
+                    else -> null
+                }
+            } else null
+            fileCallback?.onReceiveValue(results)
+            fileCallback = null
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     // Back button goes back inside El-AI instead of closing the app
